@@ -1,0 +1,20 @@
+{% extends "mebel/base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ material.name }}
+{% endblock %}
+{% block content %}
+  <div class="material-detail">
+    <img src="{% if material.image %}{{ material.image.url }}{% else %}
+    {% static "img/no_image.png" %}{% endif %}">
+    <h1>{{ material.name }}</h1>
+    <h2>
+      <a href="{{ material.category.get_absolute_url }}">
+        {{ material.category }}
+      </a>
+    </h2>
+    <p class="price">${{ product.price }}</p>
+    {{ product.description|linebreaks }}
+  </div>
+{% endblock %}
