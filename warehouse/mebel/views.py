@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-#from cart.forms import CartAddProductForm
+from ordercart.forms import OrderCartAddMaterialForm
 from .models import Category, Material
 
 
@@ -22,8 +22,7 @@ def material_detail(request, id, slug):
                                 id=id,
                                 slug=slug
                                 )
-    #cart_product_form = CartAddProductForm()
+    ordercart_material_form = OrderCartAddMaterialForm()
     return render(request,
                   'mebel/material/detail.html',
-                  {'product': material})
-                   #'cart_product_form': cart_product_form})
+                  {'material': material, 'ordercart_material_form': ordercart_material_form})

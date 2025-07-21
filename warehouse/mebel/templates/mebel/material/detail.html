@@ -14,7 +14,12 @@
         {{ material.category }}
       </a>
     </h2>
-    <p class="price">${{ product.price }}</p>
-    {{ product.description|linebreaks }}
+    <p class="price">${{ material.price }}</p>
+    <form action="{% url "ordercart:ordercart_add" material.id %}" method="post">
+      {{ ordercart_material_form }}
+      {% csrf_token %}
+      <input type="submit" value="Add to ordercart">
+    </form>
+    {{ material.description|linebreaks }}
   </div>
 {% endblock %}

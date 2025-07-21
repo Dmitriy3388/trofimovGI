@@ -11,6 +11,13 @@ load_dotenv()
 # Секретный ключ
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+# Конфигурация сервера электронной почты
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'trofimov3388@gmail.com'
+EMAIL_HOST_PASSWORD = os.getenv('GG_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 # Режим отладки
 DEBUG = os.getenv('DEBUG') == 'True'
 
@@ -39,9 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mebel.apps.MebelConfig',
+    'ordercart.apps.OrdercartConfig',
+    'orders.apps.OrdersConfig',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'ordercart.context_processors.ordercart', #Отключить при длительных запросах. Корзина включается повсюду
             ],
         },
     },
@@ -92,6 +104,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
+INTERNAL_IPS = ['127.0.0.1',]
+
+#CELERY_BROKER_URL = 'amqp://guest:guest@localhost:15672//'
+
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
@@ -103,6 +119,8 @@ USE_I18N = True
 USE_TZ = True
 
 MEDIA_URL = 'media/'
+
+ORDERCART_SESSION_ID = 'ordercart'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 

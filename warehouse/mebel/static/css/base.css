@@ -68,11 +68,11 @@ thead th, tbody tr.total {
     font-weight:bold;
 }
 
-table.cart {
+table.ordercart {
     margin-bottom:40px;
 }
 
-table.cart img {
+table.ordercart img {
     width:180px;
 }
 
@@ -137,7 +137,7 @@ ul.errorlist {
     margin-right:10%;
 }
 
-#subheader .cart {
+#subheader .ordercart {
     float:right;
     padding-top:4px;
 }
@@ -184,7 +184,7 @@ ul.errorlist {
     overflow:hidden;
 }
 
-.product-list .item {
+.material-list .item {
     width:25%;
     padding:10px 20px 10px 0;
     float:left;
@@ -192,32 +192,32 @@ ul.errorlist {
     line-height:1.2;
 }
 
-.product-list .item img {
+.material-list .item img {
     width:100%;
     margin-bottom:8px;
 }
 
-.product-detail {
+.material-detail {
     text-align:justify;
 }
 
-.product-detail .price {
+.material-detail .price {
     color:#333;
     font-size:28px;
     font-weight:bold;
 }
 
-.product-detail img {
+.material-detail img {
     width:40%;
     float:left;
     padding:0 20px 20px 0;
 }
 
-.product-detail h1 {
+.material-detail h1 {
     margin-bottom:0;
 }
 
-.product-detail h2 {
+.material-detail h2 {
     margin-top:10px;
 }
 
@@ -297,21 +297,21 @@ ul.errorlist {
     clear:both;
 }
 
-.recommendations.cart {
+.recommendations.ordercart {
     width:60%;
     float:left;
     overflow:auto;
 }
 
-.recommendations.cart h3 {
+.recommendations.ordercart h3 {
     margin-top:0;
 }
 
-.recommendations.cart .item {
+.recommendations.ordercart .item {
     margin-right:10px;
 }
 
-.recommendations.cart img {
+.recommendations.ordercart img {
     width:120px;
 }
 

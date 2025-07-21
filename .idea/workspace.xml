@@ -4,23 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/trofimovGI.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/static/css/base.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/static/css/pdf.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/static/img/no_image.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/urls.py" afterDir="false" />
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="11">
+      <change afterPath="$PROJECT_DIR$/warehouse/ordercart/context_processors.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/ordercart/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/ordercart/ordercart.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/ordercart/templates/ordercart/detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/ordercart/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/orders/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/orders/tasks.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/orders/templates/admin/orders/order/detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/created.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/orders/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/warehouse/celery.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/static/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/static/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,30 +44,32 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2zxlgeCJ9YGJXNd7E2jXJrBfzv2" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/Dmitriy/PycharmProjects/trofimovGI/warehouse/mebel/static/img",
-    "settings.editor.selected.configurable": "vcs.Git"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Dmitriy/PycharmProjects/trofimovGI&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Git&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\mebel\static\img" />
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\orders\templates\admin\orders\order" />
+      <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\orders\templates\orders\order" />
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI" />
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse" />
     </key>
@@ -82,6 +90,19 @@
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
     </task>
+    <task id="LOCAL-00001" summary="11">
+      <option name="closed" value="true" />
+      <created>1752698060140</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1752698060140</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="11" />
+    <option name="LAST_COMMIT_MESSAGE" value="11" />
   </component>
 </project>
