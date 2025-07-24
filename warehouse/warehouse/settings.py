@@ -36,7 +36,7 @@ DATABASES = {
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'mebel:main_dashboard'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 

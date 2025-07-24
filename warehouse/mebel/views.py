@@ -4,7 +4,13 @@ from .models import Category, Material
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render
+from orders.models import Order
 
+
+@login_required
+def main_dashboard(request):
+    return render(request, 'mebel/main_dashboard.html')
 
 @login_required
 def material_list(request, category_slug=None):
@@ -21,26 +27,23 @@ def material_list(request, category_slug=None):
                    'materials': materials})
 
 class MaterialListView(LoginRequiredMixin, ListView):
-    model = Material  # Указываем модель
-    context_object_name = 'materials'  # Исправляем на множественное число
+    model = Material
+    context_object_name = 'materials'
     template_name = 'mebel/material/list.html'
     paginate_by = 3
 
     def get_queryset(self):
-        # Получаем queryset с фильтрацией по категории
         queryset = super().get_queryset()
         category_slug = self.kwargs.get('category_slug')
         if category_slug:
             self.category = get_object_or_404(Category, slug=category_slug)
             return queryset.filter(category=self.category)
-        self.category = None
         return queryset
 
     def get_context_data(self, **kwargs):
-        # Добавляем категории в контекст
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
-        context['category'] = self.category
+        context['category'] = getattr(self, 'category', None)
         return context
 
 @login_required

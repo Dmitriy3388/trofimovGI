@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Список заказов</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Клиент</th>
+            <th>Дата</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in page_obj %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.first_name }} {{ order.last_name }}</td>
+            <td>{{ order.created|date:"d.m.Y H:i" }}</td>
+            <td>{% if order.paid %}Оплачен{% else %}В обработке{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include "orders/order/pagination.html" with page=page_obj %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-buttons">
+      <h1>Dashboard</h1>
+  <p>
+    Welcome to your dashboard. You can <a href="{% url "edit" %}">edit your profile</a> or <a href="{% url "password_change" %}">change your password</a>.
+  </p>
+    <a href="{% url 'orders:order_create' %}" class="btn btn-primary">Создание заказа</a>
+    <a href="{% url 'mebel:material_list' %}" class="btn btn-primary">Просмотр Материалов</a>
+    <a href="{% url 'orders:order_list' %}" class="btn btn-primary">Просмотр Заказов</a>
+</div>
+{% endblock %}
