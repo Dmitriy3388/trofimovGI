@@ -19,17 +19,67 @@
       {% endfor %}
     </ul>
   </div>
-  <div id="main" class="material-list">
+
+  <div id="main" class="material-list-compact">
     <h1>{% if category %}{{ category.name }}{% else %}Materials{% endif %}</h1>
-    {% for material in materials %}
-      <div class="item">
-        <a href="{{ material.get_absolute_url }}">
-          <img src="{% if material.image %}{{ material.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
-        </a>
-        <a href="{{ material.get_absolute_url }}">{{ material.name }}</a>
-        <br>
-        ${{ material.price }}
+
+    {% for material in page_obj %}
+      <div class="material-card">
+        <div class="material-image">
+          <a href="{{ material.get_absolute_url }}">
+            <img src="{% if material.image %}{{ material.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" alt="{{ material.name }}">
+          </a>
+        </div>
+
+        <div class="material-details">
+          <h2><a href="{{ material.get_absolute_url }}">{{ material.name }}</a></h2>
+          <span class="price">${{ material.price }}</span>
+
+          <div class="stock-info">
+            <div class="stock-item">
+              <span class="label">Available</span>
+              <span class="value {% if material.available %}in-stock{% else %}out-of-stock{% endif %}">
+                {{ material.available|yesno:"Yes,No" }}
+              </span>
+            </div>
+
+            <div class="stock-item">
+              <span class="label">Balance</span>
+              <span class="value">{{ material.balance }}</span>
+            </div>
+
+            <div class="stock-item">
+              <span class="label">Reserved</span>
+              <span class="value">{{ material.reserved }}</span>
+            </div>
+
+            <div class="stock-item">
+              <span class="label">Lack</span>
+              <span class="value {% if material.lack > 0 %}warning{% endif %}">
+                {{ material.lack }}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     {% endfor %}
+
+    <div class="pagination">
+      <span class="step-links">
+        {% if page_obj.has_previous %}
+          <a href="?page=1">&laquo; first</a>
+          <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">next</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+      </span>
+    </div>
   </div>
 {% endblock %}

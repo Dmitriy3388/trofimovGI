@@ -5,10 +5,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('account/', include('account.urls')),
     path('ordercart/', include('ordercart.urls', namespace='ordercart')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('', include('mebel.urls', namespace='mebel')),
     path('__debug__/', include('debug_toolbar.urls')),
+
 ]
 
 if settings.DEBUG:

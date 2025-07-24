@@ -1,10 +1,13 @@
 from django.urls import path
 from . import views
+from .views import MaterialListView
 
 app_name = 'mebel'
 
 urlpatterns = [
-    path('', views.material_list, name='material_list'),
+    #path('', views.material_list, name='material_list'),
+    path('', MaterialListView.as_view(), name='material_list'),
+    path('<slug:category_slug>/', MaterialListView.as_view(), name='material_list_by_category'),
     path('<slug:category_slug>/', views.material_list,
          name='material_list_by_category'),
     path('<int:id>/<slug:slug>/', views.material_detail,

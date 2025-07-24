@@ -184,17 +184,135 @@ ul.errorlist {
     overflow:hidden;
 }
 
-.material-list .item {
-    width:25%;
-    padding:10px 20px 10px 0;
-    float:left;
-    text-align:center;
-    line-height:1.2;
+.material-list-compact {
+    float: left;
+    width: 96%;
+    margin-right: -220px;
+    overflow: hidden;
 }
 
-.material-list .item img {
-    width:100%;
-    margin-bottom:8px;
+.material-list-compact .material-card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.material-list-compact .material-card:hover {
+    border-color: #5993bb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.material-list-compact .material-image {
+    width: 60px;
+    min-width: 60px;
+    height: 60px;
+    margin-right: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    border-radius: 3px;
+}
+
+.material-list-compact .material-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.material-list-compact .material-details {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.material-list-compact .material-details h2 {
+    margin: 0;
+    font-size: 15px;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.material-list-compact .material-details h2 a {
+    color: #333;
+}
+
+.material-list-compact .material-details h2 a:hover {
+    color: #5993bb;
+}
+
+.material-list-compact .price {
+    font-size: 15px;
+    color: #e67e22;
+    font-weight: bold;
+    min-width: 80px;
+}
+
+.material-list-compact .stock-info {
+    display: flex;
+    gap: 15px;
+    margin-left: auto;
+}
+
+.material-list-compact .stock-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 50px;
+}
+
+.material-list-compact .label {
+    font-size: 10px;
+    color: #777;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+
+.material-list-compact .value {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.material-list-compact .in-stock {
+    color: #27ae60;
+}
+
+.material-list-compact .out-of-stock {
+    color: #e74c3c;
+}
+
+.material-list-compact .warning {
+    color: #f39c12;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+    .material-list-compact .material-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .material-list-compact .stock-info {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 8px;
+        margin-left: 0;
+    }
+
+    .material-list-compact .stock-item {
+        min-width: auto;
+    }
 }
 
 .material-detail {

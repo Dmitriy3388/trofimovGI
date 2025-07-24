@@ -1,6 +1,7 @@
 from decimal import Decimal
 from django.conf import settings
 from mebel.models import Material
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class OrderCart:

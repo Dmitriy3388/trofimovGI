@@ -21,6 +21,7 @@ EMAIL_USE_TLS = True
 # Режим отладки
 DEBUG = os.getenv('DEBUG') == 'True'
 
+STATIC_ROOT = BASE_DIR / 'static'
 # Настройки БД
 DATABASES = {
     'default': {
@@ -35,10 +36,14 @@ DATABASES = {
 
 ALLOWED_HOSTS = []
 
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
 
 # Application definition
 
 INSTALLED_APPS = [
+    'account.apps.AccountConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
