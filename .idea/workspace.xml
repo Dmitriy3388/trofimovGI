@@ -4,9 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Общий дашбоард. (проблемы: 1 разные дашборды с разной функциональностью)">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="мейн дошбоард">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/logged_out.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/logged_out.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/password_reset_complete.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/password_reset_complete.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +135,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753597939155</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="мейн дошбоард">
+      <option name="closed" value="true" />
+      <created>1753598865252</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1753598865252</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -146,6 +161,7 @@
     <MESSAGE value="11" />
     <MESSAGE value="Дашборд исключен. Остался мейн дашборд. Проблема: не редактируется заказ" />
     <MESSAGE value="Общий дашбоард. (проблемы: 1 разные дашборды с разной функциональностью)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Общий дашбоард. (проблемы: 1 разные дашборды с разной функциональностью)" />
+    <MESSAGE value="мейн дошбоард" />
+    <option name="LAST_COMMIT_MESSAGE" value="мейн дошбоард" />
   </component>
 </project>
