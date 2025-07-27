@@ -4,8 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Навигация между приложениями закончена">
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/register_done.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/register_done.html" afterDir="false" />
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="редактирование профилей">
+      <change afterPath="$PROJECT_DIR$/warehouse/account/static/css/base.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/account/static/css/profile.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/account/static/img/no_image.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/account/templates/account/profile.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/static/css/profile.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,15 +64,17 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "feature/main__dashboard__redesign",
-    "last_opened_file_path": "C:/Users/Dmitriy/PycharmProjects/trofimovGI",
+    "last_opened_file_path": "C:/Users/Dmitriy/PycharmProjects/trofimovGI/warehouse/account/templates/account",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\account\templates\account" />
+      <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\account\static\css" />
+      <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\account\static\img" />
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\mebel\templates\mebel\material" />
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI" />
-      <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\mebel\static\img" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\orders\templates\orders\order" />
@@ -143,7 +155,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753600394582</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="редактирование профилей">
+      <option name="closed" value="true" />
+      <created>1753601131612</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1753601131612</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -163,6 +183,7 @@
     <MESSAGE value="Общий дашбоард. (проблемы: 1 разные дашборды с разной функциональностью)" />
     <MESSAGE value="мейн дошбоард" />
     <MESSAGE value="Навигация между приложениями закончена" />
-    <option name="LAST_COMMIT_MESSAGE" value="Навигация между приложениями закончена" />
+    <MESSAGE value="редактирование профилей" />
+    <option name="LAST_COMMIT_MESSAGE" value="редактирование профилей" />
   </component>
 </project>

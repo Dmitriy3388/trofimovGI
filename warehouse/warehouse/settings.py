@@ -21,6 +21,7 @@ EMAIL_USE_TLS = True
 # Режим отладки
 DEBUG = os.getenv('DEBUG') == 'True'
 
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 # Настройки БД
 DATABASES = {

@@ -10,7 +10,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     # change password urls
     path('', include('django.contrib.auth.urls')),
-    #path('', views.dashboard, name='dashboard'),
+    path('profile/', views.profile_view, name='profile'),
     path('register/', views.register, name='register'),
     path('edit/', views.edit, name='edit'),
 ]
