@@ -22,7 +22,12 @@ EMAIL_USE_TLS = True
 DEBUG = os.getenv('DEBUG') == 'True'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # Теперь Django будет искать файлы в /static/
+]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Для collectstatic (если нужно)
+
 # Настройки БД
 DATABASES = {
     'default': {

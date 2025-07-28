@@ -1,0 +1,19 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Warehouse{% endblock %}</title>
+    <!-- Подключение глобального CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}  <!-- Для стилей приложений -->
+</head>
+<body>
+    <header>...</header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>...</footer>
+    <!-- Глобальные скрипты -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
