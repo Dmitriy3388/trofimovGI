@@ -21,6 +21,8 @@
     {% for material in materials %}
     <div class="item">
         <a href="{{ material.get_absolute_url }}">{{ material.name }}</a>
+        <p>Доступно: {{ material.available }}</p>
+        <p>Нехватка: {{ material.lack }}</p>
         <p>Цена: {{ material.price }}</p>
     </div>
     {% endfor %}

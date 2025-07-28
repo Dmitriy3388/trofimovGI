@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'ordercart.apps.OrdercartConfig',
     'orders.apps.OrdersConfig',
     'debug_toolbar',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
