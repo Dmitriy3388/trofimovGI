@@ -14,9 +14,17 @@ def main_dashboard(request):
 
 @login_required
 def material_list(request, category_slug=None):
+    sort_by = request.GET.get('sort', 'name')  # По умолчанию сортируем по имени
+    order = request.GET.get('order', 'asc')    # По умолчанию порядок возрастающий
+
+    if order == 'asc':
+        order_by = sort_by
+    else:
+        order_by = f'-{sort_by}'
     category = None
     categories = Category.objects.all()
-    materials = Material.objects.all()
+    materials = Material.objects.all().order_by(order_by)
+
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         materials = materials.filter(category=category)
@@ -24,7 +32,10 @@ def material_list(request, category_slug=None):
                   'mebel/material/list.html',
                   {'category': category,
                    'categories': categories,
-                   'materials': materials})
+                   'materials': materials,
+                   'current_sort': sort_by,
+                   'current_order': order
+                   })
 
 class MaterialListView(LoginRequiredMixin, ListView):
     model = Material

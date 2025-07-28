@@ -17,16 +17,47 @@
     </ul>
 </div>
 
-<div class="materials-list">
-    {% for material in materials %}
-    <div class="item">
-        <a href="{{ material.get_absolute_url }}">{{ material.name }}</a>
-        <p>Доступно: {{ material.available }}</p>
-        <p>Нехватка: {{ material.lack }}</p>
-        <p>Цена: {{ material.price }}</p>
-    </div>
-    {% endfor %}
+{% block contents %}
+<div class="container mt-4">
+  <h2 class="mb-4">Список материалов</h2>
+  <table class="table table-hover">
+    <thead class="thead-light">
+      <tr>
+        <th>Название</th>
+        <th>Цена</th>
+        <th>Баланс</th>
+        <th>Зарезервировано</th>
+        <th>Доступно</th>
+        <th>
+          <a href="?sort=lack&order={% if current_sort == 'lack' and current_order == 'asc' %}desc{% else %}asc{% endif %}"
+             style="text-decoration: none; color: inherit;">
+            Нехватка
+            {% if current_sort == 'lack' %}
+              {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+            {% endif %}
+          </a>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for material in materials %}
+      <tr>
+        <td><a href="{{ material.get_absolute_url }}">{{ material.name }}</a></td>
+        <td>{{ material.price }} ₽</td>
+        <td>{{ material.balance }}</td>
+        <td>{{ material.reserved }}</td>
+        <td style="color: {{ material.availability_status }}; font-weight: bold;">
+          {{ material.available }}
+        </td>
+        <td style="color: {% if material.lack > 0 %}red{% else %}green{% endif %}; font-weight: bold;">
+          {{ material.lack }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
+{% endblock %}
 
 {% include "mebel/material/pagination.html" with page=page_obj %}
 {% endblock %}
