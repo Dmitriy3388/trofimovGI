@@ -23,7 +23,8 @@ DEBUG = os.getenv('DEBUG') == 'True'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # Теперь Django будет искать файлы в /static/
+    BASE_DIR / 'static',
+    os.path.join(BASE_DIR, "orders/static"),# Теперь Django будет искать файлы в /static/
 ]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Для collectstatic (если нужно)
@@ -140,7 +141,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

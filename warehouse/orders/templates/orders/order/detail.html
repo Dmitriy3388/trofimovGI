@@ -1,0 +1,60 @@
+{% extends "mebel/base.html" %}
+
+{% block title %}Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+  <h1>Order Details</h1>
+  
+  <div class="order-info">
+    <h3>Customer Information</h3>
+    <p><strong>Name:</strong> {{ order.first_name }} {{ order.last_name }}</p>
+    <p><strong>Address:</strong> {{ order.address }}</p>
+    <p><strong>City:</strong> {{ order.city }}</p>
+    <p><strong>Date:</strong> {{ order.created|date:"d.m.Y H:i" }}</p>
+  </div>
+
+  <div class="order-items">
+    <h3>Order Items</h3>
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th>Material</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order.items.all %}
+        <tr>
+          <td>{{ item.material.name }}</td>
+          <td>${{ item.price }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>${{ item.get_cost }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="total-price">
+      <strong>Total:</strong> ${{ order.get_total_cost }}
+    </div>
+  </div>
+
+  <style>
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .order-table th, .order-table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    .total-price {
+      font-size: 1.2em;
+      text-align: right;
+      margin-top: 10px;
+    }
+  </style>
+{% endblock %}

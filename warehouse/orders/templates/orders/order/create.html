@@ -1,26 +1,120 @@
 {% extends "mebel/base.html" %}
 
-{% block title %}
-  Checkout
-{% endblock %}
+{% block title %}Create Order{% endblock %}
 
 {% block content %}
-  <h1>Checkout</h1>
-  <div class="order-info">
-    <h3>Your order</h3>
-    <ul>
-      {% for item in ordercart %}
-        <li>
-          {{ item.quantity }}x {{ item.material.name }}
-          <span>${{ item.total_price }}</span>
-        </li>
-      {% endfor %}
-    </ul>
-    <p>Total: ${{ ordercart.get_total_price }}</p>
-  </div>
+  <h1>Create Order</h1>
+
   <form method="post" class="order-form">
-    {{ form.as_p }}
-    <p><input type="submit" value="Place order"></p>
     {% csrf_token %}
+
+    <div class="order-info">
+      <h3>Customer Information</h3>
+      {{ form.as_p }}
+    </div>
+
+    <div class="materials-section">
+      <h3>Materials</h3>
+      {{ formset.management_form }}
+
+      <table class="materials-table">
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody id="materials-tbody">
+          {% for form in formset %}
+          <tr class="material-form">
+            <td>{{ form.material }}</td>
+            <td>{{ form.quantity }}</td>
+            <td class="price-cell">
+              {% if form.material.value %}
+                {{ form.material.value.price|default:"-" }}
+              {% else %}
+                -
+              {% endif %}
+            </td>
+            <td>{% if form.DELETE %}{{ form.DELETE }}{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <button type="button" id="add-more" class="btn">+ Add Material</button>
+    </div>
+
+    <div class="total-price">
+      <strong>Total: </strong><span id="total-price">0</span> $
+    </div>
+
+    <input type="submit" value="Place Order" class="submit-btn">
   </form>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add new material row
+    document.getElementById('add-more').addEventListener('click', function() {
+      const formCount = document.getElementById('id_items-TOTAL_FORMS');
+      const newFormNum = parseInt(formCount.value);
+      const newRow = document.querySelector('.material-form').cloneNode(true);
+
+      // Update all attributes
+      newRow.innerHTML = newRow.innerHTML.replace(/items-\d+-/g, `items-${newFormNum}-`);
+      newRow.innerHTML = newRow.innerHTML.replace(/\[\d+\]/g, `[${newFormNum}]`);
+
+      document.getElementById('materials-tbody').appendChild(newRow);
+      formCount.value = newFormNum + 1;
+    });
+
+    // Calculate total price
+    function updateTotal() {
+      let total = 0;
+      document.querySelectorAll('.material-form').forEach(row => {
+        const quantity = row.querySelector('input[name*="quantity"]')?.value || 0;
+        const price = row.querySelector('.price-cell').textContent;
+        if (price && !isNaN(price)) {
+          total += parseFloat(price) * parseInt(quantity);
+        }
+      });
+      document.getElementById('total-price').textContent = total.toFixed(2);
+    }
+
+    // Update total when materials change
+    document.addEventListener('change', function(e) {
+      if (e.target.name.includes('material') || e.target.name.includes('quantity')) {
+        updateTotal();
+      }
+    });
+
+    updateTotal(); // Initial calculation
+  });
+  </script>
+
+  <style>
+  .materials-table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+  }
+  .materials-table th, .materials-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  .btn {
+    padding: 5px 10px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  .total-price {
+    margin: 20px 0;
+    font-size: 1.2em;
+  }
+  </style>
 {% endblock %}
