@@ -30,6 +30,10 @@ def order_create(request):
             order = form.save()
             for item_form in formset:
                 if item_form.cleaned_data and not item_form.cleaned_data.get('DELETE', False):
+                    material = item_form.cleaned_data['material']
+                    quantity = item_form.cleaned_data['quantity']
+                    material.reserved += quantity  # Увеличиваем зарезервированное количество
+                    material.save()
                     OrderItem.objects.create(
                         order=order,
                         material=item_form.cleaned_data['material'],
