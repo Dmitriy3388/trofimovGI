@@ -8,6 +8,7 @@ from .models import OrderItem, Order
 from .forms import OrderForm, OrderItemFormSet
 from .tasks import order_created
 from ordercart.ordercart import OrderCart
+from mebel.models import Material
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -48,6 +49,8 @@ def order_create(request):
     return render(request, 'orders/order/create.html', {
         'form': form,
         'formset': formset,
+        'total_price': 0.00,
+        'materials': Material.objects.all()
     })
 
 @staff_member_required

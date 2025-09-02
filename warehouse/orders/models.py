@@ -3,6 +3,11 @@ from mebel.models import Material
 
 
 class Order(models.Model):
+    class PaymentStatus(models.TextChoices):
+        NOT_PAID = 'not_paid', 'Не оплачено'
+        PARTIALLY_PAID = 'partially_paid', 'Оплачено частично'
+        FULLY_PAID = 'fully_paid', 'Оплачено полностью'
+
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     address = models.CharField(max_length=250)
@@ -10,7 +15,12 @@ class Order(models.Model):
     city = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    paid = models.BooleanField(default=False)
+    paid = models.CharField(
+        max_length=20,
+        choices=PaymentStatus.choices,
+        default=PaymentStatus.NOT_PAID,
+        verbose_name='Статус оплаты'
+    )
 
     class Meta:
         ordering = ['-created']

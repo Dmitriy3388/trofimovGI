@@ -9,10 +9,10 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Customer</th>
-        <th>Date</th>
-        <th>Total</th>
-        <th>Status</th>
+        <th>Имя заказа</th>
+        <th>Дата создания</th>
+        <th>Цена</th>
+        <th>Оплата</th>
       </tr>
     </thead>
     <tbody>
@@ -22,7 +22,15 @@
         <td>{{ order.first_name }} {{ order.last_name }}</td>
         <td>{{ order.created|date:"d.m.Y H:i" }}</td>
         <td>${{ order.get_total_cost }}</td>
-        <td>{% if order.paid %}Paid{% else %}Pending{% endif %}</td>
+        <td>
+        {% if order.paid == 'fully_paid' %}
+        <span style="color: green; font-weight: bold;">✓ Оплачено</span>
+        {% elif order.paid == 'partially_paid' %}
+        <span style="color: orange; font-weight: bold;">⏳ Оплачено частично</span>
+        {% else %}
+        <span style="color: red; font-weight: bold;">✗ Не оплачено</span>
+        {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>

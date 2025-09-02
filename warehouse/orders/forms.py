@@ -27,4 +27,12 @@ OrderItemFormSet = forms.formset_factory(
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['first_name', 'last_name', 'address', 'city']
+        fields = ['first_name', 'last_name', 'address', 'city', 'paid']
+        widgets = {
+            'paid': forms.Select(choices=Order.PaymentStatus.choices),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Можно установить значение по умолчанию
+        self.fields['paid'].initial = Order.PaymentStatus.NOT_PAID
