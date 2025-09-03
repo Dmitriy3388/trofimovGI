@@ -5,14 +5,58 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 import weasyprint
 from .models import OrderItem, Order
-from .forms import OrderForm, OrderItemFormSet
-from .tasks import order_created
-from ordercart.ordercart import OrderCart
+from .forms import OrderForm, OrderItemFormSet, WriteOffForm
 from mebel.models import Material
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.views.decorators.http import require_http_methods
+from django.contrib import messages
+from django import forms
 
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def order_write_off(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    order_items = order.items.all().select_related('material')
+
+    if request.method == 'POST':
+        form = WriteOffForm(request.POST, order_items=order_items)
+        if form.is_valid():
+            for item in order_items:
+                field_name = f'material_{item.id}'
+                quantity_to_write_off = form.cleaned_data.get(field_name, 0)
+
+                if quantity_to_write_off > 0:
+                    material = item.material
+                    # Проверяем, чтобы списывали не больше чем зарезервировано в ЭТОМ заказе
+                    # и не больше чем есть на складе
+                    quantity_to_write_off = min(
+                        quantity_to_write_off,
+                        item.quantity,  # Зарезервировано для этого заказа
+                        material.balance  # Общее количество на складе
+                    )
+
+                    # Вычитаем списанное количество из общего баланса
+                    material.balance -= quantity_to_write_off
+                    # Уменьшаем количество, зарезервированное этим заказом
+                    item.quantity -= quantity_to_write_off
+                    # Увеличиваем счетчик списанного количества
+                    item.written_off += quantity_to_write_off
+                    # Сохраняем изменения
+                    material.save()
+                    item.save()
+
+            messages.success(request, 'Материалы успешно списаны со склада.')
+            return redirect('orders:order_detail', order_id=order.id)
+    else:
+        form = WriteOffForm(order_items=order_items)
+
+    return render(request, 'orders/order/write_off_modal.html', {
+        'order': order,
+        'form': form,
+    })
 
 @login_required
 def order_list(request):

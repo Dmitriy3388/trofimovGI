@@ -1,42 +1,72 @@
 {% extends "mebel/base.html" %}
+{% load static %}
 
 {% block title %}Order #{{ order.id }}{% endblock %}
 
 {% block content %}
-  <h1>Order Details</h1>
-  
+  <h1>Детали заказа #{{ order.id }}</h1>
+
+  <!-- Сообщения об успехе/ошибках -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
   <div class="order-info">
-    <h3>Customer Information</h3>
-    <p><strong>Name:</strong> {{ order.first_name }} {{ order.last_name }}</p>
-    <p><strong>Address:</strong> {{ order.address }}</p>
-    <p><strong>City:</strong> {{ order.city }}</p>
-    <p><strong>Date:</strong> {{ order.created|date:"d.m.Y H:i" }}</p>
+    <h3>Информация о клиенте</h3>
+    <p><strong>Имя:</strong> {{ order.first_name }} {{ order.last_name }}</p>
+    <p><strong>Адрес:</strong> {{ order.address }}</p>
+    <p><strong>Город:</strong> {{ order.city }}</p>
+    <p><strong>Дата создания:</strong> {{ order.created|date:"d.m.Y H:i" }}</p>
+    <p><strong>Статус оплаты:</strong> {{ order.get_paid_display }}</p>
   </div>
 
   <div class="order-items">
-    <h3>Order Items</h3>
+    <h3>Позиции заказа</h3>
     <table class="order-table">
       <thead>
         <tr>
-          <th>Material</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Total</th>
+          <th>Материал</th>
+          <th>Цена</th>
+          <th>Количество</th>
+          <th>Итого</th>
         </tr>
       </thead>
       <tbody>
         {% for item in order.items.all %}
         <tr>
           <td>{{ item.material.name }}</td>
-          <td>${{ item.price }}</td>
+          <td>{{ item.price }} руб.</td>
           <td>{{ item.quantity }}</td>
-          <td>${{ item.get_cost }}</td>
+          <td>{{ item.get_cost }} руб.</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
     <div class="total-price">
-      <strong>Total:</strong> ${{ order.get_total_cost }}
+      <strong>Общая стоимость:</strong> {{ order.get_total_cost }} руб.
+    </div>
+  </div>
+
+  <!-- Кнопка для открытия модального окна списания -->
+  {% if order.items.exists %}
+  <div class="mt-4">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#writeOffModal">
+      Списать материалы
+    </button>
+  </div>
+  {% endif %}
+
+  <!-- Модальное окно (пустое, контент подгрузится через AJAX) -->
+  <div class="modal fade" id="writeOffModal" tabindex="-1" aria-labelledby="writeOffModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <!-- Контент будет загружен сюда через AJAX -->
+      </div>
     </div>
   </div>
 
@@ -51,10 +81,47 @@
       border: 1px solid #ddd;
       text-align: left;
     }
+    .order-table th {
+      background-color: #f8f9fa;
+    }
     .total-price {
       font-size: 1.2em;
       text-align: right;
       margin-top: 10px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+    }
+    .alert {
+      margin-bottom: 20px;
     }
   </style>
+{% endblock %}
+
+{% block domready %}
+<!-- JS для загрузки контента в модальное окно -->
+<script>
+    $(document).ready(function(){
+        $('#writeOffModal').on('show.bs.modal', function (event) {
+            var modal = $(this);
+            // Загружаем форму списания в модальное окно
+            $.ajax({
+                url: "{% url 'orders:order_write_off' order.id %}",
+                context: document.body,
+                success: function(response) {
+                    modal.find('.modal-content').html(response);
+                },
+                error: function() {
+                    modal.find('.modal-content').html('<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Не удалось загрузить форму списания.</p></div>');
+                }
+            });
+        });
+
+        // Закрытие модального окна после успешного списания
+        $('#writeOffModal').on('hidden.bs.modal', function () {
+            // Можно обновить страницу, чтобы показать обновленные данные
+            // location.reload();
+        });
+    });
+</script>
 {% endblock %}

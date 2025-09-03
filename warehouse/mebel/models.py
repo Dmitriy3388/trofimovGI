@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from django.core.validators import ValidationError
+from django.db.models import Sum  # Добавляем импорт
 
 
 class Category(models.Model):
@@ -15,6 +15,7 @@ class Category(models.Model):
         ]
         verbose_name = 'category'
         verbose_name_plural = 'categories'
+
 
     def __str__(self):
         return self.name
@@ -49,6 +50,24 @@ class Material(models.Model):
             models.Index(fields=['lack']),
         ]
 
+    @classmethod
+    def update_all_reserved_quantities(cls):
+        """
+        АКТУАЛИЗАЦИЯ: Пересчитывает резервы для всех материалов на основе активных заказов
+        """
+        from orders.models import OrderItem
+
+        # Для каждого материала суммируем quantity из всех OrderItem
+        for material in cls.objects.all():
+            total_reserved = OrderItem.objects.filter(
+                material=material
+            ).aggregate(total=Sum('quantity'))['total'] or 0
+
+            # Обновляем только если значение изменилось
+            if material.reserved != total_reserved:
+                material.reserved = total_reserved
+                material.save(update_fields=['reserved'])
+
     @property
     def availability_status(self):
         """Возвращает статус доступности для цветового отображения"""
@@ -67,8 +86,25 @@ class Material(models.Model):
         # Всегда пересчитываем нехватку
         self.lack = max(0, self.reserved - self.balance)
 
+    def update_reserved_quantity(self):
+        """
+        АКТУАЛИЗАЦИЯ: Пересчитывает резерв для конкретного материала
+        """
+        from orders.models import OrderItem
+        from django.db.models import Sum
+
+        total_reserved = OrderItem.objects.filter(
+            material=self
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+
+        # Обновляем только если значение изменилось
+        if self.reserved != total_reserved:
+            self.reserved = total_reserved
+            self.save(update_fields=['reserved'])
+
     def save(self, *args, **kwargs):
         """Переопределённое сохранение с автоматическим расчётом"""
+        self.lack = max(0, self.reserved - self.balance)
         self.full_clean()  # Вызывает clean()
         super().save(*args, **kwargs)
 

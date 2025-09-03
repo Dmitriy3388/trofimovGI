@@ -1,0 +1,84 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="writeOffModalLabel">Списание материалов по заказу #{{ order.id }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form id="writeOffForm" method="post" action="{% url 'orders:order_write_off' order.id %}">
+    <div class="modal-body">
+        <p>Укажите количество для списания по каждому материалу.</p>
+        <p class="text-danger"><strong>Внимание:</strong> Можно списать только зарезервированное количество.</p>
+
+        {% csrf_token %}
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Материал</th>
+                        <th>Зарезервировано<br><small>(для этого заказа)</small></th>
+                        <th>На складе<br><small>(общий баланс)</small></th>
+                        <th>Кол-во к списанию</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for field in form %}
+                    {% with material_data=field.field.material_data %}
+                    <tr>
+                        <td>{{ field.label }}</td>
+                        <td class="text-center">{{ material_data.reserved }}</td>
+                        <td class="text-center">{{ material_data.balance }}</td>
+                        <td>
+                            {{ field }}
+                            <div class="form-text">Макс.: {{ material_data.reserved }}</div>
+                            {% if field.errors %}
+                            <div class="text-danger small">{{ field.errors }}</div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endwith %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="submit" class="btn btn-primary">Подтвердить списание</button>
+    </div>
+</form>
+
+<script>
+$(document).ready(function(){
+    // Валидация на стороне клиента
+    $('#writeOffForm').on('submit', function(e){
+        let isValid = true;
+        let errorMessage = '';
+
+        $('input[type="number"]').each(function() {
+            const max = parseInt($(this).attr('max')) || 0; // Максимум из зарезервированного
+            const val = parseInt($(this).val()) || 0;
+            const balance = parseInt($(this).data('balance')) || 0; // Общий баланс на складе
+            const materialName = $(this).closest('tr').find('td:first').text().trim();
+
+            if (val < 0) {
+                errorMessage += `• ${materialName}: количество не может быть отрицательным\n`;
+                isValid = false;
+            }
+            if (val > max) {
+                errorMessage += `• ${materialName}: нельзя списать больше чем зарезервировано для этого заказа (${max})\n`;
+                isValid = false;
+            }
+            if (val > balance) {
+                errorMessage += `• ${materialName}: нельзя списать больше чем есть на складе (${balance})\n`;
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Ошибка в данных:\n' + errorMessage);
+        }
+    });
+
+    // Автофокус на первое поле при открытии
+    $('input[type="number"]').first().focus();
+});
+</script>

@@ -4,8 +4,7 @@ from .models import Category, Material
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
-from orders.models import Order
+from django.shortcuts import render, redirect
 
 
 @login_required
