@@ -3,6 +3,27 @@
 {% block content %}
 <h1>{% if category %}{{ category.name }}{% else %}Все материалы{% endif %}</h1>
 
+<!-- Кнопка обновления данных -->
+<div class="mb-4">
+    <form method="post" action="{% if category %}{% url 'mebel:material_list_by_category' category.slug %}{% else %}{% url 'mebel:material_list' %}{% endif %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">
+            🔄 Обновить данные
+        </button>
+        <small class="text-muted ms-2">Пересчитать резервы и нехватку по актуальным заказам</small>
+    </form>
+</div>
+
+<!-- Сообщения об успехе/ошибках -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div class="categories">
     <h3>Категории</h3>
     <ul>
