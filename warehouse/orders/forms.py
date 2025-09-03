@@ -4,8 +4,21 @@ from .models import Order, OrderItem
 
 
 class OrderItemForm(forms.ModelForm):
-    material = forms.ModelChoiceField(queryset=Material.objects.all())
-    quantity = forms.IntegerField(min_value=1, initial=1)
+    material = forms.ModelChoiceField(
+        queryset=Material.objects.all(),
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'style': 'min-width: 200px;'
+        })
+    )
+    quantity = forms.IntegerField(
+        min_value=1,
+        initial=1,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'style': 'max-width: 100px;'
+        })
+    )
 
     class Meta:
         model = OrderItem
@@ -47,9 +60,14 @@ class WriteOffForm(forms.Form):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['first_name', 'last_name', 'address', 'city', 'paid']
+        fields = ['first_name', 'last_name', 'address', 'postal_code', 'city', 'paid']
         widgets = {
-            'paid': forms.Select(choices=Order.PaymentStatus.choices),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'postal_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'paid': forms.Select(attrs={'class': 'form-select'}),
         }
 
     def __init__(self, *args, **kwargs):
