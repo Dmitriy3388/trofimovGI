@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 import weasyprint
 from .models import OrderItem, Order
-from .forms import OrderForm, OrderItemFormSet, WriteOffForm
+from .forms import OrderForm, OrderItemForm, WriteOffForm
 from mebel.models import Material
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -30,20 +30,27 @@ def order_write_off(request, order_id):
 
                 if quantity_to_write_off > 0:
                     material = item.material
-                    # Проверяем, чтобы списывали не больше чем зарезервировано в ЭТОМ заказе
-                    # и не больше чем есть на складе
+                    # Проверяем, чтобы списывали не больше чем зарезервировано
                     quantity_to_write_off = min(
                         quantity_to_write_off,
-                        item.quantity,  # Зарезервировано для этого заказа
-                        material.balance  # Общее количество на складе
+                        item.quantity,
+                        material.balance
                     )
 
-                    # Вычитаем списанное количество из общего баланса
+                    # Вычитаем списанное количество
                     material.balance -= quantity_to_write_off
-                    # Уменьшаем количество, зарезервированное этим заказом
                     item.quantity -= quantity_to_write_off
-                    # Увеличиваем счетчик списанного количества
                     item.written_off += quantity_to_write_off
+
+                    # Добавляем операцию в историю
+                    notes = form.cleaned_data.get('notes', '')
+                    item.add_operation_to_history(
+                        'write_off',
+                        quantity_to_write_off,
+                        request.user,
+                        notes
+                    )
+
                     # Сохраняем изменения
                     material.save()
                     item.save()
@@ -53,9 +60,26 @@ def order_write_off(request, order_id):
     else:
         form = WriteOffForm(order_items=order_items)
 
+    # Получаем историю операций для отображения
+    operation_history = []
+    for item in order_items:
+        for op in item.operation_history:
+            operation_history.append({
+                'material': item.material.name,
+                'type': op['type'],
+                'quantity': op['quantity'],
+                'user': op['user'],
+                'timestamp': op['timestamp'],
+                'notes': op.get('notes', '')
+            })
+
+    # Сортируем по времени (новые сверху)
+    operation_history.sort(key=lambda x: x['timestamp'], reverse=True)
+
     return render(request, 'orders/order/write_off_modal.html', {
         'order': order,
         'form': form,
+        'operation_history': operation_history[:10]  # Последние 10 операций
     })
 
 @login_required
@@ -108,6 +132,72 @@ def order_detail(request, order_id):
         'order': order,
     })
 
+
+from django import forms
+from django.forms import inlineformset_factory
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def order_edit(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    # Создаем inline formset factory
+    OrderItemFormSet = inlineformset_factory(
+        Order,
+        OrderItem,
+        form=OrderItemForm,
+        extra=1,
+        can_delete=True,
+        fields=['material', 'quantity']
+    )
+
+    if request.method == 'POST':
+        form = OrderForm(request.POST, instance=order)
+        formset = OrderItemFormSet(request.POST, instance=order, prefix='items')
+
+        if form.is_valid() and formset.is_valid():
+            try:
+                # Сохраняем основную информацию заказа
+                order = form.save()
+
+                # Сохраняем formset
+                instances = formset.save(commit=False)
+
+                # Обрабатываем новые и измененные элементы
+                for instance in instances:
+                    if isinstance(instance, OrderItem):
+                        # Устанавливаем цену из материала
+                        instance.price = instance.material.price
+                        instance.save()
+
+                        # Обновляем резерв материала
+                        instance.material.update_reserved_quantity()
+
+                # Удаляем отмеченные для удаления элементы
+                for deleted_item in formset.deleted_objects:
+                    if isinstance(deleted_item, OrderItem):
+                        material = deleted_item.material
+                        deleted_item.delete()
+                        material.update_reserved_quantity()
+
+                messages.success(request, 'Заказ успешно обновлен.')
+                return redirect('orders:order_detail', order_id=order.id)
+
+            except Exception as e:
+                messages.error(request, f'Ошибка при сохранении: {e}')
+        else:
+            # Показываем ошибки валидации
+            messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
+    else:
+        form = OrderForm(instance=order)
+        formset = OrderItemFormSet(instance=order, prefix='items')
+
+    return render(request, 'orders/order/edit.html', {
+        'form': form,
+        'formset': formset,
+        'order': order,
+    })
 
 @staff_member_required
 def admin_order_pdf(request, order_id):

@@ -12,11 +12,6 @@ class OrderItemForm(forms.ModelForm):
         fields = ['material', 'quantity']
 
 
-OrderItemFormSet = forms.formset_factory(
-    OrderItemForm,
-    extra=1,
-    can_delete=True
-)
 
 class WriteOffForm(forms.Form):
     """

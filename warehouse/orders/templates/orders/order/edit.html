@@ -1,0 +1,202 @@
+{% extends "mebel/base.html" %}
+{% load static %}
+
+{% block title %}Редактировать заказ #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Редактировать заказ #{{ order.id }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Информация о заказе -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">📋 Информация о заказе</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.first_name.label }}</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                            <div class="text-danger small">{{ form.first_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.last_name.label }}</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                            <div class="text-danger small">{{ form.last_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{ form.address.label }}</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                    <div class="text-danger small">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.postal_code.label }}</label>
+                            {{ form.postal_code }}
+                            {% if form.postal_code.errors %}
+                            <div class="text-danger small">{{ form.postal_code.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.city.label }}</label>
+                            {{ form.city }}
+                            {% if form.city.errors %}
+                            <div class="text-danger small">{{ form.city.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.paid.label }}</label>
+                            {{ form.paid }}
+                            {% if form.paid.errors %}
+                            <div class="text-danger small">{{ form.paid.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Материалы в заказе -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">📦 Материалы в заказе</h5>
+            </div>
+            <div class="card-body">
+                {{ formset.management_form }}
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Материал</th>
+                                <th>Количество</th>
+                                <th class="text-center">Удалить</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for form in formset %}
+                            <tr>
+                                <td>
+                                    {{ form.id }}
+                                    <div class="mb-2">
+                                        {{ form.material }}
+                                        {% if form.material.errors %}
+                                        <div class="text-danger small">{{ form.material.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="mb-2">
+                                        {{ form.quantity }}
+                                        {% if form.quantity.errors %}
+                                        <div class="text-danger small">{{ form.quantity.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle">
+                                    {% if form.instance.pk %}
+                                    <div class="form-check form-switch">
+                                        {{ form.DELETE }}
+                                        <label class="form-check-label" for="{{ form.DELETE.id_for_label }}"></label>
+                                    </div>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-muted small">
+                    <i class="bi bi-info-circle"></i> Для удаления позиции отметьте checkbox "Удалить"
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопки действий -->
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-lg"></i> Сохранить изменения
+            </button>
+            <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-secondary">
+                <i class="bi bi-x-lg"></i> Отмена
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-control, .form-select {
+        border-radius: 0.375rem;
+        border: 1px solid #ced4da;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .form-check-input {
+        width: 2.5em;
+        height: 1.25em;
+    }
+
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+</style>
+{% endblock %}
+
+{% block domready %}
+<script>
+    $(document).ready(function() {
+        // Добавляем классы Bootstrap к элементам формы
+        $('input, select, textarea').addClass('form-control');
+        $('select').addClass('form-select');
+
+        // Специальная обработка для checkbox удаления
+        $('input[type="checkbox"]').removeClass('form-control').addClass('form-check-input');
+
+        // Добавляем placeholder для полей
+        $('input[name*="first_name"]').attr('placeholder', 'Введите имя');
+        $('input[name*="last_name"]').attr('placeholder', 'Введите фамилию');
+        $('input[name*="address"]').attr('placeholder', 'Введите адрес');
+        $('input[name*="postal_code"]').attr('placeholder', 'Введите почтовый индекс');
+        $('input[name*="city"]').attr('placeholder', 'Введите город');
+    });
+</script>
+{% endblock %}

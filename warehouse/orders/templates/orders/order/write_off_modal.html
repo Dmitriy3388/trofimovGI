@@ -38,6 +38,49 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- История операций -->
+        <div class="mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>📊 История операций</h5>
+                </div>
+                <div class="card-body">
+                    {% if operation_history %}
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Дата</th>
+                                        <th>Тип операции</th>
+                                        <th>Количество</th>
+                                        <th>Примечание</th>
+                                        <th>Пользователь</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for op in operation_history %}
+                                    <tr>
+                                        <td>{{ op.timestamp|date:"d.m.Y H:i" }}</td>
+                                        <td>
+                                            <span class="badge {% if op.type == 'receipt' %}bg-success{% else %}bg-danger{% endif %}">
+                                                {% if op.type == 'receipt' %}Поступление{% else %}Списание{% endif %}
+                                            </span>
+                                        </td>
+                                        <td>{{ op.quantity }} шт.</td>
+                                        <td>{{ op.notes|default:"-" }}</td>
+                                        <td>{{ op.user|default:"Система" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center">Операций пока нет</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>

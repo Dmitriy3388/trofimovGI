@@ -1,10 +1,24 @@
 {% extends "mebel/base.html" %}
 {% load static %}
 
-{% block title %}Order #{{ order.id }}{% endblock %}
+{% block title %}Заказ #{{ order.id }}{% endblock %}
 
 {% block content %}
-  <h1>Детали заказа #{{ order.id }}</h1>
+<div class="container mt-4">
+  <!-- Заголовок с кнопками действий -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Заказ #{{ order.id }}</h1>
+    <div>
+      <a href="{% url 'orders:order_edit' order.id %}" class="btn btn-warning me-2">
+        <i class="bi bi-pencil"></i> Редактировать заказ
+      </a>
+      {% if order.items.exists %}
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#writeOffModal">
+        <i class="bi bi-box-arrow-right"></i> Списать материалы
+      </button>
+      {% endif %}
+    </div>
+  </div>
 
   <!-- Сообщения об успехе/ошибках -->
   {% if messages %}
@@ -16,54 +30,127 @@
     {% endfor %}
   {% endif %}
 
-  <div class="order-info">
-    <h3>Информация о клиенте</h3>
-    <p><strong>Имя:</strong> {{ order.first_name }} {{ order.last_name }}</p>
-    <p><strong>Адрес:</strong> {{ order.address }}</p>
-    <p><strong>Город:</strong> {{ order.city }}</p>
-    <p><strong>Дата создания:</strong> {{ order.created|date:"d.m.Y H:i" }}</p>
-    <p><strong>Статус оплаты:</strong> {{ order.get_paid_display }}</p>
-  </div>
+  <!-- Информация о заказе -->
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">📋 Информация о клиенте</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <p><strong>Имя:</strong><br>{{ order.first_name }}</p>
+              <p><strong>Фамилия:</strong><br>{{ order.last_name }}</p>
+            </div>
+            <div class="col-6">
+              <p><strong>Адрес:</strong><br>{{ order.address }}</p>
+              <p><strong>Индекс:</strong><br>{{ order.postal_code }}</p>
+              <p><strong>Город:</strong><br>{{ order.city }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <div class="order-items">
-    <h3>Позиции заказа</h3>
-    <table class="order-table">
-      <thead>
-        <tr>
-          <th>Материал</th>
-          <th>Цена</th>
-          <th>Количество</th>
-          <th>Итого</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in order.items.all %}
-        <tr>
-          <td>{{ item.material.name }}</td>
-          <td>{{ item.price }} руб.</td>
-          <td>{{ item.quantity }}</td>
-          <td>{{ item.get_cost }} руб.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <div class="total-price">
-      <strong>Общая стоимость:</strong> {{ order.get_total_cost }} руб.
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">📊 Статус заказа</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Дата создания:</strong> {{ order.created|date:"d.m.Y H:i" }}</p>
+          <p><strong>Последнее обновление:</strong> {{ order.updated|date:"d.m.Y H:i" }}</p>
+          <p>
+            <strong>Статус оплаты:</strong>
+            <span class="badge
+              {% if order.paid == 'fully_paid' %}bg-success
+              {% elif order.paid == 'partially_paid' %}bg-warning
+              {% else %}bg-danger{% endif %}">
+              {{ order.get_paid_display }}
+            </span>
+          </p>
+          <p><strong>ID заказа:</strong> {{ order.id }}</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Кнопка для открытия модального окна списания -->
-  {% if order.items.exists %}
-  <div class="mt-4">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#writeOffModal">
-      Списать материалы
-    </button>
+  <!-- Позиции заказа -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="card-title mb-0">📦 Позиции заказа</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Материал</th>
+              <th class="text-center">Цена за шт.</th>
+              <th class="text-center">Количество</th>
+              <th class="text-center">Зарезервировано</th>
+              <th class="text-center">Списано</th>
+              <th class="text-end">Стоимость</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in order.items.all %}
+            <tr>
+              <td>
+                <strong>{{ item.material.name }}</strong>
+                <br>
+                <small class="text-muted">Категория: {{ item.material.category.name }}</small>
+              </td>
+              <td class="text-center">{{ item.price }} руб.</td>
+              <td class="text-center">{{ item.quantity }} шт.</td>
+              <td class="text-center">
+                <span class="badge bg-info">{{ item.material.reserved }} шт.</span>
+              </td>
+              <td class="text-center">
+                <span class="badge {% if item.written_off > 0 %}bg-success{% else %}bg-secondary{% endif %}">
+                  {{ item.written_off }} шт.
+                </span>
+              </td>
+              <td class="text-end"><strong>{{ item.get_cost }} руб.</strong></td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="text-center text-muted py-4">
+                В заказе нет позиций
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot class="table-group-divider">
+            <tr>
+              <td colspan="5" class="text-end"><strong>Общая стоимость:</strong></td>
+              <td class="text-end"><strong class="fs-5">{{ order.get_total_cost }} руб.</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
   </div>
-  {% endif %}
+
+  <!-- Кнопка возврата -->
+  <div class="d-flex justify-content-between">
+    <a href="{% url 'orders:order_list' %}" class="btn btn-secondary">
+      <i class="bi bi-arrow-left"></i> Вернуться к списку заказов
+    </a>
+    <div>
+      {% if order.items.exists %}
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#writeOffModal">
+        <i class="bi bi-box-arrow-right"></i> Списать материалы
+      </button>
+      {% endif %}
+    </div>
+  </div>
+</div>
 
   <!-- Модальное окно (пустое, контент подгрузится через AJAX) -->
   <div class="modal fade" id="writeOffModal" tabindex="-1" aria-labelledby="writeOffModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <!-- Контент будет загружен сюда через AJAX -->
       </div>
@@ -71,26 +158,20 @@
   </div>
 
   <style>
-    .order-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
+    .card {
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      border: 1px solid rgba(0, 0, 0, 0.125);
     }
-    .order-table th, .order-table td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: left;
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
-    .order-table th {
+    .table th {
+      font-weight: 600;
       background-color: #f8f9fa;
     }
-    .total-price {
-      font-size: 1.2em;
-      text-align: right;
-      margin-top: 10px;
-      padding: 10px;
-      background-color: #f8f9fa;
-      border-radius: 4px;
+    .badge {
+      font-size: 0.85em;
     }
     .alert {
       margin-bottom: 20px;
@@ -112,15 +193,23 @@
                     modal.find('.modal-content').html(response);
                 },
                 error: function() {
-                    modal.find('.modal-content').html('<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Не удалось загрузить форму списания.</p></div>');
+                    modal.find('.modal-content').html(
+                        '<div class="modal-header">' +
+                        '<h5 class="modal-title">Ошибка</h5>' +
+                        '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                        '<p class="text-danger">Не удалось загрузить форму списания.</p>' +
+                        '</div>'
+                    );
                 }
             });
         });
 
-        // Закрытие модального окна после успешного списания
+        // Обновление страницы после закрытия модального окна
         $('#writeOffModal').on('hidden.bs.modal', function () {
-            // Можно обновить страницу, чтобы показать обновленные данные
-            // location.reload();
+            // Перезагружаем страницу для обновления данных
+            location.reload();
         });
     });
 </script>

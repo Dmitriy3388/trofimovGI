@@ -1,5 +1,6 @@
 from django.db import models
 from mebel.models import Material
+from django.utils import timezone
 
 
 class Order(models.Model):
@@ -47,9 +48,25 @@ class OrderItem(models.Model):
                                 decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
     written_off = models.PositiveIntegerField(default=0)
+    operation_history = models.JSONField(default=list, blank=True)
 
     def __str__(self):
         return str(self.id)
 
     def get_cost(self):
         return self.price * self.quantity
+
+    def add_operation_to_history(self, operation_type, quantity, user, notes=None):
+        """Добавляет операцию в историю"""
+        operation = {
+            'type': operation_type,
+            'quantity': quantity,
+            'user': user.username,
+            'timestamp': timezone.now().isoformat(),
+            'notes': notes
+        }
+        self.operation_history.append(operation)
+        # Ограничиваем историю последними 10 операциями
+        if len(self.operation_history) > 10:
+            self.operation_history = self.operation_history[-10:]
+        self.save(update_fields=['operation_history'])
