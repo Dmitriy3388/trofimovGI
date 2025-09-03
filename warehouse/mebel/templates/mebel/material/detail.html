@@ -1,25 +1,153 @@
 {% extends "mebel/base.html" %}
 {% load static %}
 
-{% block title %}
-  {{ material.name }}
-{% endblock %}
+{% block title %}{{ material.name }}{% endblock %}
+
 {% block content %}
-  <div class="material-detail">
-    <img src="{% if material.image %}{{ material.image.url }}{% else %}
-    {% static "img/no_image.png" %}{% endif %}">
-    <h1>{{ material.name }}</h1>
-    <h2>
-      <a href="{{ material.category.get_absolute_url }}">
-        {{ material.category }}
-      </a>
-    </h2>
-    <p class="price">${{ material.price }}</p>
-    <form action="{% url "ordercart:ordercart_add" material.id %}" method="post">
-      {{ ordercart_material_form }}
-      {% csrf_token %}
-      <input type="submit" value="Add to ordercart">
-    </form>
-    {{ material.description|linebreaks }}
+  <h1>{{ material.name }}</h1>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>Информация о материале</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Категория:</strong> {{ material.category.name }}</p>
+          <p><strong>Цена:</strong> {{ material.price }} ₽</p>
+          <p><strong>Баланс на складе:</strong> {{ material.balance }}</p>
+          <p><strong>Зарезервировано:</strong> {{ material.reserved }}</p>
+          <p><strong>Доступно:</strong> <span style="color: {{ material.availability_status }}; font-weight: bold;">{{ material.available }}</span></p>
+          <p><strong>Нехватка:</strong> <span style="color: {% if material.lack > 0 %}red{% else %}green{% endif %}; font-weight: bold;">{{ material.lack }}</span></p>
+          {% if material.description %}
+          <p><strong>Описание:</strong> {{ material.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% if material.image %}
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>Изображение</h5>
+        </div>
+        <div class="card-body text-center">
+          <img src="{{ material.image.url }}" alt="{{ material.name }}" class="img-fluid" style="max-height: 300px;">
+        </div>
+      </div>
+    </div>
+    {% endif %}
   </div>
+
+  <!-- Кнопки действий -->
+  <div class="mt-4">
+    <div class="btn-group" role="group">
+      <!-- Кнопка списания -->
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#writeOffModal">
+        📉 Списать материалы
+      </button>
+
+      <!-- Кнопка поступления -->
+      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#receiptModal">
+        📈 Поступление материалов
+      </button>
+    </div>
+  </div>
+
+  <!-- История операций -->
+  <div class="mt-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>📊 История операций</h5>
+      </div>
+      <div class="card-body">
+        {% if operations %}
+          <div class="table-responsive">
+            <table class="table table-sm table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Дата</th>
+                  <th>Тип операции</th>
+                  <th>Количество</th>
+                  <th>Примечание</th>
+                  <th>Пользователь</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for op in operations %}
+                <tr>
+                  <td>{{ op.created|date:"d.m.Y H:i" }}</td>
+                  <td>
+                    <span class="badge {% if op.operation_type == 'receipt' %}bg-success{% else %}bg-danger{% endif %}">
+                      {{ op.get_operation_type_display }}
+                    </span>
+                  </td>
+                  <td>{{ op.quantity }} шт.</td>
+                  <td>{{ op.notes|default:"-" }}</td>
+                  <td>{{ op.user.username|default:"Система" }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted text-center">Операций пока нет</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно для списания -->
+  <div class="modal fade" id="writeOffModal" tabindex="-1" aria-labelledby="writeOffModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Контент будет загружен через AJAX -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно для поступления -->
+  <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Контент будет загружен через AJAX -->
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block domready %}
+<script>
+    // Для списания
+    $('#writeOffModal').on('show.bs.modal', function (event) {
+        var modal = $(this);
+        $.ajax({
+            url: "{% url 'mebel:material_write_off' material.id %}",
+            context: document.body,
+            success: function(response) {
+                modal.find('.modal-content').html(response);
+            },
+            error: function() {
+                modal.find('.modal-content').html('<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Не удалось загрузить форму списания.</p></div>');
+            }
+        });
+    });
+
+    // Для поступления
+    $('#receiptModal').on('show.bs.modal', function (event) {
+        var modal = $(this);
+        $.ajax({
+            url: "{% url 'mebel:material_receipt' material.id %}",
+            context: document.body,
+            success: function(response) {
+                modal.find('.modal-content').html(response);
+            },
+            error: function() {
+                modal.find('.modal-content').html('<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Не удалось загрузить форму поступления.</p></div>');
+            }
+        });
+    });
+</script>
 {% endblock %}

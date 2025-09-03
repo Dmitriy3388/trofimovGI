@@ -5,6 +5,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django import forms
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django import forms
 
 
 @login_required
@@ -55,6 +61,129 @@ def material_list(request, category_slug=None):
                    })
 
 
+
+
+
+# Форма для списания
+class MaterialWriteOffForm(forms.Form):
+    quantity = forms.IntegerField(
+        label='Количество для списания',
+        min_value=1,
+        max_value=10000,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите количество'
+        })
+    )
+    reason = forms.CharField(
+        label='Причина списания',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'Например: брак, порча, производственные потери'
+        })
+    )
+
+
+# Форма для поступления
+class MaterialReceiptForm(forms.Form):
+    quantity = forms.IntegerField(
+        label='Количество для поступления',
+        min_value=1,
+        max_value=10000,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите количество'
+        })
+    )
+    comment = forms.CharField(
+        label='Комментарий',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'Например: закупка, возврат, инвентаризация'
+        })
+    )
+
+
+from .models import MaterialOperation  # Добавьте импорт
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def material_write_off(request, material_id):
+    material = get_object_or_404(Material, id=material_id)
+
+    if request.method == 'POST':
+        form = MaterialWriteOffForm(request.POST)
+        if form.is_valid():
+            quantity = form.cleaned_data['quantity']
+            reason = form.cleaned_data['reason']
+
+            if quantity > material.balance:
+                messages.error(request, f'Нельзя списать {quantity}, на складе только {material.balance}')
+            else:
+                # Списание
+                material.balance -= quantity
+                material.save()
+
+                # Сохраняем в лог
+                MaterialOperation.objects.create(
+                    material=material,
+                    operation_type='write_off',
+                    quantity=quantity,
+                    notes=reason,
+                    user=request.user
+                )
+
+                messages.success(request, f'Списано {quantity} единиц материала "{material.name}"')
+                return redirect('mebel:material_detail', id=material.id, slug=material.slug)
+    else:
+        form = MaterialWriteOffForm()
+
+    return render(request, 'mebel/material/write_off_modal.html', {
+        'material': material,
+        'form': form,
+    })
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def material_receipt(request, material_id):
+    material = get_object_or_404(Material, id=material_id)
+
+    if request.method == 'POST':
+        form = MaterialReceiptForm(request.POST)
+        if form.is_valid():
+            quantity = form.cleaned_data['quantity']
+            comment = form.cleaned_data['comment']
+
+            # Поступление
+            material.balance += quantity
+            material.save()
+
+            # Сохраняем в лог
+            MaterialOperation.objects.create(
+                material=material,
+                operation_type='receipt',
+                quantity=quantity,
+                notes=comment,
+                user=request.user
+            )
+
+            messages.success(request, f'Поступило {quantity} единиц материала "{material.name}"')
+            return redirect('mebel:material_detail', id=material.id, slug=material.slug)
+    else:
+        form = MaterialReceiptForm()
+
+    return render(request, 'mebel/material/receipt_modal.html', {
+        'material': material,
+        'form': form,
+    })
+
+
 class MaterialListView(LoginRequiredMixin, ListView):
     model = Material
     context_object_name = 'materials'
@@ -87,12 +216,40 @@ class MaterialListView(LoginRequiredMixin, ListView):
         context['category'] = getattr(self, 'category', None)
         return context
 
+from django import forms
+from .models import Material
+
+class MaterialOperationForm(forms.Form):
+    """Базовая форма для операций с материалами"""
+    quantity = forms.IntegerField(
+        min_value=1,
+        label='Количество',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите количество'
+        })
+    )
+    notes = forms.CharField(
+        required=False,
+        label='Примечания',
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'Дополнительная информация...'
+        })
+    )
+
+
 @login_required
 def material_detail(request, id, slug):
     material = get_object_or_404(Material, id=id, slug=slug)
-    ordercart_material_form = OrderCartAddMaterialForm()
-    return render(request,
-                  'mebel/material/detail.html',
-                  {'material': material, 'ordercart_material_form': ordercart_material_form})
+    operations = material.operations.all()[:10]  # Последние 10 операций
+
+    context = {
+        'material': material,
+        'operations': operations,
+    }
+
+    return render(request, 'mebel/material/detail.html', context)
 
 

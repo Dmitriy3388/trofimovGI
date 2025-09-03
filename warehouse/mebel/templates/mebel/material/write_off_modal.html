@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="writeOffModalLabel">Списание материала: {{ material.name }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form method="post" action="{% url 'mebel:material_write_off' material.id %}">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div class="mb-3">
+            <p><strong>Текущий баланс:</strong> {{ material.balance }}</p>
+        </div>
+        {{ form.as_p }}
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="submit" class="btn btn-danger">Подтвердить списание</button>
+    </div>
+</form>
