@@ -1,10 +1,5 @@
-from django import forms
-from .models import Order
-from django import forms
 from mebel.models import Material
-from .models import OrderItem
 from django import forms
-from django.contrib.admin.widgets import AdminTextInputWidget, AdminIntegerFieldWidget
 from .models import Order, OrderItem
 
 
