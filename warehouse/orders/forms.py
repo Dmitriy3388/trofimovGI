@@ -12,7 +12,7 @@ class OrderItemForm(forms.ModelForm):
         })
     )
     quantity = forms.IntegerField(
-        min_value=1,
+        min_value=0,
         initial=1,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
