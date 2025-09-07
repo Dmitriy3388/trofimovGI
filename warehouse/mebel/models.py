@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.db.models import Sum  # Добавляем импорт
 from django.conf import settings
+from django.urls import reverse
 
 
 class Category(models.Model):
@@ -50,6 +51,12 @@ class Material(models.Model):
             models.Index(fields=['name']),
             models.Index(fields=['lack']),
         ]
+
+    def get_write_off_url(self):
+        return reverse('mebel:material_write_off', args=[self.id])
+
+    def get_receipt_url(self):
+        return reverse('mebel:material_receipt', args=[self.id])
 
     @classmethod
     def update_all_reserved_quantities(cls):

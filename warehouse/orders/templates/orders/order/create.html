@@ -6,16 +6,37 @@
   <h1>Create Order</h1>
 
   <form method="post" class="order-form">
-    {% csrf_token %}
+      {% csrf_token %}
+      {% include "includes/form_errors.html" with form=form %}
 
-    <div class="order-info">
-      <h3>Customer Information</h3>
-      {{ form.as_p }}
-    </div>
+      <!-- Обработка ошибок formsets -->
+      {% if formset.errors %}
+      <div class="alert alert-danger">
+          <h6>Ошибки в позициях заказа:</h6>
+          {{ formset.non_form_errors }}
+          {% for form in formset %}
+              {% if form.errors %}
+              <div class="mb-2">
+                  <strong>Позиция {{ forloop.counter }}:</strong>
+                  <ul class="mb-0">
+                      {% for field, errors in form.errors.items %}
+                      <li>{{ field }}: {{ errors|striptags }}</li>
+                      {% endfor %}
+                  </ul>
+              </div>
+              {% endif %}
+          {% endfor %}
+      </div>
+      {% endif %}
 
-    <div class="materials-section">
-      <h3>Materials</h3>
-      {{ formset.management_form }}
+      <div class="order-info">
+          <h3>Customer Information</h3>
+          {{ form.as_p }}
+      </div>
+
+      <div class="materials-section">
+          <h3>Materials</h3>
+          {{ formset.management_form }}
 
       <table class="materials-table">
         <thead>

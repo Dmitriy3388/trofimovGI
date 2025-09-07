@@ -1,17 +1,30 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from .models import Category, Material
 from django.views.generic import ListView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_POST
+from .models import MaterialOperation  # Добавьте импорт
 from django import forms
-from django.http import JsonResponse
-from django.views.decorators.http import require_http_methods
-from django import forms
+from .models import Material
 
+
+@require_POST  # Разрешаем только POST-запросы
+@login_required
+def refresh_materials(request):
+    """Отдельный view только для обновления данных"""
+    try:
+        # После рефакторинга сигналов эта строка может не понадобиться!
+        # Material.update_all_reserved_quantities()
+        messages.success(request, '✅ Данные материалов успешно обновлены!')
+    except Exception as e:
+        messages.error(request, f'❌ Ошибка при обновлении: {e}')
+
+    # Возвращаем на предыдущую страницу
+    return redirect(request.META.get('HTTP_REFERER', 'mebel:material_list'))
 
 @login_required
 def main_dashboard(request):
@@ -20,21 +33,9 @@ def main_dashboard(request):
 
 @login_required
 def material_list(request, category_slug=None):
-    # Обрабатываем запрос на обновление данных
-    if request.method == 'POST' and 'refresh_data' in request.POST:
-        try:
-            Material.update_all_reserved_quantities()
-            messages.success(request, '✅ Данные материалов успешно обновлены!')
-        except Exception as e:
-            messages.error(request, f'❌ Ошибка при обновлении: {e}')
+    """Только отображение данных, без обработки форм"""
 
-        # ПРАВИЛЬНЫЙ редирект
-        if category_slug:
-            return redirect('mebel:material_list_by_category', category_slug=category_slug)
-        else:
-            return redirect('mebel:material_list')
-
-    # Остальной код без изменений
+    # ТОЛЬКО GET-логика
     sort_by = request.GET.get('sort', 'name')
     order = request.GET.get('order', 'asc')
 
@@ -108,7 +109,7 @@ class MaterialReceiptForm(forms.Form):
     )
 
 
-from .models import MaterialOperation  # Добавьте импорт
+
 
 
 @login_required
@@ -215,9 +216,6 @@ class MaterialListView(LoginRequiredMixin, ListView):
         context['categories'] = Category.objects.all()
         context['category'] = getattr(self, 'category', None)
         return context
-
-from django import forms
-from .models import Material
 
 class MaterialOperationForm(forms.Form):
     """Базовая форма для операций с материалами"""

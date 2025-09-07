@@ -99,22 +99,14 @@
   </div>
 
   <!-- Модальное окно для списания -->
-  <div class="modal fade" id="writeOffModal" tabindex="-1" aria-labelledby="writeOffModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Контент будет загружен через AJAX -->
-      </div>
-    </div>
-  </div>
+  {% with modal_id="writeOffModal" modal_ajax_url=material.get_write_off_url %}
+  {% include "includes/modal.html" %}
+  {% endwith %}
 
   <!-- Модальное окно для поступления -->
-  <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Контент будет загружен через AJAX -->
-      </div>
-    </div>
-  </div>
+  {% with modal_id="receiptModal" modal_ajax_url=material.get_receipt_url %}
+  {% include "includes/modal.html" %}
+  {% endwith %}
 
 {% endblock %}
 

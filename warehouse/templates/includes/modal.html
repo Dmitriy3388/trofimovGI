@@ -1,0 +1,43 @@
+<!-- templates/includes/modal_simple.html -->
+<div class="modal fade" id="{{ modal_id|default:'defaultModal' }}"
+     tabindex="-1"
+     aria-labelledby="{{ modal_id|default:'defaultModal' }}Label"
+     aria-hidden="true">
+
+    <div class="modal-dialog {{ modal_size|default:'' }}">
+        <div class="modal-content">
+            <!-- Контент будет загружен через AJAX -->
+        </div>
+    </div>
+</div>
+
+<script>
+// Скрипт для AJAX-загрузки контента
+$(document).ready(function(){
+    $('#{{ modal_id|default:"defaultModal" }}').on('show.bs.modal', function (event) {
+        var modal = $(this);
+        var ajaxUrl = "{{ modal_ajax_url|default:'#' }}";
+
+        if(ajaxUrl !== '#') {
+            $.ajax({
+                url: ajaxUrl,
+                context: document.body,
+                success: function(response) {
+                    modal.find('.modal-content').html(response);
+                },
+                error: function() {
+                    modal.find('.modal-content').html(
+                        '<div class="modal-header">' +
+                        '<h5 class="modal-title">Ошибка</h5>' +
+                        '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                        '<p class="text-danger">Не удалось загрузить содержимое.</p>' +
+                        '</div>'
+                    );
+                }
+            });
+        }
+    });
+});
+</script>

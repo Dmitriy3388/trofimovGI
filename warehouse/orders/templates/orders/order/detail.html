@@ -148,14 +148,10 @@
   </div>
 </div>
 
-  <!-- Модальное окно (пустое, контент подгрузится через AJAX) -->
-  <div class="modal fade" id="writeOffModal" tabindex="-1" aria-labelledby="writeOffModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <!-- Контент будет загружен сюда через AJAX -->
-      </div>
-    </div>
-  </div>
+  <!-- Модальное окно -->
+  {% with modal_id="writeOffModal" modal_size="modal-xl" modal_ajax_url=order.get_write_off_url %}
+  {% include "includes/modal.html" %}
+  {% endwith %}
 
   <style>
     .card {

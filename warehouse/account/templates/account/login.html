@@ -6,8 +6,11 @@
   <h1>Авторизация</h1>
   <p>Пожалуйстя, заполните форму для авторизации:</p>
   <form method="post">
-    {{ form.as_p }}
-    {% csrf_token %}
-    <p><input type="submit" value="Log in"></p>
+      {% csrf_token %}
+
+      {% include "includes/form_errors.html" %}
+
+      {{ form.as_p }}
+      <button type="submit">Отправить</button>
   </form>
 {% endblock %}

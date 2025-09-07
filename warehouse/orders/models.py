@@ -1,6 +1,7 @@
 from django.db import models
 from mebel.models import Material
 from django.utils import timezone
+from django.urls import reverse
 
 
 class Order(models.Model):
@@ -31,6 +32,9 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Order {self.id}'
+
+    def get_write_off_url(self):
+        return reverse('orders:order_write_off', args=[self.id])
 
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.items.all())

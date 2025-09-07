@@ -13,7 +13,19 @@ from django.core.paginator import Paginator
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django import forms
+from django.forms import inlineformset_factory
+from .models import Order, OrderItem
+from .forms import OrderItemForm
 
+# Добавьте это в начале файла, после импортов
+OrderItemFormSet = inlineformset_factory(
+    Order,
+    OrderItem,
+    form=OrderItemForm,
+    extra=1,
+    can_delete=True,
+    fields=['material', 'quantity']
+)
 
 @login_required
 @require_http_methods(["GET", "POST"])
@@ -101,8 +113,8 @@ def order_create(request):
                 if item_form.cleaned_data and not item_form.cleaned_data.get('DELETE', False):
                     material = item_form.cleaned_data['material']
                     quantity = item_form.cleaned_data['quantity']
-                    material.reserved += quantity  # Увеличиваем зарезервированное количество
-                    material.save()
+                    #material.reserved += quantity  # Увеличиваем зарезервированное количество
+                    #material.save()
                     OrderItem.objects.create(
                         order=order,
                         material=item_form.cleaned_data['material'],

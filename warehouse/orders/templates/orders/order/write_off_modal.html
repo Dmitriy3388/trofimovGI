@@ -8,6 +8,8 @@
         <p class="text-danger"><strong>Внимание:</strong> Можно списать только зарезервированное количество.</p>
 
         {% csrf_token %}
+        {% include "includes/form_errors.html" %}
+
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead class="table-light">
@@ -28,9 +30,6 @@
                         <td>
                             {{ field }}
                             <div class="form-text">Макс.: {{ material_data.reserved }}</div>
-                            {% if field.errors %}
-                            <div class="text-danger small">{{ field.errors }}</div>
-                            {% endif %}
                         </td>
                     </tr>
                     {% endwith %}
@@ -47,36 +46,36 @@
                 </div>
                 <div class="card-body">
                     {% if operation_history %}
-                        <div class="table-responsive">
-                            <table class="table table-sm table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Дата</th>
-                                        <th>Тип операции</th>
-                                        <th>Количество</th>
-                                        <th>Примечание</th>
-                                        <th>Пользователь</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for op in operation_history %}
-                                    <tr>
-                                        <td>{{ op.timestamp|date:"d.m.Y H:i" }}</td>
-                                        <td>
-                                            <span class="badge {% if op.type == 'receipt' %}bg-success{% else %}bg-danger{% endif %}">
-                                                {% if op.type == 'receipt' %}Поступление{% else %}Списание{% endif %}
-                                            </span>
-                                        </td>
-                                        <td>{{ op.quantity }} шт.</td>
-                                        <td>{{ op.notes|default:"-" }}</td>
-                                        <td>{{ op.user|default:"Система" }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Тип операции</th>
+                                    <th>Количество</th>
+                                    <th>Примечание</th>
+                                    <th>Пользователь</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for op in operation_history %}
+                                <tr>
+                                    <td>{{ op.timestamp|date:"d.m.Y H:i" }}</td>
+                                    <td>
+                                        <span class="badge {% if op.type == 'receipt' %}bg-success{% else %}bg-danger{% endif %}">
+                                            {% if op.type == 'receipt' %}Поступление{% else %}Списание{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>{{ op.quantity }} шт.</td>
+                                    <td>{{ op.notes|default:"-" }}</td>
+                                    <td>{{ op.user|default:"Система" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                     {% else %}
-                        <p class="text-muted text-center">Операций пока нет</p>
+                    <p class="text-muted text-center">Операций пока нет</p>
                     {% endif %}
                 </div>
             </div>
@@ -96,21 +95,21 @@ $(document).ready(function(){
         let errorMessage = '';
 
         $('input[type="number"]').each(function() {
-            const max = parseInt($(this).attr('max')) || 0; // Максимум из зарезервированного
+            const max = parseInt($(this).attr('max')) || 0;
             const val = parseInt($(this).val()) || 0;
-            const balance = parseInt($(this).data('balance')) || 0; // Общий баланс на складе
+            const balance = parseInt($(this).data('balance')) || 0;
             const materialName = $(this).closest('tr').find('td:first').text().trim();
 
             if (val < 0) {
-                errorMessage += `• ${materialName}: количество не может быть отрицательным\n`;
+                errorMessage += '• ' + materialName + ': количество не может быть отрицательным\n';
                 isValid = false;
             }
             if (val > max) {
-                errorMessage += `• ${materialName}: нельзя списать больше чем зарезервировано для этого заказа (${max})\n`;
+                errorMessage += '• ' + materialName + ': нельзя списать больше чем зарезервировано для этого заказа (' + max + ')\n';
                 isValid = false;
             }
             if (val > balance) {
-                errorMessage += `• ${materialName}: нельзя списать больше чем есть на складе (${balance})\n`;
+                errorMessage += '• ' + materialName + ': нельзя списать больше чем есть на складе (' + balance + ')\n';
                 isValid = false;
             }
         });

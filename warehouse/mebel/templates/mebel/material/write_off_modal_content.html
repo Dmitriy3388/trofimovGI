@@ -1,9 +1,9 @@
+<!-- mebel/material/write_off_modal_content.html -->
 <div class="modal-header">
-    <h5 class="modal-title" id="receiptModalLabel">Поступление материала: {{ material.name }}</h5>
+    <h5 class="modal-title">Списание материала: {{ material.name }}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-
-<form method="post" action="{% url 'mebel:material_receipt' material.id %}">
+<form method="post" action="{% url 'mebel:material_write_off' material.id %}">
     <div class="modal-body">
         {% csrf_token %}
         {% include "includes/form_errors.html" %}
@@ -14,6 +14,6 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-        <button type="submit" class="btn btn-success">Подтвердить поступление</button>
+        <button type="submit" class="btn btn-danger">Подтвердить списание</button>
     </div>
 </form>

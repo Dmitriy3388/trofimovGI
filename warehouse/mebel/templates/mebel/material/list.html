@@ -5,7 +5,7 @@
 
 <!-- Кнопка обновления данных -->
 <div class="mb-4">
-    <form method="post" action="{% if category %}{% url 'mebel:material_list_by_category' category.slug %}{% else %}{% url 'mebel:material_list' %}{% endif %}">
+    <form method="post" action="{% url 'mebel:refresh_materials' %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">
             🔄 Обновить данные
