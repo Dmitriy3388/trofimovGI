@@ -70,10 +70,11 @@ class MaterialWriteOffForm(forms.Form):
     quantity = forms.IntegerField(
         label='Количество для списания',
         min_value=1,
-        max_value=10000,
+        max_value=10000,  # Установим максимальное значение
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Введите количество'
+            'placeholder': 'Введите количество',
+            'max': 10000  # HTML5 валидация
         })
     )
     reason = forms.CharField(
@@ -85,6 +86,13 @@ class MaterialWriteOffForm(forms.Form):
             'placeholder': 'Например: брак, порча, производственные потери'
         })
     )
+
+    def __init__(self, *args, **kwargs):
+        self.material = kwargs.pop('material', None)
+        super().__init__(*args, **kwargs)
+        if self.material:
+            # Динамически устанавливаем максимальное значение
+            self.fields['quantity'].widget.attrs['max'] = self.material.balance
 
 
 # Форма для поступления
@@ -109,7 +117,7 @@ class MaterialReceiptForm(forms.Form):
     )
 
 
-
+from django.http import JsonResponse, HttpResponseBadRequest  # Добавить импорт
 
 
 @login_required
@@ -118,31 +126,28 @@ def material_write_off(request, material_id):
     material = get_object_or_404(Material, id=material_id)
 
     if request.method == 'POST':
-        form = MaterialWriteOffForm(request.POST)
+        form = MaterialWriteOffForm(request.POST, material=material)
         if form.is_valid():
             quantity = form.cleaned_data['quantity']
             reason = form.cleaned_data['reason']
 
-            if quantity > material.balance:
-                messages.error(request, f'Нельзя списать {quantity}, на складе только {material.balance}')
-            else:
-                # Списание
-                material.balance -= quantity
-                material.save()
+            # Списание
+            material.balance -= quantity
+            material.save()
 
-                # Сохраняем в лог
-                MaterialOperation.objects.create(
-                    material=material,
-                    operation_type='write_off',
-                    quantity=quantity,
-                    notes=reason,
-                    user=request.user
-                )
+            # Сохраняем в лог
+            MaterialOperation.objects.create(
+                material=material,
+                operation_type='write_off',
+                quantity=quantity,
+                notes=reason,
+                user=request.user
+            )
 
-                messages.success(request, f'Списано {quantity} единиц материала "{material.name}"')
-                return redirect('mebel:material_detail', id=material.id, slug=material.slug)
+            messages.success(request, f'Списано {quantity} единиц материала "{material.name}"')
+            return redirect('mebel:material_detail', id=material.id, slug=material.slug)
     else:
-        form = MaterialWriteOffForm()
+        form = MaterialWriteOffForm(material=material)
 
     return render(request, 'mebel/material/write_off_modal.html', {
         'material': material,

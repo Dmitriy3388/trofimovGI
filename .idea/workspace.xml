@@ -4,34 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлено цветовое отображение у пользователя, таблица но не реализована сортировка">
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/migrations/0003_materialoperation.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/write_off_modal_content.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/orders/migrations/0002_alter_order_paid.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/orders/migrations/0003_orderitem_written_off.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/orders/migrations/0004_orderitem_operation_history.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/templates/includes/form_errors.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/templates/includes/modal.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/templates/includes/pagination.html" afterDir="false" />
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="проблема с ошибками в форме списания материалов">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/receipt_modal.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/receipt_modal.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/write_off_modal.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/write_off_modal.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/signals.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/signals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/write_off_modal.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/write_off_modal.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -213,7 +190,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753732530741</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="проблема с ошибками в форме списания материалов">
+      <option name="closed" value="true" />
+      <created>1757271510130</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1757271510130</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -238,6 +223,7 @@
     <MESSAGE value="Продолжение стилей. Админка цвет нехватки, автоматический расчет" />
     <MESSAGE value="Перенос на фронтэнд значения автоматического расчета" />
     <MESSAGE value="Добавлено цветовое отображение у пользователя, таблица но не реализована сортировка" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлено цветовое отображение у пользователя, таблица но не реализована сортировка" />
+    <MESSAGE value="проблема с ошибками в форме списания материалов" />
+    <option name="LAST_COMMIT_MESSAGE" value="проблема с ошибками в форме списания материалов" />
   </component>
 </project>

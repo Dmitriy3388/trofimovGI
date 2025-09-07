@@ -1,14 +1,14 @@
-<!-- write_off_modal.html -->
 <div class="modal-header">
     <h5 class="modal-title">Списание материала: {{ material.name }}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form method="post" action="{% url 'mebel:material_write_off' material.id %}">
+<form method="post" action="{% url 'mebel:material_write_off' material.id %}" onsubmit="return validateWriteOffForm(this)">
     <div class="modal-body">
         {% csrf_token %}
         {% include "includes/form_errors.html" %}
         <div class="mb-3">
             <p><strong>Текущий баланс:</strong> {{ material.balance }}</p>
+            <p><strong>Максимум можно списать:</strong> {{ material.balance }}</p>
         </div>
         {{ form.as_p }}
     </div>
@@ -17,3 +17,19 @@
         <button type="submit" class="btn btn-danger">Подтвердить списание</button>
     </div>
 </form>
+
+<script>
+function validateWriteOffForm(form) {
+    const quantityInput = form.querySelector('input[name="quantity"]');
+    const maxQuantity = parseInt(quantityInput.getAttribute('max'));
+    const quantity = parseInt(quantityInput.value);
+
+    if (quantity > maxQuantity) {
+        alert(`Нельзя списать ${quantity}, на складе только ${maxQuantity}`);
+        quantityInput.focus();
+        return false;
+    }
+
+    return true;
+}
+</script>

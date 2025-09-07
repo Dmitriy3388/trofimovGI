@@ -112,34 +112,70 @@
 
 {% block domready %}
 <script>
-    // Для списания
-    $('#writeOffModal').on('show.bs.modal', function (event) {
-        var modal = $(this);
-        $.ajax({
-            url: "{% url 'mebel:material_write_off' material.id %}",
-            context: document.body,
-            success: function(response) {
-                modal.find('.modal-content').html(response);
-            },
-            error: function() {
-                modal.find('.modal-content').html('<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Не удалось загрузить форму списания.</p></div>');
-            }
-        });
-    });
+// Для списания
+$('#writeOffModal').on('show.bs.modal', function (event) {
+    var modal = $(this);
+    $.ajax({
+        url: "{% url 'mebel:material_write_off' material.id %}",
+        context: document.body,
+        success: function(response) {
+            modal.find('.modal-content').html(response);
 
-    // Для поступления
-    $('#receiptModal').on('show.bs.modal', function (event) {
-        var modal = $(this);
-        $.ajax({
-            url: "{% url 'mebel:material_receipt' material.id %}",
-            context: document.body,
-            success: function(response) {
-                modal.find('.modal-content').html(response);
-            },
-            error: function() {
-                modal.find('.modal-content').html('<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Не удалось загрузить форму поступления.</p></div>');
-            }
-        });
+            // Обработка формы через AJAX
+            modal.find('form').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function(data) {
+                        // Просто заменяем содержимое модального окна
+                        modal.find('.modal-content').html(data);
+                    },
+                    error: function() {
+                        alert('Ошибка при отправке формы');
+                    }
+                });
+            });
+        },
+        error: function() {
+            modal.find('.modal-content').html('<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Не удалось загрузить форму списания.</p></div>');
+        }
     });
+});
+
+// Аналогично для поступления
+$('#receiptModal').on('show.bs.modal', function (event) {
+    var modal = $(this);
+    $.ajax({
+        url: "{% url 'mebel:material_receipt' material.id %}",
+        context: document.body,
+        success: function(response) {
+            modal.find('.modal-content').html(response);
+
+            modal.find('form').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function(data) {
+                        modal.find('.modal-content').html(data);
+                    },
+                    error: function() {
+                        alert('Ошибка при отправке формы');
+                    }
+                });
+            });
+        },
+        error: function() {
+            modal.find('.modal-content').html('<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Не удалось загрузить форму поступления.</p></div>');
+        }
+    });
+});
 </script>
 {% endblock %}
