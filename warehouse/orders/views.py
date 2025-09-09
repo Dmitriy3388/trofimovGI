@@ -23,6 +23,12 @@ from django.utils import timezone
 from django.utils import timezone
 from datetime import datetime
 import dateutil.parser
+from django.db.models import Count
+from datetime import datetime
+from django.views.decorators.http import require_GET
+
+from django.http import JsonResponse
+from django.utils import timezone
 
 # Добавьте это в начале файла, после импортов
 OrderItemFormSet = inlineformset_factory(
@@ -109,13 +115,25 @@ def order_write_off(request, order_id):
         'operation_history': operation_history[:10]  # Последние 10 операций
     })
 
+
 @login_required
 def order_list(request):
     orders = Order.objects.all().order_by('-created')
-    paginator = Paginator(orders, 10)  # 10 заказов на страницу
+    paginator = Paginator(orders, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'orders/order/list.html', {'page_obj': page_obj})
+
+    # Получаем текущий год
+    current_year = datetime.now().year
+    # Создаем список последних 5 лет
+    years = list(range(current_year - 4, current_year + 1))
+    years.reverse()
+
+    return render(request, 'orders/order/list.html', {
+        'page_obj': page_obj,
+        'years': years,
+        'current_year': current_year,
+    })
 
 @login_required
 def order_create(request):
@@ -158,10 +176,6 @@ def order_detail(request, order_id):
     return render(request, 'orders/order/detail.html', {
         'order': order,
     })
-
-
-
-
 
 # ... остальные импорты ...
 
@@ -270,3 +284,22 @@ def admin_order_pdf(request, order_id):
         stylesheets=[weasyprint.CSS(
             settings.STATIC_ROOT / 'css/pdf.css')])
     return response
+
+
+@require_GET
+def order_statistics(request):
+    year = request.GET.get('year', timezone.now().year)
+    try:
+        year = int(year)
+    except (TypeError, ValueError):
+        year = timezone.now().year
+
+    orders = Order.objects.filter(created__year=year)
+
+    statistics = {
+        'fully_paid': orders.filter(paid=Order.PaymentStatus.FULLY_PAID).count(),
+        'partially_paid': orders.filter(paid=Order.PaymentStatus.PARTIALLY_PAID).count(),
+        'not_paid': orders.filter(paid=Order.PaymentStatus.NOT_PAID).count(),
+    }
+
+    return JsonResponse(statistics)
