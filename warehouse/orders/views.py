@@ -19,6 +19,10 @@ from .forms import OrderItemForm
 from django.db.models import Sum, F
 from django.db import transaction
 from collections import defaultdict
+from django.utils import timezone
+from django.utils import timezone
+from datetime import datetime
+import dateutil.parser
 
 # Добавьте это в начале файла, после импортов
 OrderItemFormSet = inlineformset_factory(
@@ -79,17 +83,25 @@ def order_write_off(request, order_id):
     operation_history = []
     for item in order_items:
         for op in item.operation_history:
+            # Преобразуем строку в datetime объект
+            timestamp = op.get('timestamp')
+            if isinstance(timestamp, str):
+                try:
+                    timestamp = dateutil.parser.isoparse(timestamp)
+                except (ValueError, TypeError):
+                    timestamp = None
+
             operation_history.append({
                 'material': item.material.name,
-                'type': op['type'],
-                'quantity': op['quantity'],
-                'user': op['user'],
-                'timestamp': op['timestamp'],
+                'type': op.get('type', ''),
+                'quantity': op.get('quantity', 0),
+                'user': op.get('user', ''),
+                'timestamp': timestamp,  # ← Теперь это datetime объект
                 'notes': op.get('notes', '')
             })
 
     # Сортируем по времени (новые сверху)
-    operation_history.sort(key=lambda x: x['timestamp'], reverse=True)
+    operation_history.sort(key=lambda x: x['timestamp'] or timezone.now(), reverse=True)
 
     return render(request, 'orders/order/write_off_modal.html', {
         'order': order,

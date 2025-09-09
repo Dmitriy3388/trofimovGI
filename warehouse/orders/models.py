@@ -60,13 +60,15 @@ class OrderItem(models.Model):
     def get_cost(self):
         return self.price * self.quantity
 
+    from datetime import datetime
+
     def add_operation_to_history(self, operation_type, quantity, user, notes=None):
         """Добавляет операцию в историю"""
         operation = {
             'type': operation_type,
             'quantity': quantity,
             'user': user.username,
-            'timestamp': timezone.now().isoformat(),
+            'timestamp': timezone.now().isoformat(),  # Сохраняем как ISO строку
             'notes': notes
         }
         self.operation_history.append(operation)
