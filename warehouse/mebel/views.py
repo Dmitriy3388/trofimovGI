@@ -9,7 +9,13 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.http import require_POST
 from .models import MaterialOperation  # Добавьте импорт
 from django import forms
+from django.db.models import Count, F, Q
+from django.db.models.functions import TruncDate, TruncMonth, TruncYear
+from datetime import datetime, timedelta
+from orders.models import Order
 from .models import Material
+import json
+from django.utils.safestring import mark_safe
 
 
 @require_POST  # Разрешаем только POST-запросы
@@ -26,10 +32,65 @@ def refresh_materials(request):
     # Возвращаем на предыдущую страницу
     return redirect(request.META.get('HTTP_REFERER', 'mebel:material_list'))
 
+
 @login_required
 def main_dashboard(request):
-    return render(request, 'mebel/main_dashboard.html')
+    # Данные для графика заказов
+    period = request.GET.get('period', 'month')  # week, month, year
 
+    today = datetime.now().date()
+    if period == 'week':
+        start_date = today - timedelta(days=7)
+        trunc_func = TruncDate('created')
+    elif period == 'month':
+        start_date = today - timedelta(days=30)
+        trunc_func = TruncDate('created')
+    else:  # year
+        start_date = today - timedelta(days=365)
+        trunc_func = TruncMonth('created')
+
+    # Получаем данные для графика
+    orders_data = Order.objects.filter(
+        created__date__gte=start_date
+    ).annotate(
+        period_field=trunc_func
+    ).values('period_field').annotate(
+        count=Count('id')
+    ).order_by('period_field')
+
+    # Подготавливаем данные для графика
+    dates = []
+    counts = []
+
+    for item in orders_data:
+        if period == 'year':
+            dates.append(item['period_field'].strftime('%Y-%m'))
+        else:
+            dates.append(item['period_field'].strftime('%Y-%m-%d'))
+        counts.append(item['count'])
+
+    # Конвертируем данные в JSON для безопасной передачи в JavaScript
+    dates_json = mark_safe(json.dumps(dates))
+    counts_json = mark_safe(json.dumps(counts))
+
+    # Материалы с текущей нехваткой
+    current_shortage = Material.objects.filter(lack__gt=0)
+
+    # Материалы с прогнозируемой нехваткой (баланс меньше 110% от зарезервированного)
+    predicted_shortage = Material.objects.filter(
+        Q(balance__gt=0) &
+        Q(balance__lt=F('reserved') * 1.1) &
+        Q(lack=0)
+    )
+
+    return render(request, 'mebel/main_dashboard.html', {
+        'dates_json': dates_json,
+        'counts_json': counts_json,
+        'current_shortage': current_shortage,
+        'predicted_shortage': predicted_shortage,
+        'period': period,
+        'has_data': len(dates) > 0  # Флаг наличия данных
+    })
 
 @login_required
 def material_list(request, category_slug=None):
@@ -254,5 +315,4 @@ def material_detail(request, id, slug):
     }
 
     return render(request, 'mebel/material/detail.html', context)
-
 
