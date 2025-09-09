@@ -1,35 +1,28 @@
 {% extends "mebel/base.html" %}
 
-{% load static %}
-
 {% block title %}Order List{% endblock %}
 
-{% block extra_css %}
-<!-- Подключаем Chart.js в extra_css чтобы загрузился раньше -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-{% endblock %}
-
 {% block content %}
-<h1>Order List</h1>
+  <h1>Order List</h1>
 
-<table class="order-list">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Имя заказа</th>
-      <th>Дата создания</th>
-      <th>Цена</th>
-      <th>Оплата</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for order in page_obj %}
-    <tr class="clickable-row" data-href="{% url 'orders:order_detail' order.id %}">
-      <td>{{ order.id }}</td>
-      <td>{{ order.first_name }} {{ order.last_name }}</td>
-      <td>{{ order.created|date:"d.m.Y H:i" }}</td>
-      <td>${{ order.get_total_cost }}</td>
-      <td>
+  <table class="order-list">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Имя заказа</th>
+        <th>Дата создания</th>
+        <th>Цена</th>
+        <th>Оплата</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in page_obj %}
+      <tr class="clickable-row" data-href="{% url 'orders:order_detail' order.id %}">
+        <td>{{ order.id }}</td>
+        <td>{{ order.first_name }} {{ order.last_name }}</td>
+        <td>{{ order.created|date:"d.m.Y H:i" }}</td>
+        <td>${{ order.get_total_cost }}</td>
+        <td>
         {% if order.paid == 'fully_paid' %}
         <span style="color: green; font-weight: bold;">✓ Оплачено</span>
         {% elif order.paid == 'partially_paid' %}
@@ -37,165 +30,42 @@
         {% else %}
         <span style="color: red; font-weight: bold;">✗ Не оплачено</span>
         {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<!-- Пагинация -->
-{% include "pagination.html" %}
-
-<!-- График статистики -->
-<div class="mt-5">
-  <h2>Статистика статусов оплаты</h2>
-  <div class="form-group mb-3">
-    <label for="yearSelect">Выберите год:</label>
-    <select class="form-control" id="yearSelect" style="width: auto; display: inline-block; margin-left: 10px;">
-      {% for year in years %}
-        <option value="{{ year }}" {% if year == current_year %}selected{% endif %}>{{ year }}</option>
+        </td>
+      </tr>
       {% endfor %}
-    </select>
-  </div>
-  <div id="chart-container">
-    <canvas id="orderStatsChart" width="400" height="200"></canvas>
-  </div>
-</div>
+    </tbody>
+  </table>
 
-<style>
-  .order-list {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-  }
-  .order-list th, .order-list td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
-  .clickable-row {
-    cursor: pointer;
-  }
-  .clickable-row:hover {
-    background-color: #f5f5f5;
-  }
-  #orderStatsChart {
-    margin-top: 20px;
-    max-width: 100%;
-  }
-</style>
-{% endblock %}
+  <!-- Пагинация -->
+  {% include "pagination.html" %}
 
-{% block domready %}
-<script>
-// Глобальные переменные
-let chart = null;
-let chartInitialized = false;
-
-// Основная функция инициализации
-function initializeChart() {
-    if (chartInitialized) return;
-    chartInitialized = true;
-
-    console.log('Initializing chart...');
-
-    // Проверяем доступность Chart.js
-    if (typeof Chart === 'undefined') {
-        console.error('Chart.js not available');
-        return;
+  <style>
+    .order-list {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
     }
-
-    // Получаем элементы
-    const ctx = document.getElementById('orderStatsChart');
-    const yearSelect = document.getElementById('yearSelect');
-
-    if (!ctx || !yearSelect) {
-        console.error('Required elements not found');
-        return;
+    .order-list th, .order-list td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
     }
-
-    // Функция загрузки данных
-    function loadChartData(year) {
-        const url = `{% url 'orders:order_statistics' %}?year=${year}`;
-
-        fetch(url, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            credentials: 'same-origin'
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Network error');
-            return response.json();
-        })
-        .then(data => {
-            // Уничтожаем предыдущий график
-            if (chart) {
-                chart.destroy();
-            }
-
-            // Создаем новый график
-            chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Полностью оплачены', 'Частично оплачены', 'Не оплачены'],
-                    datasets: [{
-                        label: `Заказы в ${year} году`,
-                        data: [data.fully_paid, data.partially_paid, data.not_paid],
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.7)',
-                            'rgba(255, 206, 86, 0.7)',
-                            'rgba(255, 99, 132, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(255, 99, 132, 1)'
-                        ],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: {
-                        duration: 300 // Уменьшаем время анимации
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1,
-                                precision: 0
-                            }
-                        }
-                    }
-                }
-            });
-        })
-        .catch(error => {
-            console.error('Error loading data:', error);
-        });
+    .clickable-row {
+      cursor: pointer;
     }
+    .clickable-row:hover {
+      background-color: #f5f5f5;
+    }
+  </style>
 
-    // Загрузка初始数据
-    loadChartData(yearSelect.value);
-
-    // Обработчик изменения года - только один раз!
-    yearSelect.addEventListener('change', function() {
-        loadChartData(this.value);
-    });
-
-    // Обработчики для строк таблицы (только один раз)
-    const rows = document.querySelectorAll('.clickable-row');
-    rows.forEach(row => {
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const rows = document.querySelectorAll('.clickable-row');
+      rows.forEach(row => {
         row.addEventListener('click', function() {
-            window.location.href = this.dataset.href;
+          window.location.href = this.dataset.href;
         });
+      });
     });
-}
-
-// Запускаем инициализацию с задержкой
-setTimeout(initializeChart, 100);
-</script>
+  </script>
 {% endblock %}

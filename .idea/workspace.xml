@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="сплошные ошибки в списке заказов">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="На главную страницу добавлены графики и справка по материалам">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +57,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "Python.forms.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Reverting in refactoring",
+    "git-widget-placeholder": "refactoring",
     "last_opened_file_path": "C:/Users/Dmitriy/PycharmProjects/trofimovGI",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
@@ -237,7 +238,23 @@
       <option name="project" value="LOCAL" />
       <updated>1757442299836</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Форма деталей по заказу исправлена. Добавлена информация по общему балансу">
+      <option name="closed" value="true" />
+      <created>1757442933243</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1757442933243</updated>
+    </task>
+    <task id="LOCAL-00020" summary="На главную страницу добавлены графики и справка по материалам">
+      <option name="closed" value="true" />
+      <created>1757444893731</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1757444893731</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -268,7 +285,7 @@
     <MESSAGE value="Форма редактирования заказа исправлена. Добавлена возможность добавление материала, дублирующие позиции суммируются" />
     <MESSAGE value="Форма списания заказа исправлена. Дата списания формируется" />
     <MESSAGE value="Форма деталей по заказу исправлена. Добавлена информация по общему балансу" />
-    <MESSAGE value="сплошные ошибки в списке заказов" />
-    <option name="LAST_COMMIT_MESSAGE" value="сплошные ошибки в списке заказов" />
+    <MESSAGE value="На главную страницу добавлены графики и справка по материалам" />
+    <option name="LAST_COMMIT_MESSAGE" value="На главную страницу добавлены графики и справка по материалам" />
   </component>
 </project>
