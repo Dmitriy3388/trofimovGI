@@ -16,6 +16,9 @@ from django import forms
 from django.forms import inlineformset_factory
 from .models import Order, OrderItem
 from .forms import OrderItemForm
+from django.db.models import Sum, F
+from django.db import transaction
+from collections import defaultdict
 
 # Добавьте это в начале файла, после импортов
 OrderItemFormSet = inlineformset_factory(
@@ -145,9 +148,10 @@ def order_detail(request, order_id):
     })
 
 
-from django import forms
-from django.forms import inlineformset_factory
 
+
+
+# ... остальные импорты ...
 
 @login_required
 @require_http_methods(["GET", "POST"])
@@ -171,26 +175,59 @@ def order_edit(request, order_id):
         if form.is_valid() and formset.is_valid():
             try:
                 # Сохраняем основную информацию заказа
-                order = form.save()
+                order = form.save(commit=False)
 
-                # Сохраняем formset
-                instances = formset.save(commit=False)
+                # Используем транзакцию для обеспечения целостности данных
+                with transaction.atomic():
+                    order.save()
 
-                # Обрабатываем новые и измененные элементы
-                for instance in instances:
-                    if isinstance(instance, OrderItem):
-                        # Устанавливаем цену из материала
-                        instance.price = instance.material.price
-                        instance.save()
+                    # Создаем словарь для агрегации данных по материалам
+                    materials_dict = defaultdict(lambda: {
+                        'quantity': 0,
+                        'written_off': 0,
+                        'operation_history': []
+                    })
 
-                        # Обновляем резерв материала
-                        instance.material.update_reserved_quantity()
+                    # Собираем данные из форм
+                    for form_in_formset in formset:
+                        if form_in_formset.cleaned_data and not form_in_formset.cleaned_data.get('DELETE', False):
+                            material = form_in_formset.cleaned_data['material']
+                            quantity = form_in_formset.cleaned_data['quantity']
 
-                # Удаляем отмеченные для удаления элементы
-                for deleted_item in formset.deleted_objects:
-                    if isinstance(deleted_item, OrderItem):
-                        material = deleted_item.material
-                        deleted_item.delete()
+                            # Если материал уже есть в словаре, суммируем значения
+                            if material.id in materials_dict:
+                                materials_dict[material.id]['quantity'] += quantity
+                                # Для существующих записей сохраняем историю операций
+                                if form_in_formset.instance.pk:
+                                    materials_dict[material.id]['written_off'] = form_in_formset.instance.written_off
+                                    materials_dict[material.id][
+                                        'operation_history'] = form_in_formset.instance.operation_history
+                            else:
+                                # Для новых материалов используем переданные значения
+                                materials_dict[material.id] = {
+                                    'quantity': quantity,
+                                    'written_off': form_in_formset.instance.written_off if form_in_formset.instance.pk else 0,
+                                    'operation_history': form_in_formset.instance.operation_history if form_in_formset.instance.pk else []
+                                }
+
+                    # Удаляем все существующие элементы заказа
+                    OrderItem.objects.filter(order=order).delete()
+
+                    # Создаем новые элементы заказа с агрегированными данными
+                    for material_id, data in materials_dict.items():
+                        material = Material.objects.get(id=material_id)
+                        OrderItem.objects.create(
+                            order=order,
+                            material=material,
+                            quantity=data['quantity'],
+                            price=material.price,
+                            written_off=data['written_off'],
+                            operation_history=data['operation_history']
+                        )
+
+                    # Обновляем резерв материалов
+                    for material_id in materials_dict:
+                        material = Material.objects.get(id=material_id)
                         material.update_reserved_quantity()
 
                 messages.success(request, 'Заказ успешно обновлен.')
@@ -199,7 +236,6 @@ def order_edit(request, order_id):
             except Exception as e:
                 messages.error(request, f'Ошибка при сохранении: {e}')
         else:
-            # Показываем ошибки валидации
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
         form = OrderForm(instance=order)

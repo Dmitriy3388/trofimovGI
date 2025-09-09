@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="ошибки с формами списания решены.">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="решена ошибка с уведомлениями">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,7 +205,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757274094450</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="решена ошибка с уведомлениями">
+      <option name="closed" value="true" />
+      <created>1757274911078</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1757274911078</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -230,6 +240,7 @@
     <MESSAGE value="Добавлено цветовое отображение у пользователя, таблица но не реализована сортировка" />
     <MESSAGE value="проблема с ошибками в форме списания материалов" />
     <MESSAGE value="ошибки с формами списания решены." />
-    <option name="LAST_COMMIT_MESSAGE" value="ошибки с формами списания решены." />
+    <MESSAGE value="решена ошибка с уведомлениями" />
+    <option name="LAST_COMMIT_MESSAGE" value="решена ошибка с уведомлениями" />
   </component>
 </project>
