@@ -5,6 +5,8 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'mebel/css/dashboard.css' %}">
+<!-- Подключаем Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -12,8 +14,8 @@
   <h1>Мой Склад</h1>
   <div class="profile-actions">
     <p>
-      Welcome to your dashboard. You can <a href="{% url 'account:edit' %}">edit your profile</a>
-      or <a href="{% url 'account:password_change' %}">change your password</a>.
+      Добро пожаловать в систему управления складом. Вы можете <a href="{% url 'account:edit' %}">редактировать свой профиль</a>
+      или <a href="{% url 'account:password_change' %}">изменить пароль</a>.
     </p>
   </div>
 
@@ -31,5 +33,106 @@
       <a href="{% url 'orders:order_list' %}" class="btn btn-primary">Просмотр Заказов</a>
     </div>
   </div>
+    <div class="row mt-4">
+        <!-- График динамики заказов -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Динамика создания заказов</h5>
+                    <div class="btn-group">
+                        <a href="?period=week" class="btn btn-sm {% if period == 'week' %}btn-primary{% else %}btn-outline-primary{% endif %}">Неделя</a>
+                        <a href="?period=month" class="btn btn-sm {% if period == 'month' %}btn-primary{% else %}btn-outline-primary{% endif %}">Месяц</a>
+                        <a href="?period=year" class="btn btn-sm {% if period == 'year' %}btn-primary{% else %}btn-outline-primary{% endif %}">Год</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if has_data %}
+                        <canvas id="ordersChart" width="400" height="200"></canvas>
+                    {% else %}
+                        <p class="text-muted">Нет данных для отображения графика</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Материалы с нехваткой -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Нехватка материалов</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Текущая нехватка -->
+                    <h6>Текущая нехватка</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for material in current_shortage %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ material.get_absolute_url }}">{{ material.name }}</a>
+                            <span class="badge bg-danger rounded-pill">{{ material.lack }} шт.</span>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item">Нет материалов с текущей нехваткой</li>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Прогнозируемая нехватка -->
+                    <h6 class="mt-3">Прогнозируемая нехватка</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for material in predicted_shortage %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ material.get_absolute_url }}">{{ material.name }}</a>
+                            <span class="badge bg-warning rounded-pill">
+                                {{ material.balance|add:"-"|add:material.reserved }} из {{ material.balance }} шт.
+                            </span>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item">Нет материалов с прогнозируемой нехваткой</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block domready %}
+{% if has_data %}
+<script>
+    // Инициализация графика
+    const ctx = document.getElementById('ordersChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ dates_json|safe }},
+            datasets: [{
+                label: 'Количество заказов',
+                data: {{ counts_json|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
 {% endblock %}
