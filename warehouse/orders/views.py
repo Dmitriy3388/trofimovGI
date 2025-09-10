@@ -23,6 +23,9 @@ from django.utils import timezone
 from django.utils import timezone
 from datetime import datetime
 import dateutil.parser
+from django.db.models import Count
+import json
+from django.utils.safestring import mark_safe
 
 # Добавьте это в начале файла, после импортов
 OrderItemFormSet = inlineformset_factory(
@@ -109,13 +112,52 @@ def order_write_off(request, order_id):
         'operation_history': operation_history[:10]  # Последние 10 операций
     })
 
+
 @login_required
 def order_list(request):
     orders = Order.objects.all().order_by('-created')
-    paginator = Paginator(orders, 10)  # 10 заказов на страницу
+    paginator = Paginator(orders, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'orders/order/list.html', {'page_obj': page_obj})
+
+    # Данные для графика
+    status_stats = Order.objects.values('paid').annotate(count=Count('id')).order_by('paid')
+
+    status_labels = []
+    status_data = []
+    background_colors = []
+    border_colors = []
+
+    # Цвета для каждого статуса
+    color_map = {
+        'not_paid': ('rgba(255, 99, 132, 0.2)', 'rgba(255, 99, 132, 1)'),
+        'partially_paid': ('rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)'),
+        'fully_paid': ('rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)')
+    }
+
+    for stat in status_stats:
+        status_label = dict(Order.PaymentStatus.choices).get(stat['paid'])
+        status_labels.append(status_label)
+        status_data.append(stat['count'])
+
+        # Получаем цвета из color_map
+        bg_color, border_color = color_map.get(stat['paid'], ('rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 1)'))
+        background_colors.append(bg_color)
+        border_colors.append(border_color)
+
+    # Конвертируем в JSON
+    status_labels_json = mark_safe(json.dumps(status_labels))
+    status_data_json = mark_safe(json.dumps(status_data))
+    background_colors_json = mark_safe(json.dumps(background_colors))
+    border_colors_json = mark_safe(json.dumps(border_colors))
+
+    return render(request, 'orders/order/list.html', {
+        'page_obj': page_obj,
+        'status_labels_json': status_labels_json,
+        'status_data_json': status_data_json,
+        'background_colors_json': background_colors_json,
+        'border_colors_json': border_colors_json
+    })
 
 @login_required
 def order_create(request):

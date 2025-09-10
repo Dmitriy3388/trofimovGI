@@ -41,44 +41,106 @@
 {% block contents %}
 <div class="container mt-4">
   <h2 class="mb-4">Список материалов</h2>
-  <table class="table table-hover">
-    <thead class="thead-light">
-      <tr>
-        <th>Название</th>
-        <th>Цена</th>
-        <th>Баланс</th>
-        <th>Зарезервировано</th>
-        <th>Доступно</th>
-        <th>
-          <a href="?sort=lack&order={% if current_sort == 'lack' and current_order == 'asc' %}desc{% else %}asc{% endif %}"
-             style="text-decoration: none; color: inherit;">
-            Нехватка
-            {% if current_sort == 'lack' %}
-              {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
-            {% endif %}
-          </a>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for material in materials %}
-      <tr>
-        <td><a href="{{ material.get_absolute_url }}">{{ material.name }}</a></td>
-        <td>{{ material.price }} ₽</td>
-        <td>{{ material.balance }}</td>
-        <td>{{ material.reserved }}</td>
-        <td style="color: {{ material.availability_status }}; font-weight: bold;">
-          {{ material.available }}
-        </td>
-        <td style="color: {% if material.lack > 0 %}red{% else %}green{% endif %}; font-weight: bold;">
-          {{ material.lack }}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th>Название</th>
+          <th>Цена</th>
+          <th>Баланс</th>
+          <th>Зарезервировано</th>
+          <th>Доступно</th>
+          <th>
+            <a href="?sort=lack&order={% if current_sort == 'lack' and current_order == 'asc' %}desc{% else %}asc{% endif %}"
+               style="text-decoration: none; color: inherit;">
+              Нехватка
+              {% if current_sort == 'lack' %}
+                {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+              {% endif %}
+            </a>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for material in materials %}
+        <tr class="clickable-row" data-href="{{ material.get_absolute_url }}">
+          <td><strong>{{ material.name }}</strong></td>
+          <td>{{ material.price }} ₽</td>
+          <td>{{ material.balance }}</td>
+          <td>{{ material.reserved }}</td>
+          <td>
+            <span style="color: {{ material.availability_status }}; font-weight: bold;">
+              {{ material.available }}
+            </span>
+          </td>
+          <td>
+            <span style="color: {% if material.lack > 0 %}red{% else %}green{% endif %}; font-weight: bold;">
+              {{ material.lack }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
 
 {% include "mebel/material/pagination.html" with page=page_obj %}
+
+<style>
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .table th {
+    background: #f8f9fa;
+    padding: 1rem;
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  .table td {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .clickable-row:hover {
+    background-color: #f8f9fa;
+  }
+
+  .btn-group .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('.clickable-row');
+    rows.forEach(row => {
+      row.addEventListener('click', function(e) {
+        // Игнорируем клики по кнопкам действий
+        if (!e.target.closest('.btn-group')) {
+          window.location.href = this.dataset.href;
+        }
+      });
+    });
+  });
+</script>
 {% endblock %}
