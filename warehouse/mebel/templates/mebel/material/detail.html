@@ -43,17 +43,22 @@
 
   <!-- Кнопки действий -->
   <div class="mt-4">
-    <div class="btn-group" role="group">
-      <!-- Кнопка списания -->
-      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#writeOffModal">
-        📉 Списать материалы
-      </button>
+      <div class="btn-group" role="group">
+          <!-- Кнопка списания -->
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#writeOffModal">
+              📉 Списать материалы
+          </button>
 
-      <!-- Кнопка поступления -->
-      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#receiptModal">
-        📈 Поступление материалов
-      </button>
-    </div>
+          <!-- Кнопка поступления -->
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#receiptModal">
+              📈 Поступление материалов
+          </button>
+
+          <!-- Новая кнопка редактирования -->
+          <a href="{% url 'mebel:material_edit' material.id %}" class="btn btn-warning">
+              ✏️ Редактировать материал
+          </a>
+      </div>
   </div>
 
   <!-- История операций -->

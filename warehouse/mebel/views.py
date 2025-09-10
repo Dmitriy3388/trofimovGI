@@ -13,6 +13,7 @@ from django.db.models import Count, F, Q
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 from datetime import datetime, timedelta
 from orders.models import Order
+from .forms import MaterialEditForm  # Добавить импорт
 from .models import Material
 import json
 from django.utils.safestring import mark_safe
@@ -316,3 +317,22 @@ def material_detail(request, id, slug):
 
     return render(request, 'mebel/material/detail.html', context)
 
+
+
+@login_required
+def material_edit(request, material_id):
+    material = get_object_or_404(Material, id=material_id)
+
+    if request.method == 'POST':
+        form = MaterialEditForm(request.POST, request.FILES, instance=material)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Материал "{material.name}" успешно обновлен!')
+            return redirect('mebel:material_detail', id=material.id, slug=material.slug)
+    else:
+        form = MaterialEditForm(instance=material)
+
+    return render(request, 'mebel/material/edit.html', {
+        'form': form,
+        'material': material
+    })

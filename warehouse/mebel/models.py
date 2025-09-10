@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.db.models import Sum  # Добавляем импорт
 from django.conf import settings
 from django.urls import reverse
+from django.utils.text import slugify
 
 
 class Category(models.Model):
@@ -111,7 +112,8 @@ class Material(models.Model):
             self.save(update_fields=['reserved'])
 
     def save(self, *args, **kwargs):
-        """Переопределённое сохранение с автоматическим расчётом"""
+        if not self.slug:
+            self.slug = slugify(self.name)
         self.lack = max(0, self.reserved - self.balance)
         self.full_clean()  # Вызывает clean()
         super().save(*args, **kwargs)

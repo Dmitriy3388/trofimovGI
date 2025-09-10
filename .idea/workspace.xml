@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Исправлена таблица материалов . Добавлены графики на таблицу заказов">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлено изображение в детали материала">
+      <change afterPath="$PROJECT_DIR$/warehouse/mebel/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/edit.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -276,7 +281,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757529021823</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Добавлено изображение в детали материала">
+      <option name="closed" value="true" />
+      <created>1757529740943</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1757529740943</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -311,6 +324,7 @@
     <MESSAGE value="Revert &quot;сплошные ошибки в списке заказов&quot;&#10;&#10;This reverts commit 3eae3ecb" />
     <MESSAGE value="Главная страница с графиками" />
     <MESSAGE value="Исправлена таблица материалов . Добавлены графики на таблицу заказов" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправлена таблица материалов . Добавлены графики на таблицу заказов" />
+    <MESSAGE value="Добавлено изображение в детали материала" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлено изображение в детали материала" />
   </component>
 </project>
