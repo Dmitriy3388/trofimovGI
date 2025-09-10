@@ -26,18 +26,19 @@
       </div>
     </div>
 
-    {% if material.image %}
+    <!-- Секция изображения - всегда отображается -->
     <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h5>Изображение</h5>
+        <div class="card">
+            <div class="card-header">
+                <h5>Изображение</h5>
+            </div>
+            <div class="card-body text-center">
+                <!-- Используем изображение по умолчанию, если нет своего -->
+                <img src="{% if material.image %}{{ material.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
+                     alt="{{ material.name }}" class="img-fluid" style="max-height: 300px;">
+            </div>
         </div>
-        <div class="card-body text-center">
-          <img src="{{ material.image.url }}" alt="{{ material.name }}" class="img-fluid" style="max-height: 300px;">
-        </div>
-      </div>
     </div>
-    {% endif %}
   </div>
 
   <!-- Кнопки действий -->
