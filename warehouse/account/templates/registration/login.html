@@ -1,18 +1,16 @@
-{% extends "base.html" %}
+{% extends "mebel/base.html" %}
 
 {% block title %}Log-in{% endblock %}
 
 {% block content %}
-  <h1>Log-in</h1>
+  <h1>Авторизация</h1>
   {% if form.errors %}
     <p>
-      Your username and password didn't match.
-      Please try again.
+        Ошибка в имени пользователя или неверный пароль
     </p>
   {% else %}
     <p>
-      Please, use the following form to log-in.
-      If you don't have an account <a href="{% url "account:register" %}">register here</a>.
+      Пожалуйста, введите данные авторизации, выданные вам администратором:
     </p>
   {% endif %}
   <div class="login-form">
@@ -20,11 +18,11 @@
       {{ form.as_p }}
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ next }}" />
-      <p><input type="submit" value="Log-in"></p>
+      <p><input type="submit" value="Войти"></p>
     </form>
     <p>
       <a href="{% url "account:password_reset" %}">
-        Forgotten your password?
+        Забыли свой пароль?
       </a>
     </p>
   </div>
