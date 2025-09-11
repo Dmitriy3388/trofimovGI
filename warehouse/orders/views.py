@@ -22,6 +22,7 @@ from collections import defaultdict
 from django.utils import timezone
 from django.utils import timezone
 from datetime import datetime
+from warehouse.utils import managers_required, mto_required
 import dateutil.parser
 from django.db.models import Count
 import json
@@ -37,7 +38,7 @@ OrderItemFormSet = inlineformset_factory(
     fields=['material', 'quantity']
 )
 
-@login_required
+@mto_required
 @require_http_methods(["GET", "POST"])
 def order_write_off(request, order_id):
     order = get_object_or_404(Order, id=order_id)
@@ -159,7 +160,7 @@ def order_list(request):
         'border_colors_json': border_colors_json
     })
 
-@login_required
+@managers_required
 def order_create(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -202,12 +203,7 @@ def order_detail(request, order_id):
     })
 
 
-
-
-
-# ... остальные импорты ...
-
-@login_required
+@managers_required
 @require_http_methods(["GET", "POST"])
 def order_edit(request, order_id):
     order = get_object_or_404(Order, id=order_id)
@@ -301,7 +297,7 @@ def order_edit(request, order_id):
         'order': order,
     })
 
-@staff_member_required
+@login_required
 def admin_order_pdf(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     html = render_to_string('orders/order/pdf.html',

@@ -79,3 +79,6 @@ def edit(request):
                   'account/edit.html',
                   {'user_form': user_form,
                    'profile_form': profile_form})
+
+def custom_permission_denied_view(request, exception=None):
+    return render(request, '403.html', status=403)

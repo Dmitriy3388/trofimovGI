@@ -13,6 +13,7 @@ from django.db.models import Count, F, Q
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 from datetime import datetime, timedelta
 from orders.models import Order
+from warehouse.utils import managers_required, mto_required
 from .forms import MaterialEditForm  # Добавить импорт
 from .models import Material
 import json
@@ -182,7 +183,7 @@ class MaterialReceiptForm(forms.Form):
 from django.http import JsonResponse, HttpResponseBadRequest  # Добавить импорт
 
 
-@login_required
+@mto_required
 @require_http_methods(["GET", "POST"])
 def material_write_off(request, material_id):
     material = get_object_or_404(Material, id=material_id)
@@ -217,7 +218,7 @@ def material_write_off(request, material_id):
     })
 
 
-@login_required
+@mto_required
 @require_http_methods(["GET", "POST"])
 def material_receipt(request, material_id):
     material = get_object_or_404(Material, id=material_id)
@@ -319,7 +320,7 @@ def material_detail(request, id, slug):
 
 
 
-@login_required
+@mto_required
 def material_edit(request, material_id):
     material = get_object_or_404(Material, id=material_id)
 

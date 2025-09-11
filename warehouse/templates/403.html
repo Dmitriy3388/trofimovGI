@@ -1,0 +1,9 @@
+{% extends "mebel/base.html" %}
+
+{% block title %}Доступ запрещен{% endblock %}
+
+{% block content %}
+    <h1>Ошибка 403: Доступ запрещен</h1>
+    <p>У вашей учетной записи недостаточно прав для просмотра этой страницы.</p>
+    <a href="{% url 'mebel:main_dashboard' %}" class="btn btn-primary">Вернуться на главную</a>
+{% endblock %}
