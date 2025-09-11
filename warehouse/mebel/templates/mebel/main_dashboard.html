@@ -23,12 +23,14 @@
     <div class="action-card">
       <a href="{% url 'account:profile' %}" class="btn btn-primary">Мой профиль</a>
     </div>
-    <div class="action-card">
-      <a href="{% url 'orders:order_create' %}" class="btn btn-primary">Создание заказа</a>
-    </div>
-    <div class="action-card">
-      <a href="{% url 'mebel:material_list' %}" class="btn btn-primary">Просмотр Материалов</a>
-    </div>
+    {% if user.groups.all.0.name == 'Менеджеры' or user.is_superuser %}
+      <div class="action-card">
+        <a href="{% url 'orders:order_create' %}" class="btn btn-primary">Создание заказа</a>
+      </div>
+    {% endif %}
+      <div class="action-card">
+        <a href="{% url 'mebel:material_list' %}" class="btn btn-primary">Просмотр Материалов</a>
+      </div>
     <div class="action-card">
       <a href="{% url 'orders:order_list' %}" class="btn btn-primary">Просмотр Заказов</a>
     </div>

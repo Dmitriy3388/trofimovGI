@@ -43,6 +43,7 @@
 
   <!-- Кнопки действий -->
   <div class="mt-4">
+      {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
       <div class="btn-group" role="group">
           <!-- Кнопка списания -->
           <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#writeOffModal">
@@ -59,6 +60,7 @@
               ✏️ Редактировать материал
           </a>
       </div>
+      {% endif %}
   </div>
 
   <!-- История операций -->
