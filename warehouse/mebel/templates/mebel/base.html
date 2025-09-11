@@ -33,7 +33,14 @@
                     {% if user.is_authenticated %}
                         <span class="user-info">
                             Пользователь: <strong>{{ user.get_full_name|default:user.username }}</strong> |
-                            Статус: {% if user.is_staff %}Администратор{% else %}Пользователь{% endif %}
+                            Статус:
+                            <strong>
+                            {% if user.groups.all %}
+                                {{ user.groups.all.0.name }}
+                            {% else %}
+                                {% if user.is_staff %}Администратор{% else %}Не определен{% endif %}
+                            {% endif %}
+                            </strong>
                         </span>
                     {% else %}
                         <span class="user-info">Неавторизованный пользователь</span>
