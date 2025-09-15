@@ -1,4 +1,5 @@
 {% extends "mebel/base.html" %}
+{% load order_extras %}
 
 {% block title %}Create Order{% endblock %}
 
@@ -52,11 +53,11 @@
           <tr class="material-form">
             <td>{{ form.material }}</td>
             <td>{{ form.quantity }}</td>
-            <td class="price-cell">
+            <td class="price-cell" data-material-id="{{ form.material.value }}">
               {% if form.material.value %}
-                {{ form.material.value.price|default:"-" }}
+                <span class="price-placeholder">{{ form.material.value|get_material_price }} руб.</span>
               {% else %}
-                -
+                —
               {% endif %}
             </td>
             <td>{% if form.DELETE %}{{ form.DELETE }}{% endif %}</td>
@@ -69,50 +70,127 @@
     </div>
 
     <div class="total-price">
-      <strong>Total: </strong><span id="total-price">0</span> $
+      <strong>Total: </strong><span id="total-price">0</span> руб.
     </div>
 
     <input type="submit" value="Place Order" class="submit-btn">
   </form>
 
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Add new material row
-    document.getElementById('add-more').addEventListener('click', function() {
-      const formCount = document.getElementById('id_items-TOTAL_FORMS');
-      const newFormNum = parseInt(formCount.value);
-      const newRow = document.querySelector('.material-form').cloneNode(true);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Преобразуем Python словарь в JavaScript объект
+        const materialPrices = JSON.parse('{{ material_prices_json|escapejs }}');
 
-      // Update all attributes
-      newRow.innerHTML = newRow.innerHTML.replace(/items-\d+-/g, `items-${newFormNum}-`);
-      newRow.innerHTML = newRow.innerHTML.replace(/\[\d+\]/g, `[${newFormNum}]`);
+        // Получаем элемент управления formset
+        const totalFormsInput = document.getElementById('id_items-TOTAL_FORMS');
+        let formCount = parseInt(totalFormsInput.value);
 
-      document.getElementById('materials-tbody').appendChild(newRow);
-      formCount.value = newFormNum + 1;
-    });
+        // Функция для добавления новой строки
+        document.getElementById('add-more').addEventListener('click', function() {
+            // Находим первую строку для клонирования
+            const formRow = document.querySelector('.material-form');
+            if (!formRow) return;
 
-    // Calculate total price
-    function updateTotal() {
-      let total = 0;
-      document.querySelectorAll('.material-form').forEach(row => {
-        const quantity = row.querySelector('input[name*="quantity"]')?.value || 0;
-        const price = row.querySelector('.price-cell').textContent;
-        if (price && !isNaN(price)) {
-          total += parseFloat(price) * parseInt(quantity);
+            // Клонируем строку
+            const newRow = formRow.cloneNode(true);
+
+            // Обновляем имена полей в новой строке
+            const newRowHtml = newRow.innerHTML.replace(
+                /items-\d+-/g,
+                `items-${formCount}-`
+            );
+            newRow.innerHTML = newRowHtml;
+
+            // Очищаем значения полей
+            newRow.querySelectorAll('input, select').forEach(function(input) {
+                if (input.name.includes('material') || input.name.includes('quantity')) {
+                    input.value = '';
+                }
+                if (input.type === 'checkbox' && input.name.includes('DELETE')) {
+                    input.checked = false;
+                }
+            });
+
+            // Обновляем отображение цены
+            const priceCell = newRow.querySelector('.price-cell');
+            priceCell.innerHTML = '<span class="price-placeholder">—</span>';
+            priceCell.dataset.materialId = '';
+            priceCell.dataset.price = '0';
+
+            // Добавляем новую строку в таблицу
+            document.getElementById('materials-tbody').appendChild(newRow);
+
+            // Увеличиваем счетчик форм
+            formCount++;
+            totalFormsInput.value = formCount;
+
+            // Добавляем обработчики событий для новой строки
+            addEventListenersToRow(newRow);
+        });
+
+        // Функция добавления обработчиков событий к строке
+        function addEventListenersToRow(row) {
+            const materialSelect = row.querySelector('select[name*="-material"]');
+            const quantityInput = row.querySelector('input[name*="-quantity"]');
+
+            if (materialSelect) {
+                materialSelect.addEventListener('change', function() {
+                    updateRowPrice(row);
+                });
+            }
+
+            if (quantityInput) {
+                quantityInput.addEventListener('input', updateTotal);
+            }
         }
-      });
-      document.getElementById('total-price').textContent = total.toFixed(2);
-    }
 
-    // Update total when materials change
-    document.addEventListener('change', function(e) {
-      if (e.target.name.includes('material') || e.target.name.includes('quantity')) {
+        // Функция обновления цены для конкретной строки
+        function updateRowPrice(row) {
+            const materialSelect = row.querySelector('select[name*="-material"]');
+            const priceCell = row.querySelector('.price-cell');
+
+            if (materialSelect && materialSelect.value) {
+                const price = materialPrices[materialSelect.value] || '0.00';
+                priceCell.innerHTML = `<span class="price-placeholder">${price} руб.</span>`;
+                priceCell.dataset.price = price;
+                priceCell.dataset.materialId = materialSelect.value;
+
+                // Обновляем общую сумму
+                updateTotal();
+            } else {
+                priceCell.innerHTML = '<span class="price-placeholder">—</span>';
+                priceCell.dataset.price = '0';
+                updateTotal();
+            }
+        }
+
+        // Функция обновления общей суммы
+        function updateTotal() {
+            let total = 0;
+
+            document.querySelectorAll('tr.material-form').forEach(row => {
+                const priceCell = row.querySelector('.price-cell');
+                const quantityInput = row.querySelector('input[name*="-quantity"]');
+
+                if (priceCell && quantityInput) {
+                    const price = parseFloat(priceCell.dataset.price || 0);
+                    const quantity = parseFloat(quantityInput.value || 0);
+                    total += price * quantity;
+                }
+            });
+
+            document.getElementById('total-price').textContent = total.toFixed(2);
+        }
+
+        // Инициализация цен и обработчиков событий при загрузке
+        document.querySelectorAll('tr.material-form').forEach(row => {
+            addEventListenersToRow(row);
+            updateRowPrice(row);
+        });
+
+        // Обновляем общую сумму при загрузке
         updateTotal();
-      }
     });
-
-    updateTotal(); // Initial calculation
-  });
   </script>
 
   <style>
@@ -132,6 +210,7 @@
     color: white;
     border: none;
     cursor: pointer;
+    margin-top: 10px;
   }
   .total-price {
     margin: 20px 0;

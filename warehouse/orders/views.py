@@ -160,35 +160,51 @@ def order_list(request):
         'border_colors_json': border_colors_json
     })
 
+
 @managers_required
 def order_create(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
         formset = OrderItemFormSet(request.POST, prefix='items')
+
+        # Удаляем пустые формы из formset
         if form.is_valid() and formset.is_valid():
-            order = form.save()
-            for item_form in formset:
-                if item_form.cleaned_data and not item_form.cleaned_data.get('DELETE', False):
+            # Фильтруем формы, удаляя пустые
+            forms_to_save = [
+                form for form in formset
+                if form.cleaned_data and not form.cleaned_data.get('DELETE', False)
+                   and form.cleaned_data.get('material') and form.cleaned_data.get('quantity')
+            ]
+
+            if forms_to_save:
+                order = form.save()
+                for item_form in forms_to_save:
                     material = item_form.cleaned_data['material']
                     quantity = item_form.cleaned_data['quantity']
-                    #material.reserved += quantity  # Увеличиваем зарезервированное количество
-                    #material.save()
+
                     OrderItem.objects.create(
                         order=order,
-                        material=item_form.cleaned_data['material'],
-                        quantity=item_form.cleaned_data['quantity'],
-                        price=item_form.cleaned_data['material'].price
+                        material=material,
+                        quantity=quantity,
+                        price=material.price
                     )
-            return redirect('orders:order_detail', order.id)
+                return redirect('orders:order_detail', order.id)
+            else:
+                # Если нет ни одного материала, показываем ошибку
+                form.add_error(None, 'Добавьте хотя бы один материал в заказ')
     else:
         form = OrderForm()
         formset = OrderItemFormSet(prefix='items')
 
+    materials = Material.objects.all()
+    material_prices = {m.id: str(m.price) for m in materials}
+
     return render(request, 'orders/order/create.html', {
         'form': form,
         'formset': formset,
+        'materials': materials,
+        'material_prices_json': json.dumps(material_prices),
         'total_price': 0.00,
-        'materials': Material.objects.all()
     })
 
 @staff_member_required
