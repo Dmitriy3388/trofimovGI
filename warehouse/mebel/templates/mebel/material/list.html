@@ -38,6 +38,8 @@
     </ul>
 </div>
 
+
+
 {% block contents %}
 <div class="container mt-4">
   <h2 class="mb-4">Список материалов</h2>
@@ -86,7 +88,8 @@
 </div>
 {% endblock %}
 
-{% include "mebel/material/pagination.html" with page=page_obj %}
+<!-- Пагинация -->
+{% include "pagination.html" %}
 
 <style>
   .table {

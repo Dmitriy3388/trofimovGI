@@ -4,6 +4,9 @@ from django.db.models import Sum  # Добавляем импорт
 from django.conf import settings
 from django.urls import reverse
 from django.utils.text import slugify
+from transliterate import slugify as transliterate_slugify
+from django.db.models.functions import Lower, Replace
+from django.db.models import Value
 
 
 class Category(models.Model):
@@ -15,6 +18,12 @@ class Category(models.Model):
         ordering = ['name']
         indexes = [
             models.Index(fields=['name']),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                Lower(Replace('name', Value(' '), Value(''))),
+                name='unique_normalized_name'
+            )
         ]
         verbose_name = 'category'
         verbose_name_plural = 'categories'
@@ -33,7 +42,7 @@ class Material(models.Model):
                                  related_name='materials',
                                  on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200)
+    slug = models.SlugField(max_length=200, blank=True)
     image = models.ImageField(upload_to='materials/%Y/%m/%d',
                               blank=True)
     description = models.TextField(blank=True)
@@ -113,7 +122,7 @@ class Material(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = transliterate_slugify(self.name)
         self.lack = max(0, self.reserved - self.balance)
         self.full_clean()  # Вызывает clean()
         super().save(*args, **kwargs)

@@ -30,9 +30,16 @@
       <div class="action-card">
         <a href="{% url 'mebel:material_list' %}" class="btn btn-primary">Просмотр Материалов</a>
       </div>
+      <!-- Добавить этот блок в раздел с основными действиями -->
+    {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
+    <div class="action-card">
+        <a href="{% url 'mebel:material_create' %}" class="btn btn-primary">Добавить материал</a>
+    </div>
+    {% endif %}
     <div class="action-card">
       <a href="{% url 'orders:order_list' %}" class="btn btn-primary">Просмотр Заказов</a>
     </div>
+
   </div>
     <div class="row mt-4">
         <!-- График динамики заказов -->

@@ -14,10 +14,13 @@ from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 from datetime import datetime, timedelta
 from orders.models import Order
 from warehouse.utils import managers_required, mto_required
-from .forms import MaterialEditForm  # Добавить импорт
+from .forms import MaterialEditForm, MaterialCreateForm  # Добавить импорт
 from .models import Material
 import json
 from django.utils.safestring import mark_safe
+from django.utils.text import slugify
+from transliterate import slugify as transliterate_slugify
+from django.core.paginator import Paginator
 
 
 @require_POST  # Разрешаем только POST-запросы
@@ -110,6 +113,9 @@ def material_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
     materials = Material.objects.all().order_by(order_by)
+    paginator = Paginator(materials, 15)  # Измените с 3 на 15
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
@@ -118,6 +124,7 @@ def material_list(request, category_slug=None):
     return render(request,
                   'mebel/material/list.html',
                   {'category': category,
+                   'page_obj': page_obj,
                    'categories': categories,
                    'materials': materials,
                    'current_sort': sort_by,
@@ -125,7 +132,22 @@ def material_list(request, category_slug=None):
                    })
 
 
+@mto_required
+def material_create(request):
+    if request.method == 'POST':
+        form = MaterialCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            material = form.save(commit=False)
+            # Генерируем slug, если он не был создан автоматически
+            if not material.slug:
+                material.slug = transliterate_slugify(material.name)
+            material.save()
+            messages.success(request, f'Материал "{material.name}" успешно создан!')
+            return redirect('mebel:material_detail', id=material.id, slug=material.slug)
+    else:
+        form = MaterialCreateForm()
 
+    return render(request, 'mebel/material/create.html', {'form': form})
 
 
 # Форма для списания
@@ -257,7 +279,7 @@ class MaterialListView(LoginRequiredMixin, ListView):
     model = Material
     context_object_name = 'materials'
     template_name = 'mebel/material/list.html'
-    paginate_by = 3
+    paginate_by = 15
 
     def post(self, request, *args, **kwargs):
         """Обработка кнопки обновления"""
