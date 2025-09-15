@@ -4,21 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Разграничение доступа статусбар">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Проработано приложение аккаунт 1">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_04_09_2025_22_05_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_04_09_2025_22_05__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/register_done.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/register_done.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/logged_out.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/logged_out.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/password_ change_done.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/password_ change_done.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/password_change_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/password_change_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/password_reset_complete.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/password_reset_complete.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/password_reset_confirm.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/password_reset_confirm.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/password_reset_done.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/password_reset_done.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/password_reset_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/password_reset_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -376,7 +365,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757616954315</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Проработано приложение аккаунт 1">
+      <option name="closed" value="true" />
+      <created>1757620104419</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1757620104419</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -406,7 +403,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="11" />
     <MESSAGE value="Дашборд исключен. Остался мейн дашборд. Проблема: не редактируется заказ" />
     <MESSAGE value="Общий дашбоард. (проблемы: 1 разные дашборды с разной функциональностью)" />
     <MESSAGE value="мейн дошбоард" />
@@ -431,6 +427,7 @@
     <MESSAGE value="Разграничение доступа без ошибок 1" />
     <MESSAGE value="Разграничение доступа сокрытие кнопок" />
     <MESSAGE value="Разграничение доступа статусбар" />
-    <option name="LAST_COMMIT_MESSAGE" value="Разграничение доступа статусбар" />
+    <MESSAGE value="Проработано приложение аккаунт 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="Проработано приложение аккаунт 1" />
   </component>
 </project>
