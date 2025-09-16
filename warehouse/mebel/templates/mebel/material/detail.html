@@ -106,6 +106,13 @@
     </div>
   </div>
 
+  <!-- Кнопка возврата -->
+  <div class="d-flex justify-content-between">
+    <a href="{% url 'mebel:material_list' %}" class="btn btn-secondary">
+      <i class="bi bi-arrow-left"></i> Вернуться к списку материалов
+    </a>
+  </div>
+
   <!-- Модальное окно для списания -->
   {% with modal_id="writeOffModal" modal_ajax_url=material.get_write_off_url %}
   {% include "includes/modal.html" %}
