@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Отердактирован базовый шаблон">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/views.py" afterDir="false" />
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Переставлены графики">
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -405,7 +404,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758038870978</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Переставлены графики">
+      <option name="closed" value="true" />
+      <created>1758043355377</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1758043355377</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -435,7 +442,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Навигация между приложениями закончена" />
     <MESSAGE value="редактирование профилей" />
     <MESSAGE value="Стили профиля" />
     <MESSAGE value="Продолжение стилей. Админка цвет нехватки, автоматический расчет" />
@@ -460,6 +466,7 @@
     <MESSAGE value="В форме создания заказа считается цена" />
     <MESSAGE value="Добавлена кнопка создания материалов, добавлена пагинация в список материалов. Исправлено автоматическое формирование slug" />
     <MESSAGE value="Отердактирован базовый шаблон" />
-    <option name="LAST_COMMIT_MESSAGE" value="Отердактирован базовый шаблон" />
+    <MESSAGE value="Переставлены графики" />
+    <option name="LAST_COMMIT_MESSAGE" value="Переставлены графики" />
   </component>
 </project>

@@ -8,12 +8,11 @@
 {% endblock %}
 
 {% block content %}
-<h1>Order List</h1>
+<h1>Список заказов</h1>
 
 <table class="order-list">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Имя заказа</th>
             <th>Дата создания</th>
             <th>Цена</th>
@@ -23,7 +22,6 @@
     <tbody>
         {% for order in page_obj %}
         <tr class="clickable-row" data-href="{% url 'orders:order_detail' order.id %}">
-            <td>{{ order.id }}</td>
             <td>{{ order.first_name }} {{ order.last_name }}</td>
             <td>{{ order.created|date:"d.m.Y H:i" }}</td>
             <td>${{ order.get_total_cost }}</td>
