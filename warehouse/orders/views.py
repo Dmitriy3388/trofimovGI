@@ -27,6 +27,7 @@ import dateutil.parser
 from django.db.models import Count
 import json
 from django.utils.safestring import mark_safe
+from mebel.models import MaterialOperation
 
 # Добавьте это в начале файла, после импортов
 OrderItemFormSet = inlineformset_factory(
@@ -65,8 +66,19 @@ def order_write_off(request, order_id):
                     item.quantity -= quantity_to_write_off
                     item.written_off += quantity_to_write_off
 
+
+
                     # Добавляем операцию в историю
                     notes = form.cleaned_data.get('notes', '')
+                    MaterialOperation.objects.create(
+                        material=material,
+                        operation_type='write_off',
+                        quantity=quantity_to_write_off,
+                        notes=notes,  # Или соберите общую заметку для всех материалов
+                        user=request.user
+                    )
+
+                    # Сохраняем в историю элемента заказа (JSONField)
                     item.add_operation_to_history(
                         'write_off',
                         quantity_to_write_off,

@@ -13,18 +13,18 @@
     {% endfor %}
 {% endif %}
 
-<div class="categories">
+<div class="categories mb-4">
     <h3>Категории</h3>
-    <ul>
-        <li {% if not category %}class="selected"{% endif %}>
-            <a href="{% url 'mebel:material_list' %}">Все</a>
-        </li>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'mebel:material_list' %}" class="btn {% if not category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            Все
+        </a>
         {% for c in categories %}
-        <li {% if category.slug == c.slug %}class="selected"{% endif %}>
-            <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-        </li>
+        <a href="{{ c.get_absolute_url }}" class="btn {% if category.slug == c.slug %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            {{ c.name }}
+        </a>
         {% endfor %}
-    </ul>
+    </div>
 </div>
 
 
