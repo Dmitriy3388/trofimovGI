@@ -17,6 +17,14 @@ class MaterialEditForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
+        labels = {
+            'name': 'Название',
+            'category': 'Категория',
+            'description': 'Описание',
+            'price': 'Цена',
+            'image': 'Изображение',
+        }
+
 
 
 
@@ -31,6 +39,14 @@ class MaterialCreateForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
+        labels = {
+            'name': 'Название',
+            'category': 'Категория',
+            'description': 'Описание',
+            'price': 'Цена',
+            'image': 'Изображение',
         }
 
     def clean_name(self):

@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="В столбцах реализована функция сортировки по столбцам">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="добавлена кнопка возврата к списку материалов">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -429,7 +430,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758048911276</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="добавлена кнопка возврата к списку материалов">
+      <option name="closed" value="true" />
+      <created>1758049755606</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1758049755606</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -459,7 +468,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Продолжение стилей. Админка цвет нехватки, автоматический расчет" />
     <MESSAGE value="Перенос на фронтэнд значения автоматического расчета" />
     <MESSAGE value="Добавлено цветовое отображение у пользователя, таблица но не реализована сортировка" />
     <MESSAGE value="проблема с ошибками в форме списания материалов" />
@@ -484,6 +492,7 @@
     <MESSAGE value="Переставлены графики" />
     <MESSAGE value="Переименованы таблицы. Убран столбец ID" />
     <MESSAGE value="В столбцах реализована функция сортировки по столбцам" />
-    <option name="LAST_COMMIT_MESSAGE" value="В столбцах реализована функция сортировки по столбцам" />
+    <MESSAGE value="добавлена кнопка возврата к списку материалов" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавлена кнопка возврата к списку материалов" />
   </component>
 </project>

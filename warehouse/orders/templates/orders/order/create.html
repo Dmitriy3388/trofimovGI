@@ -1,10 +1,10 @@
 {% extends "mebel/base.html" %}
 {% load order_extras %}
 
-{% block title %}Create Order{% endblock %}
+{% block title %}Создание Заказа{% endblock %}
 
 {% block content %}
-  <h1>Create Order</h1>
+  <h1>Создание Заказа</h1>
 
   <form method="post" class="order-form">
       {% csrf_token %}
@@ -31,21 +31,21 @@
       {% endif %}
 
       <div class="order-info">
-          <h3>Customer Information</h3>
+          <h3>Информация по заказу</h3>
           {{ form.as_p }}
       </div>
 
       <div class="materials-section">
-          <h3>Materials</h3>
+          <h3>Комплектующие</h3>
           {{ formset.management_form }}
 
       <table class="materials-table">
         <thead>
           <tr>
-            <th>Material</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Remove</th>
+            <th>Материал</th>
+            <th>Количество</th>
+            <th>Цена</th>
+            <th>Удалить?</th>
           </tr>
         </thead>
         <tbody id="materials-tbody">
@@ -66,14 +66,14 @@
         </tbody>
       </table>
 
-      <button type="button" id="add-more" class="btn">+ Add Material</button>
+      <button type="button" id="add-more" class="btn">+ Добавить Материал</button>
     </div>
 
     <div class="total-price">
-      <strong>Total: </strong><span id="total-price">0</span> руб.
+      <strong>Цена Заказа: </strong><span id="total-price">0</span> руб.
     </div>
 
-    <input type="submit" value="Place Order" class="submit-btn">
+    <input type="submit" value="Создать Заказ" class="submit-btn">
   </form>
 
   <script>

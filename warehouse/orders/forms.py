@@ -69,6 +69,13 @@ class OrderForm(forms.ModelForm):
             'city': forms.TextInput(attrs={'class': 'form-control'}),
             'paid': forms.Select(attrs={'class': 'form-select'}),
         }
+        labels = {
+            'first_name': 'Имя',
+            'last_name': 'Фамилия',
+            'address': 'Адрес',
+            'postal_code': 'Почтовый индекс',
+            'city': 'Город',
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
