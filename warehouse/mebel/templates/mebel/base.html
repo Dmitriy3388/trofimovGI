@@ -17,18 +17,10 @@
   </head>
   <body>
     <div id="header">
-      <a href="/" class="logo">Mebel</a>
+      <a href="/" class="logo">Мой Склад</a>
     </div>
     <div id="subheader">
         <div class="ordercart">
-            {% with total_items=ordercart|length %}
-                {% if total_items > 0 %}
-                    Your cart:
-                    <a href="{% url "ordercart:ordercart_detail" %}">
-                        {{ total_items }} item{{ total_items|pluralize }},
-                        ${{ ordercart.get_total_price }}
-                    </a>
-                {% elif not order %}
                     <!-- Заменяем сообщение о пустой корзине на информацию о пользователе -->
                     {% if user.is_authenticated %}
                         <span class="user-info">
@@ -45,8 +37,6 @@
                     {% else %}
                         <span class="user-info">Неавторизованный пользователь</span>
                     {% endif %}
-                {% endif %}
-            {% endwith %}
         </div>
     </div>
     <div id="content">
