@@ -17,31 +17,7 @@
       Добро пожаловать в систему управления складом.
     </p>
   </div>
-
-  <div class="main-actions">
-    <div class="action-card">
-      <a href="{% url 'account:profile' %}" class="btn btn-primary">Мой профиль</a>
-    </div>
-    {% if user.groups.all.0.name == 'Менеджеры' or user.is_superuser %}
-      <div class="action-card">
-        <a href="{% url 'orders:order_create' %}" class="btn btn-primary">Создание заказа</a>
-      </div>
-    {% endif %}
-      <div class="action-card">
-        <a href="{% url 'mebel:material_list' %}" class="btn btn-primary">Просмотр Материалов</a>
-      </div>
-      <!-- Добавить этот блок в раздел с основными действиями -->
-    {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
-    <div class="action-card">
-        <a href="{% url 'mebel:material_create' %}" class="btn btn-primary">Добавить материал</a>
-    </div>
-    {% endif %}
-    <div class="action-card">
-      <a href="{% url 'orders:order_list' %}" class="btn btn-primary">Просмотр Заказов</a>
-    </div>
-
-  </div>
-    <div class="row mt-4">
+<div class="row mt-4">
         <!-- График динамики заказов -->
         <div class="col-md-8">
             <div class="card">
@@ -101,12 +77,37 @@
             </div>
         </div>
     </div>
+  <div class="main-actions">
+    <div class="action-card">
+      <a href="{% url 'account:profile' %}" class="btn btn-primary">Мой профиль</a>
+    </div>
+    {% if user.groups.all.0.name == 'Менеджеры' or user.is_superuser %}
+      <div class="action-card">
+        <a href="{% url 'orders:order_create' %}" class="btn btn-primary">Создание заказа</a>
+      </div>
+    {% endif %}
+      <div class="action-card">
+        <a href="{% url 'mebel:material_list' %}" class="btn btn-primary">Просмотр Материалов</a>
+      </div>
+      <!-- Добавить этот блок в раздел с основными действиями -->
+    {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
+    <div class="action-card">
+        <a href="{% url 'mebel:material_create' %}" class="btn btn-primary">Добавить материал</a>
+    </div>
+    {% endif %}
+    <div class="action-card">
+      <a href="{% url 'orders:order_list' %}" class="btn btn-primary">Просмотр Заказов</a>
+    </div>
+
+  </div>
+
 </div>
 {% endblock %}
 
 {% block domready %}
 {% if has_data %}
 <script>
+document.addEventListener('DOMContentLoaded', function() {
     // Инициализация графика
     const ctx = document.getElementById('ordersChart').getContext('2d');
     const chart = new Chart(ctx, {
@@ -141,6 +142,59 @@
             }
         }
     });
+
+    // Функция для обновления графика
+    function updateChart(dates, counts) {
+        chart.data.labels = dates;
+        chart.data.datasets[0].data = counts;
+        chart.update();
+    }
+
+    // Функция для обновления активной кнопки
+    function updateActiveButton(period) {
+        // Удаляем активный класс у всех кнопок
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-outline-primary');
+        });
+        // Добавляем активный класс к выбранной кнопке
+        const activeBtn = document.querySelector(`.period-btn[href="?period=${period}"]`);
+        if (activeBtn) {
+            activeBtn.classList.remove('btn-outline-primary');
+            activeBtn.classList.add('btn-primary');
+        }
+    }
+
+    // Обработчик кликов для кнопок периода
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = new URL(this.href);
+            const period = url.searchParams.get('period');
+
+            // AJAX-запрос
+            fetch(window.location.pathname, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                },
+                data: { period: period }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.has_data) {
+                    updateChart(data.dates, data.counts);
+                } else {
+                    // Обработка отсутствия данных
+                    updateChart([], []);
+                }
+                updateActiveButton(data.period);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
 </script>
 {% endif %}
 {% endblock %}

@@ -40,7 +40,6 @@ def refresh_materials(request):
 
 @login_required
 def main_dashboard(request):
-    # Данные для графика заказов
     period = request.GET.get('period', 'month')  # week, month, year
 
     today = datetime.now().date()
@@ -74,6 +73,16 @@ def main_dashboard(request):
             dates.append(item['period_field'].strftime('%Y-%m-%d'))
         counts.append(item['count'])
 
+    # Проверяем, является ли запрос AJAX
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        data = {
+            'dates': dates,
+            'counts': counts,
+            'has_data': len(dates) > 0,
+            'period': period
+        }
+        return JsonResponse(data)  # Возвращаем JSON для AJAX
+
     # Конвертируем данные в JSON для безопасной передачи в JavaScript
     dates_json = mark_safe(json.dumps(dates))
     counts_json = mark_safe(json.dumps(counts))
@@ -81,7 +90,7 @@ def main_dashboard(request):
     # Материалы с текущей нехваткой
     current_shortage = Material.objects.filter(lack__gt=0)
 
-    # Материалы с прогнозируемой нехваткой (баланс меньше 110% от зарезервированного)
+    # Материалы с прогнозируемой нехваткой
     predicted_shortage = Material.objects.filter(
         Q(balance__gt=0) &
         Q(balance__lt=F('reserved') * 1.1) &
@@ -94,7 +103,7 @@ def main_dashboard(request):
         'current_shortage': current_shortage,
         'predicted_shortage': predicted_shortage,
         'period': period,
-        'has_data': len(dates) > 0  # Флаг наличия данных
+        'has_data': len(dates) > 0
     })
 
 @login_required

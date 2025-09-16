@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлена кнопка создания материалов, добавлена пагинация в список материалов. Исправлено автоматическое формирование slug">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Отердактирован базовый шаблон">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -396,7 +397,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757967248583</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Отердактирован базовый шаблон">
+      <option name="closed" value="true" />
+      <created>1758038870978</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1758038870978</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -426,7 +435,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="мейн дошбоард" />
     <MESSAGE value="Навигация между приложениями закончена" />
     <MESSAGE value="редактирование профилей" />
     <MESSAGE value="Стили профиля" />
@@ -451,6 +459,7 @@
     <MESSAGE value="Проработано приложение аккаунт 1" />
     <MESSAGE value="В форме создания заказа считается цена" />
     <MESSAGE value="Добавлена кнопка создания материалов, добавлена пагинация в список материалов. Исправлено автоматическое формирование slug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлена кнопка создания материалов, добавлена пагинация в список материалов. Исправлено автоматическое формирование slug" />
+    <MESSAGE value="Отердактирован базовый шаблон" />
+    <option name="LAST_COMMIT_MESSAGE" value="Отердактирован базовый шаблон" />
   </component>
 </project>
