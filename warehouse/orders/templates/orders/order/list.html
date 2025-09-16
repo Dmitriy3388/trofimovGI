@@ -13,26 +13,68 @@
 <table class="order-list">
     <thead>
         <tr>
-            <th>Имя заказа</th>
-            <th>Дата создания</th>
-            <th>Цена</th>
-            <th>Оплата</th>
+            <th>
+                <a href="?sort=id&order={% if current_sort == 'id' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link"
+                style="text-decoration: none; color: inherit;">
+                    ID
+                    {% if current_sort == 'id' %}
+                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                    {% endif %}
+                </a>
+            </th>
+            <th>
+                <a href="?sort=first_name&order={% if current_sort == 'first_name' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link"
+                style="text-decoration: none; color: inherit;">
+                    Имя заказа
+                    {% if current_sort == 'first_name' %}
+                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                    {% endif %}
+                </a>
+            </th>
+            <th>
+                <a href="?sort=created&order={% if current_sort == 'created' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link"
+                style="text-decoration: none; color: inherit;">
+                    Дата создания
+                    {% if current_sort == 'created' %}
+                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                    {% endif %}
+                </a>
+            </th>
+            <th>
+                <a href="?sort=total_cost&order={% if current_sort == 'total_cost' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link"
+                style="text-decoration: none; color: inherit;">
+                    Цена
+                    {% if current_sort == 'total_cost' %}
+                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                    {% endif %}
+                </a>
+            </th>
+            <th>
+                <a href="?sort=paid&order={% if current_sort == 'paid' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link"
+                style="text-decoration: none; color: inherit;">
+                    Оплата
+                    {% if current_sort == 'paid' %}
+                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                    {% endif %}
+                </a>
+            </th>
         </tr>
     </thead>
     <tbody>
         {% for order in page_obj %}
         <tr class="clickable-row" data-href="{% url 'orders:order_detail' order.id %}">
+            <td>{{ order.id }}</td>
             <td>{{ order.first_name }} {{ order.last_name }}</td>
             <td>{{ order.created|date:"d.m.Y H:i" }}</td>
             <td>${{ order.get_total_cost }}</td>
             <td>
-            {% if order.paid == 'fully_paid' %}
-            <span style="color: green; font-weight: bold;">✓ Оплачено</span>
-            {% elif order.paid == 'partially_paid' %}
-            <span style="color: orange; font-weight: bold;">⏳ Оплачено частично</span>
-            {% else %}
-            <span style="color: red; font-weight: bold;">✗ Не оплачено</span>
-            {% endif %}
+                {% if order.paid == 'fully_paid' %}
+                    <span style="color: green; font-weight: bold;">✓ Оплачено</span>
+                {% elif order.paid == 'partially_paid' %}
+                    <span style="color: orange; font-weight: bold;">⏳ Оплачено частично</span>
+                {% else %}
+                    <span style="color: red; font-weight: bold;">✗ Не оплачено</span>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

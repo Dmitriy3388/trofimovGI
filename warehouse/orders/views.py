@@ -112,14 +112,45 @@ def order_write_off(request, order_id):
         'form': form,
         'operation_history': operation_history[:10]  # Последние 10 операций
     })
+from django.db.models import Sum, F, DecimalField
+from django.db.models.functions import Coalesce
 
 
 @login_required
 def order_list(request):
-    orders = Order.objects.all().order_by('-created')
-    paginator = Paginator(orders, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    sort_by = request.GET.get('sort', '-created')
+    order = request.GET.get('order', 'desc')
+
+    # Получаем базовый queryset
+    orders = Order.objects.all()
+
+    # Для вычисляемых полей применяем сортировку на уровне Python
+    if sort_by == 'total_cost':
+        # Преобразуем queryset в список для сортировки
+        orders_list = list(orders)
+        # Сортируем по вычисляемому полю total_cost
+        if order == 'asc':
+            orders_list.sort(key=lambda x: x.get_total_cost())
+        else:
+            orders_list.sort(key=lambda x: x.get_total_cost(), reverse=True)
+
+        # Создаем paginator для отсортированного списка
+        paginator = Paginator(orders_list, 10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+    else:
+        # Для обычных полей применяем сортировку на уровне БД
+        if order == 'asc':
+            if sort_by.startswith('-'):
+                sort_by = sort_by[1:]
+        else:
+            if not sort_by.startswith('-'):
+                sort_by = '-' + sort_by
+
+        orders = orders.order_by(sort_by)
+        paginator = Paginator(orders, 10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
     # Данные для графика
     status_stats = Order.objects.values('paid').annotate(count=Count('id')).order_by('paid')
@@ -154,6 +185,8 @@ def order_list(request):
 
     return render(request, 'orders/order/list.html', {
         'page_obj': page_obj,
+        'current_sort': sort_by.lstrip('-'),
+        'current_order': order,
         'status_labels_json': status_labels_json,
         'status_data_json': status_data_json,
         'background_colors_json': background_colors_json,

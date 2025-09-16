@@ -12,6 +12,7 @@ from django import forms
 from django.db.models import Count, F, Q
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 from datetime import datetime, timedelta
+from django.http import JsonResponse, HttpResponseBadRequest  # Добавить импорт
 from orders.models import Order
 from warehouse.utils import managers_required, mto_required
 from .forms import MaterialEditForm, MaterialCreateForm  # Добавить импорт
@@ -21,6 +22,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from transliterate import slugify as transliterate_slugify
 from django.core.paginator import Paginator
+from django.db.models import F, ExpressionWrapper, IntegerField
 
 
 @require_POST  # Разрешаем только POST-запросы
@@ -106,40 +108,6 @@ def main_dashboard(request):
         'has_data': len(dates) > 0
     })
 
-@login_required
-def material_list(request, category_slug=None):
-    """Только отображение данных, без обработки форм"""
-
-    # ТОЛЬКО GET-логика
-    sort_by = request.GET.get('sort', 'name')
-    order = request.GET.get('order', 'asc')
-
-    if order == 'asc':
-        order_by = sort_by
-    else:
-        order_by = f'-{sort_by}'
-
-    category = None
-    categories = Category.objects.all()
-    materials = Material.objects.all().order_by(order_by)
-    paginator = Paginator(materials, 15)  # Измените с 3 на 15
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-        materials = materials.filter(category=category)
-
-    return render(request,
-                  'mebel/material/list.html',
-                  {'category': category,
-                   'page_obj': page_obj,
-                   'categories': categories,
-                   'materials': materials,
-                   'current_sort': sort_by,
-                   'current_order': order
-                   })
-
 
 @mto_required
 def material_create(request):
@@ -211,7 +179,7 @@ class MaterialReceiptForm(forms.Form):
     )
 
 
-from django.http import JsonResponse, HttpResponseBadRequest  # Добавить импорт
+
 
 
 @mto_required
@@ -303,17 +271,44 @@ class MaterialListView(LoginRequiredMixin, ListView):
         return self.get(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        # Получаем параметры сортировки
+        sort_by = self.request.GET.get('sort', 'name')
+        order = self.request.GET.get('order', 'asc')
+
+        # Аннотируем queryset вычисляемым полем available
+        queryset = Material.objects.annotate(
+            calculated_available=ExpressionWrapper(
+                F('balance') - F('reserved'),
+                output_field=IntegerField()
+            )
+        )
+
+        # Для сортировки по available используем вычисляемое поле
+        if sort_by == 'available':
+            sort_by = 'calculated_available'
+
+        # Определяем порядок сортировки
+        if order == 'asc':
+            order_by = sort_by
+        else:
+            order_by = f'-{sort_by}'
+
+        queryset = queryset.order_by(order_by)
+
         category_slug = self.kwargs.get('category_slug')
         if category_slug:
             self.category = get_object_or_404(Category, slug=category_slug)
             return queryset.filter(category=self.category)
         return queryset
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['category'] = getattr(self, 'category', None)
+
+        # Добавляем параметры сортировки в контекст
+        context['current_sort'] = self.request.GET.get('sort', 'name')
+        context['current_order'] = self.request.GET.get('order', 'asc')
+
         return context
 
 class MaterialOperationForm(forms.Form):

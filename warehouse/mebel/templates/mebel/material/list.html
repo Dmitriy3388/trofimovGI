@@ -36,13 +36,53 @@
     <table>
       <thead>
         <tr>
-          <th>Название</th>
-          <th>Цена</th>
-          <th>Баланс</th>
-          <th>Зарезервировано</th>
-          <th>Доступно</th>
           <th>
-            <a href="?sort=lack&order={% if current_sort == 'lack' and current_order == 'asc' %}desc{% else %}asc{% endif %}"
+              <a href="?sort=name&order={% if current_sort == 'name' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="sort-link"
+              style="text-decoration: none; color: inherit;">
+                Название
+                {% if current_sort == 'name' %}
+                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                {% endif %}
+              </a>
+          </th>
+          <th>
+              <a href="?sort=price&order={% if current_sort == 'price' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="sort-link"
+              style="text-decoration: none; color: inherit;">
+                Цена
+                {% if current_sort == 'price' %}
+                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                {% endif %}
+              </a>
+          </th>
+          <th>
+              <a href="?sort=balance&order={% if current_sort == 'balance' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="sort-link"
+              style="text-decoration: none; color: inherit;">
+                Баланс
+                {% if current_sort == 'balance' %}
+                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                {% endif %}
+              </a>
+          </th>
+          <th>
+              <a href="?sort=reserved&order={% if current_sort == 'reserved' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="sort-link"
+              style="text-decoration: none; color: inherit;">
+                Зарезервировано
+                {% if current_sort == 'reserved' %}
+                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                {% endif %}
+              </a>
+          </th>
+          <th>
+              <a href="?sort=available&order={% if current_sort == 'available' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="sort-link"
+              style="text-decoration: none; color: inherit;">
+                Доступно
+                {% if current_sort == 'available' %}
+                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                {% endif %}
+              </a>
+          </th>
+          <th>
+            <a href="?sort=lack&order={% if current_sort == 'lack' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}"
                style="text-decoration: none; color: inherit;">
               Нехватка
               {% if current_sort == 'lack' %}
