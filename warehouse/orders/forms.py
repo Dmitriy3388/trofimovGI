@@ -60,24 +60,24 @@ class WriteOffForm(forms.Form):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['first_name', 'last_name', 'address', 'postal_code', 'city', 'paid']
+        fields = ['order_name', 'customer_name', 'address', 'transferred_amount', 'discount', 'category', 'blueprint', 'visualization']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'order_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'customer_name': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
-            'postal_code': forms.TextInput(attrs={'class': 'form-control'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'paid': forms.Select(attrs={'class': 'form-select'}),
+            'transferred_amount': forms.NumberInput(attrs={'class': 'form-control'}),
+            'discount': forms.NumberInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'blueprint': forms.FileInput(attrs={'class': 'form-control'}),
+            'visualization': forms.FileInput(attrs={'class': 'form-control'}),
         }
         labels = {
-            'first_name': 'Имя',
-            'last_name': 'Фамилия',
+            'order_name': 'Название',
+            'customer_name': 'Имя заказчика',
             'address': 'Адрес',
-            'postal_code': 'Почтовый индекс',
-            'city': 'Город',
+            'transferred_amount': 'Перечисленные средства',
+            'discount': 'Скидка (%)',
+            'category': 'Категория',
+            'blueprint': 'Чертеж',
+            'visualization': 'Визуализация',
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Можно установить значение по умолчанию
-        self.fields['paid'].initial = Order.PaymentStatus.NOT_PAID

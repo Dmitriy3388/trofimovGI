@@ -3,6 +3,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+# Добавьте эти импорты в начало views.py
+from django.utils.safestring import mark_safe
 import weasyprint
 from .models import OrderItem, Order
 from .forms import OrderForm, OrderItemForm, WriteOffForm
@@ -209,7 +211,7 @@ def order_list(request):
 @managers_required
 def order_create(request):
     if request.method == 'POST':
-        form = OrderForm(request.POST)
+        form = OrderForm(request.POST, request.FILES)  # Добавьте request.FILES
         formset = OrderItemFormSet(request.POST, prefix='items')
 
         # Удаляем пустые формы из formset
@@ -233,6 +235,11 @@ def order_create(request):
                         quantity=quantity,
                         price=material.price
                     )
+
+                # Обновляем статус оплаты после создания всех OrderItem
+                order.update_payment_status()
+                order.save(update_fields=['paid'])
+
                 return redirect('orders:order_detail', order.id)
             else:
                 # Если нет ни одного материала, показываем ошибку
@@ -252,10 +259,26 @@ def order_create(request):
         'total_price': 0.00,
     })
 
+from django.utils.safestring import mark_safe
+
+def display_blueprint(obj):
+    if obj.blueprint:
+        return mark_safe(f'<img src="{obj.blueprint.url}" width="100" height="100" />')
+    return "Нет чертежа"
+
+def display_visualization(obj):
+    if obj.visualization:
+        return mark_safe(f'<img src="{obj.visualization.url}" width="100" height="100" />')
+    return "Нет визуализации"
+
 @staff_member_required
 def admin_order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    return render(request,'admin/orders/order/detail.html',{'order': order})
+    return render(request, 'admin/orders/order/detail.html', {
+        'order': order,
+        'display_blueprint': display_blueprint(order),
+        'display_visualization': display_visualization(order)
+    })
 @login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
@@ -280,7 +303,7 @@ def order_edit(request, order_id):
     )
 
     if request.method == 'POST':
-        form = OrderForm(request.POST, instance=order)
+        form = OrderForm(request.POST, request.FILES, instance=order)
         formset = OrderItemFormSet(request.POST, instance=order, prefix='items')
 
         if form.is_valid() and formset.is_valid():
@@ -341,8 +364,12 @@ def order_edit(request, order_id):
                         material = Material.objects.get(id=material_id)
                         material.update_reserved_quantity()
 
-                messages.success(request, 'Заказ успешно обновлен.')
-                return redirect('orders:order_detail', order_id=order.id)
+                    # Обновляем статус оплаты после изменения items
+                    order.update_payment_status()
+                    order.save(update_fields=['paid'])
+
+                    messages.success(request, 'Заказ успешно обновлен.')
+                    return redirect('orders:order_detail', order_id=order.id)
 
             except Exception as e:
                 messages.error(request, f'Ошибка при сохранении: {e}')

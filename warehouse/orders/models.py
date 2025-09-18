@@ -1,8 +1,8 @@
 from django.db import models
 from mebel.models import Material
 from django.utils import timezone
+from decimal import Decimal
 from django.urls import reverse
-
 
 class Order(models.Model):
     class PaymentStatus(models.TextChoices):
@@ -10,11 +10,26 @@ class Order(models.Model):
         PARTIALLY_PAID = 'partially_paid', 'Оплачено частично'
         FULLY_PAID = 'fully_paid', 'Оплачено полностью'
 
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    class CategoryChoices(models.TextChoices):
+        KITCHEN = 'kitchen', 'Кухня'
+        WARDROBE = 'wardrobe', 'Шкаф'
+        TABLE = 'table', 'Стол'
+        BED = 'bed', 'Кровать'
+        OTHER = 'other', 'Другое'
+
+    order_name = models.CharField(max_length=50, verbose_name='Название')  # Бывшее first_name
+    customer_name = models.CharField(max_length=50, verbose_name='Имя заказчика')  # Бывшее last_name
     address = models.CharField(max_length=250)
-    postal_code = models.CharField(max_length=20)
-    city = models.CharField(max_length=100)
+    transferred_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Перечисленные средства')  # Замена postal_code
+    discount = models.PositiveIntegerField(default=0, verbose_name='Скидка (%)')
+    category = models.CharField(
+        max_length=20,
+        choices=CategoryChoices.choices,
+        default=CategoryChoices.OTHER,
+        verbose_name='Категория'
+    )
+    blueprint = models.ImageField(upload_to='blueprints/%Y/%m/%d/', blank=True, null=True, verbose_name='Чертеж')
+    visualization = models.ImageField(upload_to='visualizations/%Y/%m/%d/', blank=True, null=True, verbose_name='Визуализация')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.CharField(
@@ -37,7 +52,29 @@ class Order(models.Model):
         return reverse('orders:order_write_off', args=[self.id])
 
     def get_total_cost(self):
-        return sum(item.get_cost() for item in self.items.all())
+        if not self.pk:
+            return Decimal('0.00')
+        materials_cost = sum(item.get_cost() for item in self.items.all())
+        # Преобразуем discount в Decimal и делаем вычисления
+        discount_decimal = Decimal(str(self.discount)) / Decimal('100')
+        discount_multiplier = Decimal('1') - discount_decimal
+        return materials_cost * Decimal('2') * discount_multiplier
+
+    def update_payment_status(self):
+        total_cost = self.get_total_cost()
+        # Преобразуем transferred_amount в Decimal для сравнения
+        transferred = Decimal(str(self.transferred_amount))
+
+        if transferred >= total_cost:
+            self.paid = self.PaymentStatus.FULLY_PAID
+        elif transferred > Decimal('0'):
+            self.paid = self.PaymentStatus.PARTIALLY_PAID
+        else:
+            self.paid = self.PaymentStatus.NOT_PAID
+
+    def save(self, *args, **kwargs):
+        #self.update_payment_status()
+        super().save(*args, **kwargs)
 
 
 

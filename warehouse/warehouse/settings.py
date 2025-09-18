@@ -24,7 +24,7 @@ DEBUG = os.getenv('DEBUG') == 'True'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    os.path.join(BASE_DIR, "orders/static"),# Теперь Django будет искать файлы в /static/
+    #os.path.join(BASE_DIR, "orders/static"),# Теперь Django будет искать файлы в /static/
 ]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Для collectstatic (если нужно)

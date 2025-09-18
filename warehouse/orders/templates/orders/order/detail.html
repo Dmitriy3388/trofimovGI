@@ -4,6 +4,18 @@
 {% block title %}Заказ #{{ order.id }}{% endblock %}
 
 {% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if order.blueprint %}
+            <img src="{{ order.blueprint.url }}" class="img-fluid" alt="Чертеж">
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        {% if order.visualization %}
+            <img src="{{ order.visualization.url }}" class="img-fluid" alt="Визуализация">
+        {% endif %}
+    </div>
+</div>
 <div class="container mt-4">
   <!-- Заголовок с кнопками действий -->
   <div class="d-flex justify-content-between align-items-center mb-4">
@@ -36,26 +48,17 @@
   {% endif %}
 
   <!-- Информация о заказе -->
-  <div class="row">
-    <div class="col-md-6">
-      <div class="card mb-4">
-        <div class="card-header">
-          <h5 class="card-title mb-0">📋 Информация о клиенте</h5>
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Название:</strong><br>{{ order.order_name }}</p>
+            <p><strong>Имя заказчика:</strong><br>{{ order.customer_name }}</p>
+            <p><strong>Категория:</strong><br>{{ order.get_category_display }}</p>
         </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-6">
-              <p><strong>Имя:</strong><br>{{ order.first_name }}</p>
-              <p><strong>Фамилия:</strong><br>{{ order.last_name }}</p>
-            </div>
-            <div class="col-6">
-              <p><strong>Адрес:</strong><br>{{ order.address }}</p>
-              <p><strong>Индекс:</strong><br>{{ order.postal_code }}</p>
-              <p><strong>Город:</strong><br>{{ order.city }}</p>
-            </div>
-          </div>
+        <div class="col-md-6">
+            <p><strong>Адрес:</strong><br>{{ order.address }}</p>
+            <p><strong>Перечисленные средства:</strong><br>{{ order.transferred_amount }} руб.</p>
+            <p><strong>Скидка:</strong><br>{{ order.discount }}%</p>
         </div>
-      </div>
     </div>
 
     <div class="col-md-6">

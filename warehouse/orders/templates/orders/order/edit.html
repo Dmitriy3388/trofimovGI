@@ -7,8 +7,40 @@
 <div class="container mt-4">
     <h1>Редактировать заказ #{{ order.id }}</h1>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+
+        <!-- Загрузка изображений -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">{{ form.blueprint.label }}</label>
+                    {{ form.blueprint }}
+                    {% if form.blueprint.errors %}
+                    <div class="text-danger small">{{ form.blueprint.errors }}</div>
+                    {% endif %}
+                    {% if order.blueprint %}
+                    <div class="mt-2">
+                        <small>Текущий файл: <a href="{{ order.blueprint.url }}" target="_blank">{{ order.blueprint.name }}</a></small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">{{ form.visualization.label }}</label>
+                    {{ form.visualization }}
+                    {% if form.visualization.errors %}
+                    <div class="text-danger small">{{ form.visualization.errors }}</div>
+                    {% endif %}
+                    {% if order.visualization %}
+                    <div class="mt-2">
+                        <small>Текущий файл: <a href="{{ order.visualization.url }}" target="_blank">{{ order.visualization.name }}</a></small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
         <!-- Информация о заказе -->
         <div class="card mb-4">
@@ -19,57 +51,47 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">{{ form.first_name.label }}</label>
-                            {{ form.first_name }}
-                            {% if form.first_name.errors %}
-                            <div class="text-danger small">{{ form.first_name.errors }}</div>
+                            <label class="form-label">{{ form.order_name.label }}</label>
+                            {{ form.order_name }}
+                            {% if form.order_name.errors %}
+                            <div class="text-danger small">{{ form.order_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.customer_name.label }}</label>
+                            {{ form.customer_name }}
+                            {% if form.customer_name.errors %}
+                            <div class="text-danger small">{{ form.customer_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.address.label }}</label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                            <div class="text-danger small">{{ form.address.errors }}</div>
                             {% endif %}
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">{{ form.last_name.label }}</label>
-                            {{ form.last_name }}
-                            {% if form.last_name.errors %}
-                            <div class="text-danger small">{{ form.last_name.errors }}</div>
+                            <label class="form-label">{{ form.transferred_amount.label }}</label>
+                            {{ form.transferred_amount }}
+                            {% if form.transferred_amount.errors %}
+                            <div class="text-danger small">{{ form.transferred_amount.errors }}</div>
                             {% endif %}
                         </div>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">{{ form.address.label }}</label>
-                    {{ form.address }}
-                    {% if form.address.errors %}
-                    <div class="text-danger small">{{ form.address.errors }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="form-label">{{ form.postal_code.label }}</label>
-                            {{ form.postal_code }}
-                            {% if form.postal_code.errors %}
-                            <div class="text-danger small">{{ form.postal_code.errors }}</div>
+                            <label class="form-label">{{ form.discount.label }}</label>
+                            {{ form.discount }}
+                            {% if form.discount.errors %}
+                            <div class="text-danger small">{{ form.discount.errors }}</div>
                             {% endif %}
                         </div>
-                    </div>
-                    <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="form-label">{{ form.city.label }}</label>
-                            {{ form.city }}
-                            {% if form.city.errors %}
-                            <div class="text-danger small">{{ form.city.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label class="form-label">{{ form.paid.label }}</label>
-                            {{ form.paid }}
-                            {% if form.paid.errors %}
-                            <div class="text-danger small">{{ form.paid.errors }}</div>
+                            <label class="form-label">{{ form.category.label }}</label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                            <div class="text-danger small">{{ form.category.errors }}</div>
                             {% endif %}
                         </div>
                     </div>
@@ -153,113 +175,113 @@
 </div>
 
 <style>
-    .form-control, .form-select {
-        border-radius: 0.375rem;
-        border: 1px solid #ced4da;
-        padding: 0.375rem 0.75rem;
-    }
+.form-control, .form-select {
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+    padding: 0.375rem 0.75rem;
+}
 
-    .form-control:focus, .form-select:focus {
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
+.form-control:focus, .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
 
-    .table td {
-        vertical-align: middle;
-    }
+.table td {
+    vertical-align: middle;
+}
 
-    .form-row {
-        transition: all 0.3s ease;
-    }
+.form-row {
+    transition: all 0.3s ease;
+}
 
-    .btn-success {
-        background-color: #28a745;
-        border-color: #28a745;
-    }
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
 
-    .btn-success:hover {
-        background-color: #218838;
-        border-color: #1e7e34;
-    }
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
 
-    .form-check-input {
-        width: 2.5em;
-        height: 1.25em;
-    }
+.form-check-input {
+    width: 2.5em;
+    height: 1.25em;
+}
 
-    .card {
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        border: 1px solid rgba(0, 0, 0, 0.125);
-    }
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
 
-    .card-header {
-        background-color: #f8f9fa;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-    }
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
 </style>
 {% endblock %}
 
 {% block domready %}
 <script>
-    $(document).ready(function() {
-        // Добавляем классы Bootstrap к элементам формы
+$(document).ready(function() {
+    // Добавляем классы Bootstrap к элементам формы
+    $('input, select, textarea').addClass('form-control');
+    $('select').addClass('form-select');
+
+    // Специальная обработка для checkbox удаления
+    $('input[type="checkbox"]').removeClass('form-control').addClass('form-check-input');
+
+    // Добавляем placeholder для полей
+    $('input[name*="order_name"]').attr('placeholder', 'Введите название заказа');
+    $('input[name*="customer_name"]').attr('placeholder', 'Введите имя заказчика');
+    $('input[name*="address"]').attr('placeholder', 'Введите адрес');
+    $('input[name*="transferred_amount"]').attr('placeholder', 'Введите сумму');
+    $('input[name*="discount"]').attr('placeholder', '0');
+
+    // Код для добавления новой формы
+    $('#add-form').on('click', function() {
+        const totalForms = $('#id_items-TOTAL_FORMS');
+        const formNum = parseInt(totalForms.val());
+        const formRows = $('.form-row');
+
+        if (formRows.length === 0) return;
+
+        const lastFormRow = formRows.last();
+        const newFormRow = lastFormRow.clone();
+
+        // Заменяем индексы в именах полей
+        newFormRow.html(newFormRow.html().replace(/items-\d+-/g, `items-${formNum}-`));
+        newFormRow.html(newFormRow.html().replace(/\[\d+\]/g, `[${formNum}]`));
+
+        // Очищаем значения полей
+        newFormRow.find('input, select, textarea').each(function() {
+            if ($(this).attr('type') !== 'hidden') {
+                $(this).val('');
+            } else {
+                // Очищаем скрытые поля id
+                if ($(this).attr('name').includes('id')) {
+                    $(this).val('');
+                }
+            }
+        });
+
+        // Удаляем чекбокс удаления для новых форм
+        const deleteCell = newFormRow.find('td:last-child');
+        if (deleteCell.find('input[type="checkbox"]').length) {
+            deleteCell.html('<span class="text-muted">-</span>');
+        }
+
+        // Вставляем новую строку
+        $('#formset-tbody').append(newFormRow);
+
+        // Увеличиваем счетчик форм
+        totalForms.val(formNum + 1);
+
+        // Перепривязываем обработчики для новых элементов
         $('input, select, textarea').addClass('form-control');
         $('select').addClass('form-select');
-
-        // Специальная обработка для checkbox удаления
         $('input[type="checkbox"]').removeClass('form-control').addClass('form-check-input');
-
-        // Добавляем placeholder для полей
-        $('input[name*="first_name"]').attr('placeholder', 'Введите имя');
-        $('input[name*="last_name"]').attr('placeholder', 'Введите фамилию');
-        $('input[name*="address"]').attr('placeholder', 'Введите адрес');
-        $('input[name*="postal_code"]').attr('placeholder', 'Введите почтовый индекс');
-        $('input[name*="city"]').attr('placeholder', 'Введите город');
-
-        // Код для добавления новой формы
-        $('#add-form').on('click', function() {
-            const totalForms = $('#id_items-TOTAL_FORMS');
-            const formNum = parseInt(totalForms.val());
-            const formRows = $('.form-row');
-
-            if (formRows.length === 0) return;
-
-            const lastFormRow = formRows.last();
-            const newFormRow = lastFormRow.clone();
-
-            // Заменяем индексы в именах полей
-            newFormRow.html(newFormRow.html().replace(/items-\d+-/g, `items-${formNum}-`));
-            newFormRow.html(newFormRow.html().replace(/\[\d+\]/g, `[${formNum}]`));
-
-            // Очищаем значения полей
-            newFormRow.find('input, select, textarea').each(function() {
-                if ($(this).attr('type') !== 'hidden') {
-                    $(this).val('');
-                } else {
-                    // Очищаем скрытые поля id
-                    if ($(this).attr('name').includes('id')) {
-                        $(this).val('');
-                    }
-                }
-            });
-
-            // Удаляем чекбокс удаления для новых форм
-            const deleteCell = newFormRow.find('td:last-child');
-            if (deleteCell.find('input[type="checkbox"]').length) {
-                deleteCell.html('<span class="text-muted">-</span>');
-            }
-
-            // Вставляем новую строку
-            $('#formset-tbody').append(newFormRow);
-
-            // Увеличиваем счетчик форм
-            totalForms.val(formNum + 1);
-
-            // Перепривязываем обработчики для новых элементов
-            $('input, select, textarea').addClass('form-control');
-            $('select').addClass('form-select');
-            $('input[type="checkbox"]').removeClass('form-control').addClass('form-check-input');
-        });
     });
+});
 </script>
 {% endblock %}
