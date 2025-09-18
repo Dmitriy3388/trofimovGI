@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Исправлены подсказки в формах добавления материалов и создания заказов">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Исправлено логирование списания материалов через форму деталей заказа и отображение категорий в списке материалов">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_09_2025_22_07_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_09_2025_22_07__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -445,7 +445,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758051177601</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="Исправлено логирование списания материалов через форму деталей заказа и отображение категорий в списке материалов">
+      <option name="closed" value="true" />
+      <created>1758053605314</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1758053605314</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -475,7 +483,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Добавлено цветовое отображение у пользователя, таблица но не реализована сортировка" />
     <MESSAGE value="проблема с ошибками в форме списания материалов" />
     <MESSAGE value="ошибки с формами списания решены." />
     <MESSAGE value="решена ошибка с уведомлениями" />
@@ -500,6 +507,7 @@
     <MESSAGE value="В столбцах реализована функция сортировки по столбцам" />
     <MESSAGE value="добавлена кнопка возврата к списку материалов" />
     <MESSAGE value="Исправлены подсказки в формах добавления материалов и создания заказов" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправлены подсказки в формах добавления материалов и создания заказов" />
+    <MESSAGE value="Исправлено логирование списания материалов через форму деталей заказа и отображение категорий в списке материалов" />
+    <option name="LAST_COMMIT_MESSAGE" value="Исправлено логирование списания материалов через форму деталей заказа и отображение категорий в списке материалов" />
   </component>
 </project>
