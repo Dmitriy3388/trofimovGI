@@ -105,7 +105,7 @@ $(document).ready(function(){
                 isValid = false;
             }
             if (val > max) {
-                errorMessage += '• ' + materialName + ': нельзя списать больше чем зарезервировано для этого заказа (' + max + ')\n';
+                errorMessage += '• ' + materialName + ': нельзя списать больше чем осталось списать (' + max + ')\n';
                 isValid = false;
             }
             if (val > balance) {

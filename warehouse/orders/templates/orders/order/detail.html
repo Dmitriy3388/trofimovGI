@@ -1,6 +1,6 @@
 {% extends "mebel/base.html" %}
 {% load static %}
-
+{% load order_extras %}
 {% block title %}Заказ #{{ order.id }}{% endblock %}
 
 {% block content %}
@@ -92,43 +92,44 @@
       <div class="card-body">
           <div class="table-responsive">
               <table class="table table-hover">
-                  <thead class="table-light">
-                      <tr>
-                          <th>Материал</th>
-                          <th class="text-center">Цена за шт.</th>
-                          <th class="text-center">Количество</th>
-                          <th class="text-center">Зарезервировано</th>
-                          <th class="text-center">Баланс на складе</th> <!-- Новый столбец -->
-                          <th class="text-center">Списано</th>
-                          <th class="text-end">Стоимость</th>
-                      </tr>
-                  </thead>
+                    <thead class="table-light">
+                        <tr>
+                            <th>Материал</th>
+                            <th class="text-center">Цена за шт.</th>
+                            <th class="text-center">Количество по заказу</th>
+                            <th class="text-center">Зарезервировано</th>
+                            <th class="text-center">Баланс на складе</th>
+                            <th class="text-center">Списано</th>
+                            <th class="text-end">Стоимость</th>
+                        </tr>
+                    </thead>
                   <tbody>
                       {% for item in order.items.all %}
-                      <tr>
-                          <td>
-                              <strong>{{ item.material.name }}</strong>
-                              <br>
-                              <small class="text-muted">Категория: {{ item.material.category.name }}</small>
-                          </td>
-                          <td class="text-center">{{ item.price }} руб.</td>
-                          <td class="text-center">{{ item.quantity }} шт.</td>
-                          <td class="text-center">
-                              <span class="badge bg-info">{{ item.material.reserved }} шт.</span>
-                          </td>
-                          <td class="text-center"> <!-- Новый столбец -->
-                              <span class="badge
-                                  {% if item.material.balance > 0 %}bg-success{% else %}bg-danger{% endif %}">
-                                  {{ item.material.balance }} шт.
-                              </span>
-                          </td>
-                          <td class="text-center">
-                              <span class="badge {% if item.written_off > 0 %}bg-success{% else %}bg-secondary{% endif %}">
-                                  {{ item.written_off }} шт.
-                              </span>
-                          </td>
-                          <td class="text-end"><strong>{{ item.get_cost }} руб.</strong></td>
-                      </tr>
+                        <tr>
+                            <td>
+                                <strong>{{ item.material.name }}</strong>
+                                <br>
+                                <small class="text-muted">Категория: {{ item.material.category.name }}</small>
+                            </td>
+                            <td class="text-center">{{ item.price }} руб.</td>
+                            <td class="text-center">{{ item.quantity }} шт.</td>
+                            <td class="text-center">
+                                <span class="badge bg-info">
+                                    {{ item.material.reserved }} шт.
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge {% if item.material.balance > 0 %}bg-success{% else %}bg-danger{% endif %}">
+                                    {{ item.material.balance }} шт.
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge {% if item.written_off > 0 %}bg-success{% else %}bg-secondary{% endif %}">
+                                    {{ item.written_off }} шт. (остаток: {{ item.quantity|subtract:item.written_off }} шт.)
+                                </span>
+                            </td>
+                            <td class="text-end"><strong>{{ item.get_cost }} руб.</strong></td>
+                        </tr>
                       {% empty %}
                       <tr>
                           <td colspan="7" class="text-center text-muted py-4"> <!-- Изменили colspan на 7 -->

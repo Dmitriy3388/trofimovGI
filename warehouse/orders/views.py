@@ -56,41 +56,42 @@ def order_write_off(request, order_id):
 
                 if quantity_to_write_off > 0:
                     material = item.material
-                    # Проверяем, чтобы списывали не больше чем зарезервировано
-                    quantity_to_write_off = min(
-                        quantity_to_write_off,
-                        item.quantity,
-                        material.balance
+
+                    # Рассчитываем доступное для списания количество
+                    # Максимум можно списать: минимум из (остаток_для_списания, баланс_на_складе)
+                    available_to_write_off = min(
+                        item.quantity - item.written_off,  # ← Осталось списать по заказу
+                        material.balance,  # ← Доступно на складе
+                        quantity_to_write_off  # ← Запрошенное количество
                     )
 
-                    # Вычитаем списанное количество
-                    material.balance -= quantity_to_write_off
-                    item.quantity -= quantity_to_write_off
-                    item.written_off += quantity_to_write_off
+                    if available_to_write_off > 0:
+                        # Уменьшаем баланс на складе
+                        material.balance -= available_to_write_off
+                        # Увеличиваем списанное количество (НЕ уменьшаем исходное quantity!)
+                        item.written_off += available_to_write_off
 
+                        # Добавляем операцию в историю
+                        notes = form.cleaned_data.get('notes', '')
+                        MaterialOperation.objects.create(
+                            material=material,
+                            operation_type='write_off',
+                            quantity=available_to_write_off,
+                            notes=notes,
+                            user=request.user
+                        )
 
+                        # Сохраняем в историю элемента заказа
+                        item.add_operation_to_history(
+                            'write_off',
+                            available_to_write_off,
+                            request.user,
+                            notes
+                        )
 
-                    # Добавляем операцию в историю
-                    notes = form.cleaned_data.get('notes', '')
-                    MaterialOperation.objects.create(
-                        material=material,
-                        operation_type='write_off',
-                        quantity=quantity_to_write_off,
-                        notes=notes,  # Или соберите общую заметку для всех материалов
-                        user=request.user
-                    )
-
-                    # Сохраняем в историю элемента заказа (JSONField)
-                    item.add_operation_to_history(
-                        'write_off',
-                        quantity_to_write_off,
-                        request.user,
-                        notes
-                    )
-
-                    # Сохраняем изменения
-                    material.save()
-                    item.save()
+                        # Сохраняем изменения
+                        material.save()
+                        item.save()
 
             messages.success(request, 'Материалы успешно списаны со склада.')
             return redirect('orders:order_detail', order_id=order.id)

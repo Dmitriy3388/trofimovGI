@@ -25,35 +25,32 @@ class OrderItemForm(forms.ModelForm):
         fields = ['material', 'quantity']
 
 
-
 class WriteOffForm(forms.Form):
-    """
-    Динамическая форма для списания материалов.
-    Создает поле для каждого материала в заказе.
-    """
-
     def __init__(self, *args, **kwargs):
         order_items = kwargs.pop('order_items')
         super().__init__(*args, **kwargs)
 
         for item in order_items:
             field_name = f'material_{item.id}'
+            # Максимум можно списать остаток (исходное количество минус уже списанное)
+            max_value = item.quantity - item.written_off
+
             self.fields[field_name] = forms.IntegerField(
-                label=f'{item.material.name} (Макс.: {item.quantity})',
+                label=f'{item.material.name} (Макс.: {max_value})',
                 min_value=0,
-                max_value=item.quantity,  # Нельзя списать больше, чем зарезервировано в этом заказе
+                max_value=max_value,  # ← Исправлено!
                 initial=0,
                 required=False,
                 widget=forms.NumberInput(attrs={
                     'class': 'form-control',
                     'data-material-id': item.material.id,
-                    'data-reserved': item.quantity,
+                    'data-reserved': max_value,  # ← Обновляем для отображения
                     'data-balance': item.material.balance
                 })
             )
             self.fields[field_name].material_data = {
                 'material_id': item.material.id,
-                'reserved': item.quantity,
+                'reserved': max_value,  # ← Обновляем
                 'balance': item.material.balance
             }
 
