@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mebel.apps.MebelConfig',
-    'ordercart.apps.OrdercartConfig',
     'orders.apps.OrdersConfig',
     'debug_toolbar',
     'rest_framework',
@@ -87,8 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'ordercart.context_processors.ordercart', #Отключить при длительных запросах. Корзина включается повсюду
+                'django.contrib.messages.context_processors.messages', #Отключить при длительных запросах. Корзина включается повсюду
             ],
         },
     },

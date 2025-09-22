@@ -16,37 +16,7 @@
             </div>
             <div class="card-body">
                 {% include "includes/form_errors.html" with form=form %}
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">{{ form.name.label }}</label>
-                            {{ form.name }}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">{{ form.category.label }}</label>
-                            {{ form.category }}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">{{ form.price.label }}</label>
-                            {{ form.price }}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">{{ form.image.label }}</label>
-                            {{ form.image }}
-                        </div>
-                    </div>
-                </div>
-                <!-- Добавляем поле выбора поставщика после категории -->
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -62,6 +32,20 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.price.label }}</label>
+                            {{ form.price }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.image.label }}</label>
+                            {{ form.image }}
+                        </div>
+                    </div>
+                </div>
                                 <!-- НОВЫЙ БЛОК - поставщик -->
                 <!-- БЛОК ПОСТАВЩИКА С КНОПКОЙ ДОБАВЛЕНИЯ -->
                 <div class="row">
