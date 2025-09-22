@@ -1,0 +1,242 @@
+<div class="modal-header">
+    <h5 class="modal-title">Добавить нового поставщика</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form id="supplier-create-form" method="post" action="{% url 'mebel:supplier_create_modal' %}">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div id="supplier-form-errors"></div>
+
+        <div class="mb-3">
+            <label class="form-label">{{ form.name.label }}</label>
+            {{ form.name }}
+            <div class="form-text">Обязательное поле</div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">{{ form.contact_person.label }}</label>
+                    {{ form.contact_person }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">{{ form.phone.label }}</label>
+                    {{ form.phone }}
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">{{ form.email.label }}</label>
+            {{ form.email }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">{{ form.address.label }}</label>
+            {{ form.address }}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="submit" class="btn btn-primary">Создать поставщика</button>
+    </div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('supplier-create-form');
+    const errorContainer = document.getElementById('supplier-form-errors');
+
+    // Функция для сохранения данных формы материала
+    function saveMaterialFormData() {
+        const materialForm = document.querySelector('form[enctype="multipart/form-data"]');
+        if (!materialForm) return null;
+
+        const formData = {};
+        const inputs = materialForm.querySelectorAll('input, select, textarea');
+
+        inputs.forEach(input => {
+            if (input.name && input.type !== 'file') {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    formData[input.name] = input.checked;
+                } else {
+                    formData[input.name] = input.value;
+                }
+            }
+        });
+
+        // Сохраняем в sessionStorage
+        sessionStorage.setItem('materialFormData', JSON.stringify(formData));
+        return formData;
+    }
+
+    // Функция для восстановления данных формы материала
+    function restoreMaterialFormData() {
+        const savedData = sessionStorage.getItem('materialFormData');
+        if (!savedData) return;
+
+        const formData = JSON.parse(savedData);
+        const materialForm = document.querySelector('form[enctype="multipart/form-data"]');
+        if (!materialForm) return;
+
+        Object.keys(formData).forEach(name => {
+            const input = materialForm.querySelector(`[name="${name}"]`);
+            if (input) {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.checked = formData[name];
+                } else {
+                    input.value = formData[name];
+                }
+
+                // Триггерим событие change для обновления зависимых полей
+                const event = new Event('change', { bubbles: true });
+                input.dispatchEvent(event);
+            }
+        });
+
+        // Очищаем сохраненные данные
+        sessionStorage.removeItem('materialFormData');
+    }
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Сохраняем данные формы материала перед отправкой
+        saveMaterialFormData();
+
+        // Показываем индикатор загрузки
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Создание...';
+        submitBtn.disabled = true;
+
+        // Отправляем форму через AJAX
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: new FormData(form)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Обновляем select с поставщиками
+                const supplierSelect = document.getElementById('supplier-select');
+                if (supplierSelect) {
+                    const newOption = new Option(data.supplier_name, data.supplier_id, true, true);
+                    supplierSelect.add(newOption);
+
+                    // Восстанавливаем данные формы материала
+                    setTimeout(restoreMaterialFormData, 100);
+                }
+
+                // Обновляем другие возможные select'ы на странице
+                document.querySelectorAll('select[name="supplier"]').forEach(select => {
+                    if (select.id !== 'supplier-select') {
+                        const option = new Option(data.supplier_name, data.supplier_id);
+                        select.add(option);
+                    }
+                });
+
+                // Закрываем модальное окно
+                const modal = bootstrap.Modal.getInstance(document.getElementById('supplierModal'));
+                if (modal) {
+                    modal.hide();
+                }
+
+                // Показываем сообщение об успехе
+                showAlert('success', data.message);
+
+                // Очищаем форму поставщика
+                form.reset();
+                errorContainer.innerHTML = '';
+
+            } else {
+                // Показываем ошибки валидации
+                showFormErrors(errorContainer, data.errors);
+
+                // Восстанавливаем данные формы материала при ошибке
+                setTimeout(restoreMaterialFormData, 100);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('danger', 'Произошла ошибка при создании поставщика');
+
+            // Восстанавливаем данные формы материала при ошибке
+            setTimeout(restoreMaterialFormData, 100);
+        })
+        .finally(() => {
+            // Восстанавливаем кнопку
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        });
+    });
+
+    // Восстанавливаем данные при закрытии модалки без создания поставщика
+    document.getElementById('supplierModal').addEventListener('hidden.bs.modal', function() {
+        setTimeout(restoreMaterialFormData, 100);
+    });
+
+    function showFormErrors(container, errors) {
+        let html = '<div class="alert alert-danger">';
+        html += '<strong>Ошибки в форме:</strong><ul>';
+        for (const field in errors) {
+            const fieldNames = {
+                'name': 'Название',
+                'contact_person': 'Контактное лицо',
+                'phone': 'Телефон',
+                'email': 'Email',
+                'address': 'Адрес'
+            };
+            const fieldName = fieldNames[field] || field;
+            html += `<li><strong>${fieldName}:</strong> ${errors[field].join(', ')}</li>`;
+        }
+        html += '</ul></div>';
+        container.innerHTML = html;
+
+        container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showAlert(type, message) {
+        // Удаляем существующие алерты того же типа
+        document.querySelectorAll(`.alert-${type}`).forEach(alert => {
+            if (alert.parentNode) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }
+        });
+
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-3`;
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+
+        const header = document.querySelector('h1') || document.querySelector('.container');
+        if (header) {
+            header.parentNode.insertBefore(alertDiv, header.nextSibling);
+        } else {
+            document.querySelector('.container').prepend(alertDiv);
+        }
+
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                const bsAlert = new bootstrap.Alert(alertDiv);
+                bsAlert.close();
+            }
+        }, 5000);
+    }
+
+    // Автофокус на первое поле при открытии модалки
+    const firstInput = form.querySelector('input[type="text"], input[type="email"]');
+    if (firstInput) {
+        setTimeout(() => firstInput.focus(), 300);
+    }
+});
+</script>

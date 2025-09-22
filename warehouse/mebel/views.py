@@ -23,7 +23,66 @@ from django.utils.text import slugify
 from transliterate import slugify as transliterate_slugify
 from django.core.paginator import Paginator
 from django.db.models import F, ExpressionWrapper, IntegerField
+from django.shortcuts import get_object_or_404
+from .models import Category, Material, Supplier  # добавляем Supplier
+from .forms import MaterialEditForm, MaterialCreateForm, SupplierCreateForm  # добавляем SupplierCreateForm
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
+
+# остальные импорты...
+
+# НОВЫЙ VIEW ДЛЯ СОЗДАНИЯ ПОСТАВЩИКА ЧЕРЕЗ МОДАЛКУ
+@login_required
+@require_http_methods(["GET", "POST"])
+def supplier_create_modal(request):
+    if request.method == 'POST':
+        form = SupplierCreateForm(request.POST)
+        if form.is_valid():
+            supplier = form.save()
+
+            # Если это AJAX запрос, возвращаем JSON
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'supplier_id': supplier.id,
+                    'supplier_name': supplier.name,
+                    'message': 'Поставщик успешно создан!'
+                })
+
+            # Для не-AJAX запроса определяем, откуда пришел запрос
+            referer = request.POST.get('referer') or request.META.get('HTTP_REFERER')
+
+            messages.success(request, f'Поставщик "{supplier.name}" успешно создан!')
+
+            # Пытаемся вернуться на предыдущую страницу
+            if referer:
+                return redirect(referer)
+            else:
+                # Если referer нет, возвращаемся к списку материалов
+                return redirect('mebel:material_list')
+
+        # Обработка невалидной формы для AJAX
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors
+            })
+        # Для не-AJAX просто показываем форму с ошибками
+        # (этот случай маловероятен, но на всякий случай)
+
+    else:
+        form = SupplierCreateForm()
+
+    # Рендерим форму для модального окна (AJAX)
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        html = render_to_string('mebel/includes/supplier_modal_form.html', {
+            'form': form
+        }, request=request)
+        return JsonResponse({'html': html})
+
+    # Не-AJAX GET запрос (редкий случай)
+    return render(request, 'mebel/supplier/create.html', {'form': form})
 
 @require_POST  # Разрешаем только POST-запросы
 @login_required

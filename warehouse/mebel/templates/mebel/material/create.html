@@ -63,18 +63,20 @@
                 </div>
 
                                 <!-- НОВЫЙ БЛОК - поставщик -->
+                <!-- БЛОК ПОСТАВЩИКА С КНОПКОЙ ДОБАВЛЕНИЯ -->
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-10">
                         <div class="mb-3">
                             <label class="form-label">{{ form.supplier.label }}</label>
                             {{ form.supplier }}
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <!-- Оставшееся поле можно сдвинуть или оставить пустым -->
+                    <div class="col-md-2">
                         <div class="mb-3">
-                            <label class="form-label">{{ form.price.label }}</label>
-                            {{ form.price }}
+                            <label class="form-label">&nbsp;</label>
+                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#supplierModal">
+                                + Добавить
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -97,6 +99,15 @@
     </form>
 </div>
 
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ СОЗДАНИЯ ПОСТАВЩИКА -->
+<div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="supplier-modal-content">
+            <!-- Содержимое будет загружено через AJAX -->
+        </div>
+    </div>
+</div>
+
 <style>
 .form-control, .form-select {
     border-radius: 0.375rem;
@@ -109,4 +120,41 @@
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 </style>
+{% endblock %}
+
+{% block domready %}
+<script>
+// Загрузка формы поставщика в модальное окно
+$('#supplierModal').on('show.bs.modal', function (event) {
+    var modal = $(this);
+    $.ajax({
+        url: "{% url 'mebel:supplier_create_modal' %}",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: function(response) {
+            modal.find('.modal-content').html(response.html);
+        },
+        error: function() {
+            modal.find('.modal-content').html(
+                '<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>' +
+                '<div class="modal-body"><p>Не удалось загрузить форму создания поставщика.</p></div>'
+            );
+        }
+    });
+});
+
+// Очистка модального окна при закрытии
+$('#supplierModal').on('hidden.bs.modal', function () {
+    $(this).find('.modal-content').html('');
+});
+
+// Фокус на поле поставщика после закрытия модалки
+$('#supplierModal').on('hidden.bs.modal', function () {
+    setTimeout(function() {
+        $('#supplier-select').focus();
+    }, 100);
+});
+
+</script>
 {% endblock %}

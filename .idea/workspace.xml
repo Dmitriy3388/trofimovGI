@@ -4,15 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлены фотографии к заказам. Добавлена формула общей стоимости заказа. Изменена структура заказа.">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлен столбец поставщик и его отображение . Проблема - нет окна создания поставщика (только через админку)">
+      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/includes/supplier_modal_form.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -98,14 +97,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00001" summary="11">
-      <option name="closed" value="true" />
-      <created>1752698060140</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1752698060140</updated>
     </task>
     <task id="LOCAL-00002" summary="11">
       <option name="closed" value="true" />
@@ -483,7 +474,23 @@
       <option name="project" value="LOCAL" />
       <updated>1758560386524</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="Добавлен столбец поставщик и его отображение . Проблема - нет окна создания поставщика (только через админку)">
+      <option name="closed" value="true" />
+      <created>1758562650802</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1758562650802</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Добавлен столбец поставщик и его отображение . Проблема - нет окна создания поставщика (только через админку)">
+      <option name="closed" value="true" />
+      <created>1758562660226</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1758562660226</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -513,7 +520,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="решена ошибка с уведомлениями" />
     <MESSAGE value="Форма редактирования заказа исправлена. Добавлена возможность добавление материала, дублирующие позиции суммируются" />
     <MESSAGE value="Форма списания заказа исправлена. Дата списания формируется" />
     <MESSAGE value="Форма деталей по заказу исправлена. Добавлена информация по общему балансу" />
@@ -538,6 +544,7 @@
     <MESSAGE value="Исправлено логирование списания материалов через форму деталей заказа и отображение категорий в списке материалов" />
     <MESSAGE value="Добавлены фотографии к заказам. Выявлена проблема со стоимостью заказа" />
     <MESSAGE value="Добавлены фотографии к заказам. Добавлена формула общей стоимости заказа. Изменена структура заказа." />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлены фотографии к заказам. Добавлена формула общей стоимости заказа. Изменена структура заказа." />
+    <MESSAGE value="Добавлен столбец поставщик и его отображение . Проблема - нет окна создания поставщика (только через админку)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлен столбец поставщик и его отображение . Проблема - нет окна создания поставщика (только через админку)" />
   </component>
 </project>

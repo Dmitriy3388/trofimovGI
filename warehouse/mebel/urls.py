@@ -15,5 +15,6 @@ urlpatterns = [
     path('<int:material_id>/edit/', views.material_edit, name='material_edit'),  # Новый URL
     path('<slug:category_slug>/', MaterialListView.as_view(), name='material_list_by_category'),  # Используем MaterialListView
     path('<int:id>/<slug:slug>/', views.material_detail, name='material_detail'),
+    path('supplier/create-modal/', views.supplier_create_modal, name='supplier_create_modal'),
 
 ]

@@ -24,9 +24,6 @@ class Supplier(models.Model):
         ordering = ['name']
         verbose_name = 'поставщик'
         verbose_name_plural = 'поставщики'
-        indexes = [
-            models.Index(fields=['name']),
-        ]
 
     def __str__(self):
         return self.name
@@ -185,3 +182,4 @@ class MaterialOperation(models.Model):
 
     def __str__(self):
         return f"{self.get_operation_type_display()} {self.quantity} шт. - {self.material.name}"
+
