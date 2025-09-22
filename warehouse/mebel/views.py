@@ -271,11 +271,9 @@ class MaterialListView(LoginRequiredMixin, ListView):
         return self.get(request, *args, **kwargs)
 
     def get_queryset(self):
-        # Получаем параметры сортировки
         sort_by = self.request.GET.get('sort', 'name')
         order = self.request.GET.get('order', 'asc')
 
-        # Аннотируем queryset вычисляемым полем available
         queryset = Material.objects.annotate(
             calculated_available=ExpressionWrapper(
                 F('balance') - F('reserved'),
@@ -283,17 +281,24 @@ class MaterialListView(LoginRequiredMixin, ListView):
             )
         )
 
-        # Для сортировки по available используем вычисляемое поле
-        if sort_by == 'available':
-            sort_by = 'calculated_available'
-
-        # Определяем порядок сортировки
-        if order == 'asc':
-            order_by = sort_by
+        # Добавляем поддержку сортировки по поставщику
+        if sort_by == 'supplier':
+            # Сортируем по имени поставщика
+            if order == 'asc':
+                queryset = queryset.order_by('supplier__name')
+            else:
+                queryset = queryset.order_by('-supplier__name')
         else:
-            order_by = f'-{sort_by}'
+            # Для других полей используем старую логику
+            if sort_by == 'available':
+                sort_by = 'calculated_available'
 
-        queryset = queryset.order_by(order_by)
+            if order == 'asc':
+                order_by = sort_by
+            else:
+                order_by = f'-{sort_by}'
+
+            queryset = queryset.order_by(order_by)
 
         category_slug = self.kwargs.get('category_slug')
         if category_slug:

@@ -19,6 +19,19 @@
           <p><strong>Зарезервировано:</strong> {{ material.reserved }}</p>
           <p><strong>Доступно:</strong> <span style="color: {{ material.availability_status }}; font-weight: bold;">{{ material.available }}</span></p>
           <p><strong>Нехватка:</strong> <span style="color: {% if material.lack > 0 %}red{% else %}green{% endif %}; font-weight: bold;">{{ material.lack }}</span></p>
+                <!-- В карточке информации о материале добавляем -->
+            <!-- В карточке информации о материале добавляем -->
+            <p><strong>Поставщик:</strong>
+                {% if material.supplier %}
+                    {{ material.supplier.name }}
+                    {% if material.supplier.phone %}
+                        <br><small class="text-muted">Тел: {{ material.supplier.phone }}</small>
+                    {% endif %}
+                {% else %}
+                    <span class="text-muted">Не указан</span>
+                {% endif %}
+            </p>
+
           {% if material.description %}
           <p><strong>Описание:</strong> {{ material.description }}</p>
           {% endif %}
@@ -62,6 +75,7 @@
       </div>
       {% endif %}
   </div>
+
 
   <!-- История операций -->
   <div class="mt-4">

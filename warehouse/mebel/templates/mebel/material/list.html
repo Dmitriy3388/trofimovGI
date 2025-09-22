@@ -90,6 +90,15 @@
               {% endif %}
             </a>
           </th>
+          <th>
+            <a href="?sort=supplier&order={% if current_sort == 'supplier' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}"
+               style="text-decoration: none; color: inherit;">
+                Поставщик
+                {% if current_sort == 'supplier' %}
+                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                {% endif %}
+            </a>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -108,6 +117,13 @@
             <span style="color: {% if material.lack > 0 %}red{% else %}green{% endif %}; font-weight: bold;">
               {{ material.lack }}
             </span>
+          </td>
+          <td>
+            {% if material.supplier %}
+                {{ material.supplier.name }}
+            {% else %}
+                <span class="text-muted">Не указан</span>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}

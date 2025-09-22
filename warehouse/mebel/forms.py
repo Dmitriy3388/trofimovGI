@@ -8,18 +8,19 @@ from django.db.models import Value
 class MaterialEditForm(forms.ModelForm):
     class Meta:
         model = Material
-        fields = ['name', 'category', 'description', 'price', 'image']
+        fields = ['name', 'category', 'supplier', 'description', 'price', 'image']  # добавляем supplier
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
+            'supplier': forms.Select(attrs={'class': 'form-control'}),  # новое поле
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
-
         labels = {
             'name': 'Название',
             'category': 'Категория',
+            'supplier': 'Поставщик',  # новая метка
             'description': 'Описание',
             'price': 'Цена',
             'image': 'Изображение',
@@ -32,18 +33,19 @@ class MaterialEditForm(forms.ModelForm):
 class MaterialCreateForm(forms.ModelForm):
     class Meta:
         model = Material
-        fields = ['name', 'category', 'description', 'price', 'image']
+        fields = ['name', 'category', 'supplier', 'description', 'price', 'image']  # добавляем supplier
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
+            'supplier': forms.Select(attrs={'class': 'form-control'}),  # новое поле
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
-
         labels = {
             'name': 'Название',
             'category': 'Категория',
+            'supplier': 'Поставщик',  # новая метка
             'description': 'Описание',
             'price': 'Цена',
             'image': 'Изображение',

@@ -9,6 +9,31 @@ from django.db.models.functions import Lower, Replace
 from django.db.models import Value
 
 
+# Добавляем в models.py после импортов и перед Category
+
+class Supplier(models.Model):
+    name = models.CharField(max_length=200, verbose_name="Название поставщика")
+    contact_person = models.CharField(max_length=100, blank=True, verbose_name="Контактное лицо")
+    phone = models.CharField(max_length=20, blank=True, verbose_name="Телефон")
+    email = models.EmailField(blank=True, verbose_name="Email")
+    address = models.TextField(blank=True, verbose_name="Адрес")
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'поставщик'
+        verbose_name_plural = 'поставщики'
+        indexes = [
+            models.Index(fields=['name']),
+        ]
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('mebel:supplier_detail', args=[self.id])
+
 class Category(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200,
@@ -48,6 +73,13 @@ class Material(models.Model):
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10,
                                 decimal_places=2)
+    # НОВОЕ ПОЛЕ - поставщик
+    supplier = models.ForeignKey(Supplier,
+                                on_delete=models.SET_NULL,
+                                null=True,
+                                blank=True,
+                                verbose_name="Поставщик",
+                                related_name='materials')
     balance = models.PositiveIntegerField(default=0, verbose_name="Текущий остаток")
     reserved = models.PositiveIntegerField(default=0, verbose_name="Зарезервировано")
     lack = models.PositiveIntegerField(default=0, verbose_name="Нехватка")

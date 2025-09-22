@@ -46,7 +46,39 @@
                         </div>
                     </div>
                 </div>
-                
+                <!-- Добавляем поле выбора поставщика после категории -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.name.label }}</label>
+                            {{ form.name }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.category.label }}</label>
+                            {{ form.category }}
+                        </div>
+                    </div>
+                </div>
+
+                                <!-- НОВЫЙ БЛОК - поставщик -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.supplier.label }}</label>
+                            {{ form.supplier }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Оставшееся поле можно сдвинуть или оставить пустым -->
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.price.label }}</label>
+                            {{ form.price }}
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label">{{ form.description.label }}</label>
                     {{ form.description }}
