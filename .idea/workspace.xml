@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлены фотографии к заказам. Выявлена проблема со стоимостью заказа">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлены фотографии к заказам. Добавлена формула общей стоимости заказа. Изменена структура заказа.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/write_off_modal.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/write_off_modal.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templatetags/order_extras.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templatetags/order_extras.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -472,7 +467,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758228806497</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="Добавлены фотографии к заказам. Добавлена формула общей стоимости заказа. Изменена структура заказа.">
+      <option name="closed" value="true" />
+      <created>1758560386524</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1758560386524</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -502,7 +505,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ошибки с формами списания решены." />
     <MESSAGE value="решена ошибка с уведомлениями" />
     <MESSAGE value="Форма редактирования заказа исправлена. Добавлена возможность добавление материала, дублирующие позиции суммируются" />
     <MESSAGE value="Форма списания заказа исправлена. Дата списания формируется" />
@@ -527,6 +529,7 @@
     <MESSAGE value="Исправлены подсказки в формах добавления материалов и создания заказов" />
     <MESSAGE value="Исправлено логирование списания материалов через форму деталей заказа и отображение категорий в списке материалов" />
     <MESSAGE value="Добавлены фотографии к заказам. Выявлена проблема со стоимостью заказа" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлены фотографии к заказам. Выявлена проблема со стоимостью заказа" />
+    <MESSAGE value="Добавлены фотографии к заказам. Добавлена формула общей стоимости заказа. Изменена структура заказа." />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлены фотографии к заказам. Добавлена формула общей стоимости заказа. Изменена структура заказа." />
   </component>
 </project>
