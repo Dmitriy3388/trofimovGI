@@ -1,194 +1,731 @@
 {% extends "mebel/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- Подключаем Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.chart-container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 50%;
+    height: 500px;
+    float: left;
+    margin-right: 20px;
+    position: relative; /* Добавляем */
+    overflow: hidden; /* Обрезаем выходящее за пределы */
+}
+
+.search-container {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+#materialSearch {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.autocomplete-results {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 0 0 6px 6px;
+    display: none;
+}
+
+.chart-wrapper {
+    width: 100%;
+    height: 200px; /* Фиксированная высота для графика */
+    position: relative;
+}
+
+#materialChart {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+.autocomplete-item.active {
+    background-color: #007bff !important;
+    color: white !important;
+}
+
+.autocomplete-item.active small {
+    color: #e6f3ff !important;
+}
+
+/* Улучшим визуальное отображение */
+.search-container {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+#materialSearch {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#materialSearch:focus {
+    border-color: #007bff;
+}
+
+.autocomplete-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.material-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.period-select {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.materials-table-container {
+    width: calc(50% - 20px);
+    float: right;
+}
+
+.table {
+    font-size: 14px;
+}
+
+.btn-sm {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .chart-container,
+    .materials-table-container {
+        width: 100%;
+        float: none;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<h1>{% if category %}{{ category.name }}{% else %}Все материалы{% endif %}</h1>
-
-<!-- Сообщения об успехе/ошибках -->
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-{% endif %}
-
-<div class="categories mb-4">
-    <h3>Категории</h3>
-    <div class="d-flex flex-wrap gap-2">
-        <a href="{% url 'mebel:material_list' %}" class="btn {% if not category %}btn-primary{% else %}btn-outline-primary{% endif %}">
-            Все
-        </a>
-        {% for c in categories %}
-        <a href="{{ c.get_absolute_url }}" class="btn {% if category.slug == c.slug %}btn-primary{% else %}btn-outline-primary{% endif %}">
-            {{ c.name }}
-        </a>
-        {% endfor %}
-    </div>
-</div>
-
-
-
-{% block contents %}
 <div class="container mt-4">
-  <h2 class="mb-4">Список материалов</h2>
-  <div>
-    <table>
-      <thead>
-        <tr>
-          <th>
-              <a href="?sort=name&order={% if current_sort == 'name' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="sort-link"
-              style="text-decoration: none; color: inherit;">
-                Название
-                {% if current_sort == 'name' %}
-                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
-                {% endif %}
-              </a>
-          </th>
-          <th>
-              <a href="?sort=price&order={% if current_sort == 'price' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="sort-link"
-              style="text-decoration: none; color: inherit;">
-                Цена
-                {% if current_sort == 'price' %}
-                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
-                {% endif %}
-              </a>
-          </th>
-          <th>
-              <a href="?sort=balance&order={% if current_sort == 'balance' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="sort-link"
-              style="text-decoration: none; color: inherit;">
-                Баланс
-                {% if current_sort == 'balance' %}
-                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
-                {% endif %}
-              </a>
-          </th>
-          <th>
-              <a href="?sort=reserved&order={% if current_sort == 'reserved' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="sort-link"
-              style="text-decoration: none; color: inherit;">
-                Зарезервировано
-                {% if current_sort == 'reserved' %}
-                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
-                {% endif %}
-              </a>
-          </th>
-          <th>
-              <a href="?sort=available&order={% if current_sort == 'available' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="sort-link"
-              style="text-decoration: none; color: inherit;">
-                Доступно
-                {% if current_sort == 'available' %}
-                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
-                {% endif %}
-              </a>
-          </th>
-          <th>
-            <a href="?sort=lack&order={% if current_sort == 'lack' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}"
-               style="text-decoration: none; color: inherit;">
-              Нехватка
-              {% if current_sort == 'lack' %}
-                {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
-              {% endif %}
-            </a>
-          </th>
-          <th>
-            <a href="?sort=supplier&order={% if current_sort == 'supplier' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}"
-               style="text-decoration: none; color: inherit;">
-                Поставщик
-                {% if current_sort == 'supplier' %}
-                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
-                {% endif %}
-            </a>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for material in materials %}
-        <tr class="clickable-row" data-href="{{ material.get_absolute_url }}">
-          <td><strong>{{ material.name }}</strong></td>
-          <td>{{ material.price }} ₽</td>
-          <td>{{ material.balance }}</td>
-          <td>{{ material.reserved }}</td>
-          <td>
-            <span style="color: {{ material.availability_status }}; font-weight: bold;">
-              {{ material.available }}
-            </span>
-          </td>
-          <td>
-            <span style="color: {% if material.lack > 0 %}red{% else %}green{% endif %}; font-weight: bold;">
-              {{ material.lack }}
-            </span>
-          </td>
-          <td>
-            {% if material.supplier %}
-                {{ material.supplier.name }}
-            {% else %}
-                <span class="text-muted">Не указан</span>
+    <h1>{% if category %}{{ category.name }}{% else %}Все материалы{% endif %}</h1>
+
+    <div class="clearfix">
+        <!-- Блок с графиком -->
+        <!-- В блоке с графиком обновим структуру -->
+        <div class="chart-container">
+            <h5>📊 График наличия материалов</h5>
+
+            <div class="search-container">
+                <input type="text" id="materialSearch" placeholder="🔍 Введите название материала...">
+                <div id="autocompleteResults" class="autocomplete-results"></div>
+            </div>
+
+            <div class="material-info" id="materialInfo" style="display: none;">
+                <h6 id="materialName"></h6>
+                <div class="row">
+                    <div class="col-6">
+                        <small>Баланс: <strong id="currentBalance"></strong></small>
+                    </div>
+                    <div class="col-6">
+                        <small>Доступно: <strong id="currentAvailable"></strong></small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-controls">
+                <label for="periodSelect" class="small">Период:</label>
+                <select id="periodSelect" class="period-select">
+                    <option value="3">3 мес</option>
+                    <option value="6">6 мес</option>
+                    <option value="12" selected>1 год</option>
+                </select>
+                <button id="refreshChart" class="btn btn-outline-secondary btn-sm">🔄</button>
+            </div>
+
+            <!-- Обернем canvas в div с фиксированной высотой -->
+            <div class="chart-wrapper">
+                <canvas id="materialChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Таблица материалов -->
+        <div class="materials-table-container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Список материалов</h5>
+                <div>
+                    {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
+                    <a href="{% url 'mebel:material_create' %}" class="btn btn-primary btn-sm">+ Добавить</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Сообщения об успехе/ошибках -->
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
             {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+
+            <!-- Категории -->
+            <div class="categories mb-3">
+                <div class="d-flex flex-wrap gap-1">
+                    <a href="{% url 'mebel:material_list' %}" class="btn {% if not category %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm">
+                        Все
+                    </a>
+                    {% for c in categories %}
+                    <a href="{{ c.get_absolute_url }}" class="btn {% if category.slug == c.slug %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm">
+                        {{ c.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Таблица материалов -->
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Название</th>
+                            <th>Цена</th>
+                            <th>Баланс</th>
+                            <th>Доступно</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for material in materials %}
+                        <tr data-material-id="{{ material.id }}">
+                            <td>
+                                <strong>{{ material.name }}</strong>
+                                {% if material.supplier %}
+                                <br><small class="text-muted">{{ material.supplier.name }}</small>
+                                {% endif %}
+                            </td>
+                            <td>{{ material.price }} ₽</td>
+                            <td>{{ material.balance }}</td>
+                            <td>
+                                <span class="badge {% if material.availability_status == 'green' %}bg-success{% elif material.availability_status == 'yellow' %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ material.available }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-info btn-sm show-chart"
+                                            data-material-id="{{ material.id }}"
+                                            data-material-name="{{ material.name }}"
+                                            title="Показать график">
+                                        📊
+                                    </button>
+                                    <a href="{{ material.get_absolute_url }}" class="btn btn-primary btn-sm" title="Подробности">
+                                        👁️
+                                    </a>
+                                    {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
+                                    <a href="{% url 'mebel:material_edit' material.id %}" class="btn btn-warning btn-sm" title="Редактировать">
+                                        ✏️
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Пагинация -->
+            {% include "pagination.html" %}
+        </div>
+    </div>
 </div>
 {% endblock %}
 
-<!-- Пагинация -->
-{% include "pagination.html" %}
-
-<style>
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .table th {
-    background: #f8f9fa;
-    padding: 1rem;
-    font-weight: 600;
-    text-align: left;
-    border-bottom: 2px solid #dee2e6;
-  }
-
-  .table td {
-    padding: 1rem;
-    border-bottom: 1px solid #dee2e6;
-  }
-
-  .table tr:last-child td {
-    border-bottom: none;
-  }
-
-  .clickable-row {
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  .clickable-row:hover {
-    background-color: #f8f9fa;
-  }
-
-  .btn-group .btn {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-  }
-</style>
-
+{% block domready %}
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const rows = document.querySelectorAll('.clickable-row');
-    rows.forEach(row => {
-      row.addEventListener('click', function(e) {
-        // Игнорируем клики по кнопкам действий
-        if (!e.target.closest('.btn-group')) {
-          window.location.href = this.dataset.href;
+let materialChart = null;
+let currentMaterialId = null;
+
+// Полностью переписанная функция автодополнения
+function setupAutocomplete() {
+    const searchInput = document.getElementById('materialSearch');
+    const resultsContainer = document.getElementById('autocompleteResults');
+    let timeoutId = null;
+
+    // Функция для выполнения поиска
+    function performSearch(query) {
+        if (!query || query.length < 2) {
+            resultsContainer.style.display = 'none';
+            return;
         }
-      });
+
+        // Формируем URL правильно
+        const url = `{% url 'mebel:material_autocomplete' %}?q=${encodeURIComponent(query)}`;
+        console.log('Search URL:', url);
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(materials => {
+            console.log('Received materials:', materials);
+            displayResults(materials);
+        })
+        .catch(error => {
+            console.error('Search error:', error);
+            displayError('Ошибка загрузки данных');
+        });
+    }
+
+    // Функция отображения результатов
+    function displayResults(materials) {
+        resultsContainer.innerHTML = '';
+
+        if (materials && materials.length > 0) {
+            materials.forEach(material => {
+                const item = document.createElement('div');
+                item.className = 'autocomplete-item';
+                item.innerHTML = `
+                    <div><strong>${this.escapeHtml(material.name)}</strong></div>
+                    <small>Категория: ${this.escapeHtml(material.category)} | Баланс: ${material.balance}</small>
+                `;
+                item.addEventListener('click', () => {
+                    this.selectMaterial(material);
+                });
+                resultsContainer.appendChild(item);
+            });
+            resultsContainer.style.display = 'block';
+        } else {
+            this.displayNoResults();
+        }
+    }
+
+    // Функция отображения ошибки
+    function displayError(message) {
+        resultsContainer.innerHTML = `<div class="autocomplete-item text-danger">${message}</div>`;
+        resultsContainer.style.display = 'block';
+    }
+
+    // Функция отображения "не найдено"
+    function displayNoResults() {
+        resultsContainer.innerHTML = '<div class="autocomplete-item text-muted">Материалы не найдены</div>';
+        resultsContainer.style.display = 'block';
+    }
+
+    // Функция выбора материала
+    function selectMaterial(material) {
+        searchInput.value = material.name;
+        resultsContainer.style.display = 'none';
+        loadMaterialChart(material.id);
+
+        // Прокрутка к графику
+        document.querySelector('.chart-container').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+
+    // Экранирование HTML
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Обработчик ввода с задержкой
+    searchInput.addEventListener('input', function(e) {
+        const query = e.target.value.trim();
+
+        // Очищаем предыдущий таймер
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+
+        // Скрываем результаты если запрос слишком короткий
+        if (query.length < 2) {
+            resultsContainer.style.display = 'none';
+            return;
+        }
+
+        // Устанавливаем задержку 400 мс
+        timeoutId = setTimeout(() => {
+            performSearch(query);
+        }, 400);
     });
-  });
+
+    // Обработчик клавиш
+    searchInput.addEventListener('keydown', function(e) {
+        const items = resultsContainer.querySelectorAll('.autocomplete-item');
+        const activeItem = resultsContainer.querySelector('.autocomplete-item.active');
+        let nextActive = null;
+
+        switch(e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                if (!activeItem && items.length > 0) {
+                    nextActive = items[0];
+                } else if (activeItem && activeItem.nextElementSibling) {
+                    nextActive = activeItem.nextElementSibling;
+                }
+                break;
+
+            case 'ArrowUp':
+                e.preventDefault();
+                if (activeItem && activeItem.previousElementSibling) {
+                    nextActive = activeItem.previousElementSibling;
+                }
+                break;
+
+            case 'Enter':
+                e.preventDefault();
+                if (activeItem) {
+                    activeItem.click();
+                }
+                break;
+
+            case 'Escape':
+                resultsContainer.style.display = 'none';
+                break;
+        }
+
+        // Обновляем активный элемент
+        if (activeItem) {
+            activeItem.classList.remove('active');
+        }
+        if (nextActive) {
+            nextActive.classList.add('active');
+        }
+    });
+
+    // Закрытие при клике вне области
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-container')) {
+            resultsContainer.style.display = 'none';
+        }
+    });
+
+    // При фокусе показываем последние результаты если есть
+    searchInput.addEventListener('focus', function() {
+        if (this.value.length >= 2 && resultsContainer.children.length > 0) {
+            resultsContainer.style.display = 'block';
+        }
+    });
+
+    // Сохраняем функции в объекте для доступа извне
+    window.autocomplete = {
+        performSearch,
+        displayResults,
+        displayError,
+        displayNoResults,
+        selectMaterial,
+        escapeHtml
+    };
+}
+
+// Загрузка данных графика
+function loadMaterialChart(materialId) {
+    showLoading(true);
+
+    fetch(`{% url 'mebel:material_chart_data' 0 %}`.replace('0', materialId))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            currentMaterialId = materialId;
+
+            // Обновляем информацию о материале
+            const materialInfo = document.getElementById('materialInfo');
+            materialInfo.style.display = 'block';
+            document.getElementById('materialName').textContent = data.material_name;
+            document.getElementById('currentBalance').textContent = data.current_balance;
+            document.getElementById('currentAvailable').textContent = data.current_available;
+
+            // Форматируем даты для лучшего отображения
+            const formattedDates = data.dates.map(date => {
+                const d = new Date(date);
+                return d.toLocaleDateString('ru-RU', {
+                    month: 'short',
+                    day: 'numeric'
+                });
+            });
+
+            // Создаем или обновляем график
+            updateChart(formattedDates, data.quantities, data.material_name);
+        })
+        .catch(error => {
+            console.error('Error loading chart data:', error);
+            alert('Ошибка загрузки данных графика');
+        })
+        .finally(() => {
+            showLoading(false);
+        });
+}
+
+// Функция показа/скрытия загрузки
+function showLoading(show) {
+    const refreshBtn = document.getElementById('refreshChart');
+    if (show) {
+        refreshBtn.innerHTML = '⏳';
+        refreshBtn.disabled = true;
+    } else {
+        refreshBtn.innerHTML = '🔄';
+        refreshBtn.disabled = false;
+    }
+}
+
+// Обновление графика
+function updateChart(dates, quantities, materialName) {
+    const ctx = document.getElementById('materialChart').getContext('2d');
+
+    if (materialChart) {
+        materialChart.destroy();
+    }
+
+    // Очищаем canvas перед созданием нового графика
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    materialChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: `Наличие: ${materialName}`,
+                data: quantities,
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.2)', // Уменьшим прозрачность
+                borderWidth: 2,
+                fill: true,
+                tension: 0.2,
+                pointBackgroundColor: '#4CAF50',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 1,
+                pointRadius: 2,
+                pointHoverRadius: 4,
+                // Ограничиваем заливку только областью данных
+                segment: {
+                    backgroundColor: (ctx) => {
+                        // Ограничиваем заливку в пределах графика
+                        const chart = ctx.chart;
+                        const {ctx: chartCtx, chartArea} = chart;
+
+                        if (!chartArea) {
+                            return;
+                        }
+
+                        const gradient = chartCtx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                        gradient.addColorStop(0, 'rgba(76, 175, 80, 0.2)');
+                        gradient.addColorStop(1, 'rgba(76, 175, 80, 0.05)');
+                        return gradient;
+                    }
+                }
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Важно для контроля размеров
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        boxWidth: 12,
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    bodyFont: {
+                        size: 10
+                    },
+                    titleFont: {
+                        size: 10
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grace: '5%', // Добавляем небольшой отступ от краев
+                    grid: {
+                        drawBorder: true,
+                        color: 'rgba(0,0,0,0.1)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 9
+                        },
+                        maxTicksLimit: 6
+                    }
+                },
+                x: {
+                    grid: {
+                        drawBorder: true,
+                        color: 'rgba(0,0,0,0.1)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 9
+                        },
+                        maxTicksLimit: 8
+                    }
+                }
+            },
+            elements: {
+                line: {
+                    tension: 0.2
+                },
+                point: {
+                    hitRadius: 10 // Увеличим область клика для удобства
+                }
+            },
+            layout: {
+                padding: {
+                    left: 5,
+                    right: 5,
+                    top: 5,
+                    bottom: 5
+                }
+            }
+        }
+    });
+
+    // Принудительное обновление размера после создания графика
+    setTimeout(() => {
+        if (materialChart) {
+            materialChart.resize();
+        }
+    }, 100);
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    setupAutocomplete();
+
+    // Загрузка графика для первого материала при загрузке страницы
+    const firstMaterialRow = document.querySelector('tr[data-material-id]');
+    if (firstMaterialRow) {
+        const materialId = firstMaterialRow.dataset.materialId;
+        const materialName = firstMaterialRow.querySelector('strong').textContent;
+
+        loadMaterialChart(materialId);
+        document.getElementById('materialSearch').value = materialName;
+    }
+
+    // Обработчики для кнопок "Показать график"
+    document.querySelectorAll('.show-chart').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const materialId = this.dataset.materialId;
+            const materialName = this.dataset.materialName;
+
+            document.getElementById('materialSearch').value = materialName;
+            loadMaterialChart(materialId);
+        });
+    });
+
+    // Обновление графика при изменении периода
+    document.getElementById('periodSelect').addEventListener('change', function() {
+        if (currentMaterialId) {
+            loadMaterialChart(currentMaterialId);
+        }
+    });
+
+    // Кнопка обновления графика
+    document.getElementById('refreshChart').addEventListener('click', function() {
+        if (currentMaterialId) {
+            loadMaterialChart(currentMaterialId);
+        }
+    });
+
+    // Обработчик для строк таблицы (альтернативный способ выбора)
+    document.querySelectorAll('tr[data-material-id]').forEach(row => {
+        row.addEventListener('click', function(e) {
+            // Игнорируем клики по кнопкам
+            if (!e.target.closest('.action-buttons')) {
+                const materialId = this.dataset.materialId;
+                const materialName = this.querySelector('strong').textContent;
+
+                document.getElementById('materialSearch').value = materialName;
+                loadMaterialChart(materialId);
+            }
+        });
+    });
+});
 </script>
 {% endblock %}

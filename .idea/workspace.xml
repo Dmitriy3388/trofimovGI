@@ -4,24 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлена кнопка создания поставщика и формы создания поставщика. Ошибка. При добавлении материала ранее заполненные формы до добавления поставщика обновляются без сохранения">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Удален Ordercart">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/create.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/context_processors.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/forms.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/ordercart.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/templates/ordercart/detail.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/ordercart/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/pagination.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/pagination.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,14 +96,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00003" summary="11">
-      <option name="closed" value="true" />
-      <created>1753376134875</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1753376134875</updated>
     </task>
     <task id="LOCAL-00004" summary="Общий дашбоард. (проблемы: 1 разные дашборды с разной функциональностью)">
       <option name="closed" value="true" />
@@ -499,7 +481,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758565130512</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Удален Ordercart">
+      <option name="closed" value="true" />
+      <created>1758567326224</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1758567326224</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -529,7 +519,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Форма списания заказа исправлена. Дата списания формируется" />
     <MESSAGE value="Форма деталей по заказу исправлена. Добавлена информация по общему балансу" />
     <MESSAGE value="На главную страницу добавлены графики и справка по материалам" />
     <MESSAGE value="Revert &quot;сплошные ошибки в списке заказов&quot;&#10;&#10;This reverts commit 3eae3ecb" />
@@ -554,6 +543,7 @@
     <MESSAGE value="Добавлены фотографии к заказам. Добавлена формула общей стоимости заказа. Изменена структура заказа." />
     <MESSAGE value="Добавлен столбец поставщик и его отображение . Проблема - нет окна создания поставщика (только через админку)" />
     <MESSAGE value="Добавлена кнопка создания поставщика и формы создания поставщика. Ошибка. При добавлении материала ранее заполненные формы до добавления поставщика обновляются без сохранения" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлена кнопка создания поставщика и формы создания поставщика. Ошибка. При добавлении материала ранее заполненные формы до добавления поставщика обновляются без сохранения" />
+    <MESSAGE value="Удален Ordercart" />
+    <option name="LAST_COMMIT_MESSAGE" value="Удален Ordercart" />
   </component>
 </project>

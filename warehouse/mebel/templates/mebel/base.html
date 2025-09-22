@@ -73,5 +73,26 @@
     border-radius: 4px;
     border: 1px solid #e9ecef;
 }
+/* Добавим в static/mebel/css/base.css */
+.chart-container {
+    transition: all 0.3s ease;
+}
 
+.autocomplete-results {
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.material-info {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 100px; }
+}
 </style>

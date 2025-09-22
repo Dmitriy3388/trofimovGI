@@ -29,8 +29,303 @@ from .forms import MaterialEditForm, MaterialCreateForm, SupplierCreateForm  # �
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 
+# Добавим в views.py после существующих импортов
+from django.db.models import Sum, Q
+from django.utils import timezone
+from datetime import timedelta
 
-# остальные импорты...
+# Добавим в views.py
+from django.db.models import Sum
+from datetime import datetime, timedelta
+import json
+
+
+@login_required
+def material_operations(request, material_id):
+    """Возвращает детальную информацию об операциях материала"""
+    material = get_object_or_404(Material, id=material_id)
+
+    # Операции из MaterialOperation
+    operations = MaterialOperation.objects.filter(material=material).order_by('-created')[:50]
+
+    # Резервирования из OrderItem
+    from orders.models import OrderItem
+    reservations = OrderItem.objects.filter(material=material).order_by('-order__created')[:50]
+
+    operations_data = []
+
+    for op in operations:
+        operations_data.append({
+            'date': op.created.isoformat(),
+            'type': op.get_operation_type_display(),
+            'quantity': op.quantity,
+            'notes': op.notes,
+            'user': op.user.username if op.user else 'Система',
+            'source': 'operation'
+        })
+
+    for res in reservations:
+        operations_data.append({
+            'date': res.order.created.isoformat(),
+            'type': 'Резервирование',
+            'quantity': res.quantity,
+            'notes': f'Заказ #{res.order.id}',
+            'user': res.order.user.username if res.order.user else 'Система',
+            'source': 'order'
+        })
+
+    # Сортируем по дате
+    operations_data.sort(key=lambda x: x['date'], reverse=True)
+
+    return JsonResponse(operations_data, safe=False)
+
+@login_required
+def material_chart_data(request, material_id):
+    """Возвращает данные для графика наличия материала"""
+    material = get_object_or_404(Material, id=material_id)
+
+    # Получаем операции за последний год
+    one_year_ago = timezone.now() - timedelta(days=365)
+    operations = MaterialOperation.objects.filter(
+        material=material,
+        created__gte=one_year_ago
+    ).order_by('created')
+
+    # Также получаем операции из заказов (резервирования)
+    from orders.models import OrderItem
+    order_operations = OrderItem.objects.filter(
+        material=material,
+        order__created__gte=one_year_ago
+    ).order_by('order__created')
+
+    # Собираем все операции вместе
+    all_operations = []
+
+    # Добавляем MaterialOperation
+    for op in operations:
+        all_operations.append({
+            'date': op.created,
+            'type': op.operation_type,
+            'quantity': op.quantity,
+            'source': 'operation'
+        })
+
+    # Добавляем OrderItem (резервирования)
+    for item in order_operations:
+        all_operations.append({
+            'date': item.order.created,
+            'type': 'reservation',
+            'quantity': item.quantity,
+            'source': 'order'
+        })
+
+    # Сортируем все операции по дате
+    all_operations.sort(key=lambda x: x['date'])
+
+    # Создаем временные точки для графика (по месяцам)
+    dates = []
+    quantities = []
+
+    # Начинаем с текущего баланса и идем назад
+    current_date = timezone.now().date()
+    start_date = current_date - timedelta(days=365)
+
+    # Создаем точки для каждого месяца
+    temp_date = start_date.replace(day=1)  # Начинаем с первого дня месяца
+    monthly_data = {}
+
+    while temp_date <= current_date:
+        month_key = temp_date.strftime('%Y-%m')
+        monthly_data[month_key] = {
+            'date': temp_date,
+            'receipt': 0,
+            'write_off': 0,
+            'reservation': 0
+        }
+        # Переходим к следующему месяцу
+        if temp_date.month == 12:
+            temp_date = temp_date.replace(year=temp_date.year + 1, month=1)
+        else:
+            temp_date = temp_date.replace(month=temp_date.month + 1)
+
+    # Распределяем операции по месяцам
+    for op in all_operations:
+        month_key = op['date'].strftime('%Y-%m')
+        if month_key in monthly_data:
+            if op['type'] == 'receipt':
+                monthly_data[month_key]['receipt'] += op['quantity']
+            elif op['type'] == 'write_off':
+                monthly_data[month_key]['write_off'] += op['quantity']
+            elif op['type'] == 'reservation':
+                monthly_data[month_key]['reservation'] += op['quantity']
+
+    # Восстанавливаем историю баланса (идем от текущего значения назад)
+    current_balance = material.balance
+    balance_history = {current_date.strftime('%Y-%m'): current_balance}
+
+    # Сортируем месяцы в обратном порядке (от текущего к прошлому)
+    sorted_months = sorted(monthly_data.keys(), reverse=True)
+
+    for i, month_key in enumerate(sorted_months):
+        if month_key == current_date.strftime('%Y-%m'):
+            # Текущий месяц - используем текущий баланс
+            continue
+
+        # Для предыдущих месяцев: вычитаем поступления и прибавляем списания/резервирования
+        # (т.к. идем назад во времени)
+        month_data = monthly_data[month_key]
+        current_balance = current_balance - month_data['receipt'] + month_data['write_off'] + month_data['reservation']
+        balance_history[month_key] = max(0, current_balance)  # Баланс не может быть отрицательным
+
+    # Сортируем данные по дате для графика
+    sorted_history = sorted(balance_history.items(), key=lambda x: x[0])
+
+    dates = [item[0] for item in sorted_history]
+    quantities = [item[1] for item in sorted_history]
+
+    return JsonResponse({
+        'material_name': material.name,
+        'dates': dates,
+        'quantities': quantities,
+        'current_balance': material.balance,
+        'current_available': material.available,
+        'reserved': material.reserved
+    })
+
+
+# Упрощенная версия - по дням (более точная)
+@login_required
+def material_daily_chart_data(request, material_id):
+    """Данные для графика по дням"""
+    material = get_object_or_404(Material, id=material_id)
+
+    # Получаем операции за последний год
+    one_year_ago = timezone.now() - timedelta(days=365)
+
+    # MaterialOperation
+    operations = MaterialOperation.objects.filter(
+        material=material,
+        created__gte=one_year_ago
+    ).order_by('created')
+
+    # OrderItem (резервирования)
+    from orders.models import OrderItem
+    reservations = OrderItem.objects.filter(
+        material=material,
+        order__created__gte=one_year_ago
+    ).order_by('order__created')
+
+    # Собираем все события по дням
+    daily_events = {}
+
+    # Обрабатываем MaterialOperation
+    for op in operations:
+        date_key = op.created.date().isoformat()
+        if date_key not in daily_events:
+            daily_events[date_key] = {'receipt': 0, 'write_off': 0, 'reservation': 0}
+
+        if op.operation_type == 'receipt':
+            daily_events[date_key]['receipt'] += op.quantity
+        else:
+            daily_events[date_key]['write_off'] += op.quantity
+
+    # Обрабатываем OrderItem
+    for res in reservations:
+        date_key = res.order.created.date().isoformat()
+        if date_key not in daily_events:
+            daily_events[date_key] = {'receipt': 0, 'write_off': 0, 'reservation': 0}
+        daily_events[date_key]['reservation'] += res.quantity
+
+    # Создаем временной ряд за последний год
+    dates = []
+    quantities = []
+
+    current_date = timezone.now().date()
+    start_date = current_date - timedelta(days=365)
+
+    # Начинаем с текущего баланса и идем назад
+    current_balance = material.balance
+
+    # Создаем список всех дат за период (в обратном порядке)
+    all_dates = []
+    temp_date = current_date
+    while temp_date >= start_date:
+        all_dates.append(temp_date)
+        temp_date -= timedelta(days=1)
+
+    # Восстанавливаем историю (от настоящего к прошлому)
+    balance_history = []
+
+    for date in all_dates:
+        date_key = date.isoformat()
+        balance_history.append({
+            'date': date_key,
+            'balance': current_balance
+        })
+
+        # Корректируем баланс для предыдущего дня
+        if date_key in daily_events:
+            events = daily_events[date_key]
+            # Идем назад: вычитаем поступления, прибавляем списания и резервирования
+            current_balance = current_balance - events['receipt'] + events['write_off'] + events['reservation']
+
+    # Разворачиваем историю (чтобы шло от прошлого к настоящему)
+    balance_history.reverse()
+
+    # Берем каждую 7-ю точку для упрощения графика (чтобы не было слишком много точек)
+    dates = [item['date'] for item in balance_history][::7]
+    quantities = [max(0, item['balance']) for item in balance_history][::7]
+
+    return JsonResponse({
+        'material_name': material.name,
+        'dates': dates,
+        'quantities': quantities,
+        'current_balance': material.balance,
+        'current_available': material.available,
+        'reserved': material.reserved
+    })
+
+
+# View для автодополнения поиска
+# Добавим в views.py улучшенную функцию автодополнения
+@login_required
+def material_autocomplete(request):
+    """Автодополнение для поиска материалов"""
+    query = request.GET.get('q', '').strip()
+
+    # Логируем запрос для отладки
+    print(f"Autocomplete query: '{query}'")
+
+    if not query or len(query) < 2:
+        return JsonResponse([], safe=False)
+
+    try:
+        # Используем более гибкий поиск
+        materials = Material.objects.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(supplier__name__icontains=query) |
+            Q(category__name__icontains=query)
+        ).select_related('category', 'supplier').distinct()[:10]
+
+        results = []
+        for material in materials:
+            results.append({
+                'id': material.id,
+                'name': material.name,
+                'category': material.category.name if material.category else 'Без категории',
+                'balance': material.balance,
+                'supplier': material.supplier.name if material.supplier else 'Не указан'
+            })
+
+        print(f"Found {len(results)} materials")
+        return JsonResponse(results, safe=False)
+
+    except Exception as e:
+        print(f"Error in material_autocomplete: {e}")
+        # Возвращаем пустой список при ошибке
+        return JsonResponse([], safe=False)
+
 
 # НОВЫЙ VIEW ДЛЯ СОЗДАНИЯ ПОСТАВЩИКА ЧЕРЕЗ МОДАЛКУ
 @login_required

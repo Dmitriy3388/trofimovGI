@@ -16,5 +16,7 @@ urlpatterns = [
     path('<slug:category_slug>/', MaterialListView.as_view(), name='material_list_by_category'),  # Используем MaterialListView
     path('<int:id>/<slug:slug>/', views.material_detail, name='material_detail'),
     path('supplier/create-modal/', views.supplier_create_modal, name='supplier_create_modal'),
-
+    path('material-chart-data/<int:material_id>/', views.material_daily_chart_data, name='material_chart_data'),
+    path('material-autocomplete/', views.material_autocomplete, name='material_autocomplete'),
+    path('material/<int:material_id>/operations/', views.material_operations, name='material_operations'),
 ]

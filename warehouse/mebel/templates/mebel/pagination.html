@@ -1,38 +1,33 @@
 <div class="pagination">
-  <span class="step-links">
-    {% if page_obj.has_previous %}
-      <a href="?page=1">&laquo; first</a>
-      <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-    {% endif %}
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="btn btn-sm btn-outline-primary">&laquo;</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="btn btn-sm btn-outline-primary">&lsaquo;</a>
+        {% endif %}
 
-    <span class="current">
-      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        <span class="current small">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="btn btn-sm btn-outline-primary">&rsaquo;</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if category %}&category={{ category.slug }}{% endif %}" class="btn btn-sm btn-outline-primary">&raquo;</a>
+        {% endif %}
     </span>
-
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}">next</a>
-      <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-    {% endif %}
-  </span>
 </div>
 
 <style>
 .pagination {
-  margin: 20px 0;
-  text-align: center;
+    margin: 15px 0;
+    text-align: center;
 }
-.pagination a {
-  color: #333;
-  padding: 5px 10px;
-  text-decoration: none;
-  border: 1px solid #ddd;
-  margin: 0 2px;
-}
-.pagination a:hover {
-  background-color: #f5f5f5;
+.pagination .btn {
+    margin: 0 2px;
+    padding: 2px 6px;
+    font-size: 12px;
 }
 .pagination .current {
-  padding: 5px 10px;
-  font-weight: bold;
+    padding: 0 10px;
+    font-size: 12px;
 }
 </style>
