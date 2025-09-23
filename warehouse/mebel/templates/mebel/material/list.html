@@ -18,6 +18,36 @@
     position: relative; /* Добавляем */
     overflow: hidden; /* Обрезаем выходящее за пределы */
 }
+/* Стили для заголовка таблицы */
+.table-primary {
+    background-color: #007bff !important;
+    color: white;
+}
+
+.table-primary th {
+    background-color: #007bff !important;
+    color: white !important;
+    border-color: #0056b3 !important;
+}
+
+.table-primary a {
+    color: white !important;
+    text-decoration: none;
+}
+
+.table-primary a:hover {
+    color: #e6f3ff !important;
+    text-decoration: underline;
+}
+
+/* Убедимся, что стрелки сортировки видны на синем фоне */
+.table-primary .sort-link {
+    color: white !important;
+}
+
+.table-primary .sort-link:hover {
+    color: #e6f3ff !important;
+}
 
 .search-container {
     margin-bottom: 20px;
@@ -105,6 +135,7 @@
 .material-info {
     background: #f8f9fa;
     padding: 15px;
+    border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 15px;
     font-size: 14px;
@@ -128,10 +159,18 @@
 .materials-table-container {
     width: calc(50% - 20px);
     float: right;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .table {
+    padding: 10px;
     font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.table-responsive {
+    margin-bottom: 20px;
 }
 
 .btn-sm {
@@ -245,12 +284,54 @@
             <!-- Таблица материалов -->
             <div class="table-responsive">
                 <table class="table table-sm table-hover">
-                    <thead class="table-light">
+                    <!-- Замените текущий thead таблицы на этот код -->
+                    <thead class="table-primary text-white">
                         <tr>
-                            <th>Название</th>
-                            <th>Цена</th>
-                            <th>Баланс</th>
-                            <th>Доступно</th>
+                            <th>
+                                <a href="?sort=name&order={% if current_sort == 'name' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}"
+                                   class="sort-link" style="text-decoration: none; color: inherit;">
+                                    Название
+                                    {% if current_sort == 'name' %}
+                                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                                    {% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?sort=supplier&order={% if current_sort == 'supplier' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}"
+                                   class="sort-link" style="text-decoration: none; color: inherit;">
+                                    Поставщик
+                                    {% if current_sort == 'supplier' %}
+                                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                                    {% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?sort=price&order={% if current_sort == 'price' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}"
+                                   class="sort-link" style="text-decoration: none; color: inherit;">
+                                    Цена
+                                    {% if current_sort == 'price' %}
+                                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                                    {% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?sort=balance&order={% if current_sort == 'balance' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}"
+                                   class="sort-link" style="text-decoration: none; color: inherit;">
+                                    Баланс
+                                    {% if current_sort == 'balance' %}
+                                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                                    {% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?sort=available&order={% if current_sort == 'available' and current_order == 'asc' %}desc{% else %}asc{% endif %}{% if category %}&category={{ category.slug }}{% endif %}"
+                                   class="sort-link" style="text-decoration: none; color: inherit;">
+                                    Доступно
+                                    {% if current_sort == 'available' %}
+                                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                                    {% endif %}
+                                </a>
+                            </th>
                             <th>Действия</th>
                         </tr>
                     </thead>
@@ -259,8 +340,12 @@
                         <tr data-material-id="{{ material.id }}">
                             <td>
                                 <strong>{{ material.name }}</strong>
+                            </td>
+                            <td>
                                 {% if material.supplier %}
-                                <br><small class="text-muted">{{ material.supplier.name }}</small>
+                                    {{ material.supplier.name }}
+                                {% else %}
+                                    <span class="text-muted">Не указан</span>
                                 {% endif %}
                             </td>
                             <td>{{ material.price }} ₽</td>
