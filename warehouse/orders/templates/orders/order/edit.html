@@ -1,5 +1,6 @@
 {% extends "mebel/base.html" %}
 {% load static %}
+{% load order_extras %}
 
 {% block title %}Редактировать заказ #{{ order.id }}{% endblock %}
 
@@ -96,6 +97,36 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Блок с общей стоимостью заказа -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Полная стоимость заказа:</strong>
+                                    <span id="total-price-display">{{ order.get_total_cost }} руб.</span>
+                                    <br>
+                                    <small class="text-muted">
+                                        (Стоимость материалов × 2 × (1 - скидка/100))
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <small>
+                                        <strong>Перечисленные средства:</strong> {{ order.transferred_amount }} руб.<br>
+                                        <strong>Статус оплаты:</strong>
+                                        <span class="badge
+                                            {% if order.paid == 'fully_paid' %}bg-success
+                                            {% elif order.paid == 'partially_paid' %}bg-warning
+                                            {% else %}bg-danger{% endif %}">
+                                            {{ order.get_paid_display }}
+                                        </span>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -113,6 +144,8 @@
                             <tr>
                                 <th>Материал</th>
                                 <th>Количество</th>
+                                <th>Цена за шт.</th>
+                                <th>Стоимость</th>
                                 <th class="text-center">Удалить</th>
                             </tr>
                         </thead>
@@ -136,6 +169,20 @@
                                         {% endif %}
                                     </div>
                                 </td>
+                                <td class="price-cell" data-material-id="{{ form.material.value }}">
+                                    {% if form.material.value %}
+                                    <span class="price-placeholder">{{ form.material.value|get_material_price }} руб.</span>
+                                    {% else %}
+                                    ---
+                                    {% endif %}
+                                </td>
+                                <td class="item-cost">
+                                    {% if form.material.value and form.quantity.value %}
+                                    <span class="calculated-cost">---</span>
+                                    {% else %}
+                                    ---
+                                    {% endif %}
+                                </td>
                                 <td class="text-center align-middle">
                                     {% if form.instance.pk %}
                                     <div class="form-check form-switch">
@@ -149,6 +196,13 @@
                             </tr>
                             {% endfor %}
                         </tbody>
+                        <tfoot class="table-group-divider">
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Общая стоимость материалов:</strong></td>
+                                <td><strong id="materials-total">0 руб.</strong></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
 
@@ -218,6 +272,12 @@
     background-color: #f8f9fa;
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
 </style>
 {% endblock %}
 
@@ -237,6 +297,75 @@ $(document).ready(function() {
     $('input[name*="address"]').attr('placeholder', 'Введите адрес');
     $('input[name*="transferred_amount"]').attr('placeholder', 'Введите сумму');
     $('input[name*="discount"]').attr('placeholder', '0');
+
+    // Функция для обновления общей стоимости
+    function updateTotalCost() {
+        let materialsTotal = 0;
+
+        // Считаем общую стоимость материалов
+        $('.form-row').each(function() {
+            const priceCell = $(this).find('.price-cell');
+            const quantityInput = $(this).find('input[name*="-quantity"]');
+            const deleteCheckbox = $(this).find('input[type="checkbox"][name*="-DELETE"]');
+            const costCell = $(this).find('.calculated-cost');
+
+            // Пропускаем удаленные строки
+            if (deleteCheckbox.length > 0 && deleteCheckbox.is(':checked')) {
+                costCell.text('---');
+                return;
+            }
+
+            if (priceCell.length && quantityInput.length) {
+                const priceText = priceCell.find('.price-placeholder').text();
+                const price = parseFloat(priceText) || 0;
+                const quantity = parseFloat(quantityInput.val()) || 0;
+                const itemCost = price * quantity;
+
+                materialsTotal += itemCost;
+
+                // Обновляем стоимость для текущей строки
+                costCell.text(itemCost.toFixed(2) + ' руб.');
+            } else {
+                costCell.text('---');
+            }
+        });
+
+        // Обновляем общую стоимость материалов
+        $('#materials-total').text(materialsTotal.toFixed(2) + ' руб.');
+
+        // Получаем значение скидки
+        const discountInput = $('input[name*="discount"]');
+        const discount = parseFloat(discountInput.val()) || 0;
+
+        // Рассчитываем итоговую стоимость: материалы * 2 * (1 - discount/100)
+        const totalPrice = materialsTotal * 2 * (1 - discount / 100);
+
+        // Обновляем отображение полной стоимости
+        $('#total-price-display').text(totalPrice.toFixed(2) + ' руб.');
+    }
+
+    // Обработчики событий для обновления стоимости
+    $('select[name*="-material"]').on('change', function() {
+        const materialId = $(this).val();
+        const priceCell = $(this).closest('tr').find('.price-cell');
+
+        if (materialId) {
+            // Используем текст из выбранного option
+            const selectedOption = $(this).find('option:selected');
+            const priceText = selectedOption.text().match(/\d+\.?\d*/);
+            const price = priceText ? parseFloat(priceText[0]) : 0;
+
+            priceCell.find('.price-placeholder').text(price.toFixed(2) + ' руб.');
+        } else {
+            priceCell.find('.price-placeholder').text('---');
+        }
+
+        updateTotalCost();
+    });
+
+    $('input[name*="-quantity"]').on('input', updateTotalCost);
+    $('input[name*="discount"]').on('input', updateTotalCost);
+    $('input[type="checkbox"][name*="-DELETE"]').on('change', updateTotalCost);
 
     // Код для добавления новой формы
     $('#add-form').on('click', function() {
@@ -265,6 +394,10 @@ $(document).ready(function() {
             }
         });
 
+        // Очищаем ячейки с ценой и стоимостью
+        newFormRow.find('.price-cell').html('<span class="price-placeholder">---</span>');
+        newFormRow.find('.item-cost').html('<span class="calculated-cost">---</span>');
+
         // Удаляем чекбокс удаления для новых форм
         const deleteCell = newFormRow.find('td:last-child');
         if (deleteCell.find('input[type="checkbox"]').length) {
@@ -281,7 +414,30 @@ $(document).ready(function() {
         $('input, select, textarea').addClass('form-control');
         $('select').addClass('form-select');
         $('input[type="checkbox"]').removeClass('form-control').addClass('form-check-input');
+
+        // Добавляем обработчики для новой строки
+        newFormRow.find('select[name*="-material"]').on('change', function() {
+            const materialId = $(this).val();
+            const priceCell = $(this).closest('tr').find('.price-cell');
+
+            if (materialId) {
+                const selectedOption = $(this).find('option:selected');
+                const priceText = selectedOption.text().match(/\d+\.?\d*/);
+                const price = priceText ? parseFloat(priceText[0]) : 0;
+
+                priceCell.find('.price-placeholder').text(price.toFixed(2) + ' руб.');
+            } else {
+                priceCell.find('.price-placeholder').text('---');
+            }
+
+            updateTotalCost();
+        });
+
+        newFormRow.find('input[name*="-quantity"]').on('input', updateTotalCost);
     });
+
+    // Инициализация при загрузке
+    updateTotalCost();
 });
 </script>
 {% endblock %}

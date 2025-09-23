@@ -19,3 +19,11 @@ def subtract(value, arg):
         return int(value) - int(arg)
     except (ValueError, TypeError):
         return value
+
+@register.filter
+def multiply(value, arg):
+    """Умножает value на arg"""
+    try:
+        return float(value) * float(arg)
+    except (ValueError, TypeError):
+        return 0
