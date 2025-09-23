@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="График остатков добавлен и отлажен">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Списки материалов и списки заказов приведены к одному виду">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" afterDir="false" />
@@ -92,22 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00006" summary="мейн дошбоард">
-      <option name="closed" value="true" />
-      <created>1753598865252</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1753598865252</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Навигация между приложениями закончена">
-      <option name="closed" value="true" />
-      <created>1753600394582</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1753600394582</updated>
     </task>
     <task id="LOCAL-00008" summary="редактирование профилей">
       <option name="closed" value="true" />
@@ -485,7 +469,23 @@
       <option name="project" value="LOCAL" />
       <updated>1758650795813</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="Списки материалов и списки заказов приведены к одному виду">
+      <option name="closed" value="true" />
+      <created>1758653599368</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1758653599383</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Списки материалов и списки заказов приведены к одному виду">
+      <option name="closed" value="true" />
+      <created>1758653605418</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1758653605418</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -515,7 +515,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Revert &quot;сплошные ошибки в списке заказов&quot;&#10;&#10;This reverts commit 3eae3ecb" />
     <MESSAGE value="Главная страница с графиками" />
     <MESSAGE value="Исправлена таблица материалов . Добавлены графики на таблицу заказов" />
     <MESSAGE value="Добавлено изображение в детали материала" />
@@ -540,6 +539,7 @@
     <MESSAGE value="Удален Ordercart" />
     <MESSAGE value="Графики сложно добавлены, но не работают. ТРебуется отображение цены в форме редактировании заказов" />
     <MESSAGE value="График остатков добавлен и отлажен" />
-    <option name="LAST_COMMIT_MESSAGE" value="График остатков добавлен и отлажен" />
+    <MESSAGE value="Списки материалов и списки заказов приведены к одному виду" />
+    <option name="LAST_COMMIT_MESSAGE" value="Списки материалов и списки заказов приведены к одному виду" />
   </component>
 </project>
