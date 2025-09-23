@@ -193,98 +193,112 @@ def material_chart_data(request, material_id):
     })
 
 
-# Упрощенная версия - по дням (более точная)
 @login_required
 def material_daily_chart_data(request, material_id):
-    """Данные для графика по дням"""
+    """Данные для графика по дням - ИСПРАВЛЕННАЯ ВЕРСИЯ"""
     material = get_object_or_404(Material, id=material_id)
 
-    # Получаем операции за последний год
-    one_year_ago = timezone.now() - timedelta(days=365)
-
-    # MaterialOperation
+    # Получаем операции за ВСЕ время, а не за год
     operations = MaterialOperation.objects.filter(
-        material=material,
-        created__gte=one_year_ago
+        material=material
     ).order_by('created')
 
-    # OrderItem (резервирования)
+    # Получаем резервирования за ВСЕ время
     from orders.models import OrderItem
     reservations = OrderItem.objects.filter(
-        material=material,
-        order__created__gte=one_year_ago
+        material=material
     ).order_by('order__created')
 
-    # Собираем все события по дням
-    daily_events = {}
+    # Собираем ВСЕ события за всю историю материала
+    all_events = []
 
-    # Обрабатываем MaterialOperation
     for op in operations:
-        date_key = op.created.date().isoformat()
-        if date_key not in daily_events:
-            daily_events[date_key] = {'receipt': 0, 'write_off': 0, 'reservation': 0}
+        all_events.append({
+            'date': op.created,
+            'type': op.operation_type,
+            'quantity': op.quantity,
+            'source': 'operation'
+        })
 
-        if op.operation_type == 'receipt':
-            daily_events[date_key]['receipt'] += op.quantity
-        else:
-            daily_events[date_key]['write_off'] += op.quantity
-
-    # Обрабатываем OrderItem
     for res in reservations:
-        date_key = res.order.created.date().isoformat()
-        if date_key not in daily_events:
-            daily_events[date_key] = {'receipt': 0, 'write_off': 0, 'reservation': 0}
-        daily_events[date_key]['reservation'] += res.quantity
+        all_events.append({
+            'date': res.order.created,
+            'type': 'reservation',
+            'quantity': res.quantity,
+            'source': 'order'
+        })
 
-    # Создаем временной ряд за последний год
+    # Сортируем по дате (от старых к новым)
+    all_events.sort(key=lambda x: x['date'])
+
+    # Восстанавливаем историю баланса ПРАВИЛЬНО
+    # Начинаем с ИЗВЕСТНОГО начального баланса (если есть самая первая операция)
+    current_balance = 0
+    balance_history = []
+
+    # Если есть события, находим баланс ДО первого события
+    if all_events:
+        # Вычисляем баланс на момент ДО первой операции
+        # Для этого идем ОТ ТЕКУЩЕГО баланса НАЗАД через все операции
+        temp_balance = material.balance
+
+        # Идем в обратном порядке (от новых к старым) и "отменяем" операции
+        for event in reversed(all_events):
+            if event['type'] == 'receipt':
+                temp_balance -= event['quantity']  # Отменяем поступление
+            elif event['type'] == 'write_off':
+                temp_balance += event['quantity']  # Отменяем списание
+            # Резервирования не влияют на физический баланс
+
+        current_balance = max(0, temp_balance)  # Начальный баланс ДО всех операций
+
+    # Теперь идем вперед по времени и применяем операции
     dates = []
     quantities = []
 
-    current_date = timezone.now().date()
-    start_date = current_date - timedelta(days=365)
+    # Добавляем начальную точку (если есть история)
+    if all_events:
+        first_date = all_events[0]['date'].date()
+        # Добавляем точку за день до первой операции
+        prev_date = first_date - timedelta(days=1)
+        dates.append(prev_date.isoformat())
+        quantities.append(current_balance)
 
-    # Начинаем с текущего баланса и идем назад
-    current_balance = material.balance
+    # Применяем операции в хронологическом порядке
+    for event in all_events:
+        event_date = event['date'].date()
 
-    # Создаем список всех дат за период (в обратном порядке)
-    all_dates = []
-    temp_date = current_date
-    while temp_date >= start_date:
-        all_dates.append(temp_date)
-        temp_date -= timedelta(days=1)
+        if event['type'] == 'receipt':
+            current_balance += event['quantity']
+        elif event['type'] == 'write_off':
+            current_balance = max(0, current_balance - event['quantity'])  # Не уходим в минус
 
-    # Восстанавливаем историю (от настоящего к прошлому)
-    balance_history = []
+        # Добавляем точку после операции
+        dates.append(event_date.isoformat())
+        quantities.append(current_balance)
 
-    for date in all_dates:
-        date_key = date.isoformat()
-        balance_history.append({
-            'date': date_key,
-            'balance': current_balance
-        })
+    # Ограничиваем последним годом для производительности
+    one_year_ago = (timezone.now() - timedelta(days=365)).date()
 
-        # Корректируем баланс для предыдущего дня
-        if date_key in daily_events:
-            events = daily_events[date_key]
-            # Идем назад: вычитаем поступления, прибавляем списания и резервирования
-            current_balance = current_balance - events['receipt'] + events['write_off'] + events['reservation']
+    filtered_data = []
+    for i, date_str in enumerate(dates):
+        date_obj = datetime.fromisoformat(date_str).date()
+        if date_obj >= one_year_ago:
+            filtered_data.append((date_str, quantities[i]))
 
-    # Разворачиваем историю (чтобы шло от прошлого к настоящему)
-    balance_history.reverse()
-
-    # Берем каждую 7-ю точку для упрощения графика (чтобы не было слишком много точек)
-    dates = [item['date'] for item in balance_history][::7]
-    quantities = [max(0, item['balance']) for item in balance_history][::7]
+    if filtered_data:
+        dates_filtered, quantities_filtered = zip(*filtered_data)
+    else:
+        dates_filtered, quantities_filtered = [], []
 
     return JsonResponse({
         'material_name': material.name,
-        'dates': dates,
-        'quantities': quantities,
+        'dates': dates_filtered,
+        'quantities': quantities_filtered,
         'current_balance': material.balance,
         'current_available': material.available,
         'reserved': material.reserved
     })
-
 
 # View для автодополнения поиска
 # Добавим в views.py улучшенную функцию автодополнения
