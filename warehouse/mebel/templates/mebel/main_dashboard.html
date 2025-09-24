@@ -89,6 +89,14 @@
       <div class="action-card">
         <a href="{% url 'mebel:material_list' %}" class="btn btn-primary">Просмотр Материалов</a>
       </div>
+
+    {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
+    <div class="action-card">
+        <a href="{% url 'mebel:operations_list' %}" class="btn btn-info">
+            📊 Операции списания/поступления
+        </a>
+    </div>
+    {% endif %}
       <!-- Добавить этот блок в раздел с основными действиями -->
     {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
     <div class="action-card">

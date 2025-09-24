@@ -1,0 +1,97 @@
+{% extends "mebel/base.html" %}
+{% load static %}
+
+{% block title %}Операция #{{ operation.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        {% if operation.operation_type == 'receipt' %}
+                            📈 Поступление
+                        {% else %}
+                            📉 Списание
+                        {% endif %}
+                        #{{ operation.id }}
+                    </h5>
+                    <span class="badge {% if operation.can_edit %}bg-warning{% else %}bg-secondary{% endif %}">
+                        {% if operation.can_edit %}Можно редактировать{% else %}Только просмотр{% endif %}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Основная информация</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Материал:</strong>
+                                    <a href="{{ operation.material.get_absolute_url }}">
+                                        {{ operation.material.name }}
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Количество:</strong> {{ operation.quantity }} шт.
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Дата операции:</strong> {{ operation.created|date:"d.m.Y H:i" }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Пользователь:</strong> {{ operation.user.get_full_name|default:operation.user.username }}
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6>Детали</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Тип операции:</strong>
+                                    {% if operation.operation_type == 'receipt' %}
+                                        <span class="badge bg-success">Поступление</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Списание</span>
+                                    {% endif %}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Текущий баланс материала:</strong> {{ operation.material.balance }} шт.
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Доступно:</strong> {{ operation.material.available }} шт.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h6>Примечание</h6>
+                        <div class="card">
+                            <div class="card-body">
+                                {{ operation.notes|default:"Примечание отсутствует"|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 d-flex gap-2">
+                        <a href="{% url 'mebel:operations_list' %}" class="btn btn-secondary">
+                            ← Назад к списку
+                        </a>
+                        
+                        {% if operation.can_edit %}
+                        <a href="{% url 'mebel:operation_edit' operation.id %}" class="btn btn-warning">
+                            ✏️ Редактировать
+                        </a>
+                        {% endif %}
+                        
+                        <a href="{{ operation.material.get_absolute_url }}" class="btn btn-primary">
+                            👁️ К материалу
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

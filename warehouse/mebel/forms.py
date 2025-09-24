@@ -5,7 +5,7 @@ from .models import Material
 from django.db.models.functions import Lower, Replace
 from django.db.models import Value
 from django import forms
-from .models import Material, Category, Supplier  # добавляем Supplier
+from .models import Material, MaterialOperation, Category, Supplier  # добавляем Supplier
 from django.core.exceptions import ValidationError
 from django.db.models.functions import Lower, Replace
 from django.db.models import Value
@@ -58,6 +58,48 @@ class MaterialEditForm(forms.ModelForm):
         }
 
 
+class MaterialOperationEditForm(forms.ModelForm):
+    class Meta:
+        model = MaterialOperation
+        fields = ['quantity', 'notes']
+        widgets = {
+            'quantity': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 1
+            }),
+            'notes': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3
+            })
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.material = kwargs.pop('material', None)
+        super().__init__(*args, **kwargs)
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data['quantity']
+
+        # Для списания проверяем, чтобы не уйти в отрицательный баланс
+        if (self.material and
+                self.instance.operation_type == 'write_off' and
+                hasattr(self.instance, 'id')):
+
+            # Рассчитываем, каким будет баланс после изменения
+            current_balance = self.material.balance
+
+            # Находим разницу между старым и новым количеством списания
+            quantity_diff = quantity - self.instance.quantity
+
+            # Предполагаемый новый баланс
+            projected_balance = current_balance - quantity_diff
+
+            if projected_balance < 0:
+                raise ValidationError(
+                    f'Нельзя списать {quantity} шт. Это приведет к отрицательному балансу ({projected_balance})'
+                )
+
+        return quantity
 
 
 

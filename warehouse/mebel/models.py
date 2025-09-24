@@ -7,6 +7,7 @@ from django.utils.text import slugify
 from transliterate import slugify as transliterate_slugify
 from django.db.models.functions import Lower, Replace
 from django.db.models import Value
+from django.utils import timezone
 
 
 # Добавляем в models.py после импортов и перед Category
@@ -98,6 +99,43 @@ class Material(models.Model):
         return reverse('mebel:material_receipt', args=[self.id])
 
     @classmethod
+    def recalculate_balance(cls, material_id):
+        """Полностью пересчитывает баланс материала на основе всех операций"""
+        from django.db.models import Sum
+
+        material = cls.objects.get(id=material_id)
+
+        # Суммируем все поступления
+        total_receipt = MaterialOperation.objects.filter(
+            material=material,
+            operation_type='receipt'
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+
+        # Суммируем все списания
+        total_write_off = MaterialOperation.objects.filter(
+            material=material,
+            operation_type='write_off'
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+
+        # Вычисляем новый баланс
+        new_balance = total_receipt - total_write_off
+
+        # Обновляем баланс, если он изменился
+        if material.balance != new_balance:
+            material.balance = new_balance
+            material.save(update_fields=['balance'])
+
+        return new_balance
+
+    @classmethod
+    def recalculate_all_balances(cls):
+        """Пересчитывает балансы для всех материалов"""
+        for material in cls.objects.all():
+            cls.recalculate_balance(material.id)
+    def recalculate_own_balance(self):
+        """Пересчитывает баланс для текущего материала"""
+        return self.recalculate_balance(self.id)
+    @classmethod
     def update_all_reserved_quantities(cls):
         """
         АКТУАЛИЗАЦИЯ: Пересчитывает резервы для всех материалов на основе активных заказов
@@ -182,4 +220,14 @@ class MaterialOperation(models.Model):
 
     def __str__(self):
         return f"{self.get_operation_type_display()} {self.quantity} шт. - {self.material.name}"
+
+    def get_edit_url(self):
+        return reverse('mebel:operation_edit', args=[self.id])
+
+    def get_absolute_url(self):
+        return reverse('mebel:operations_list') + f'?operation={self.id}'
+
+    def can_edit(self):
+        """Проверяет, можно ли редактировать операцию (только сегодняшние)"""
+        return self.created.date() == timezone.now().date()
 

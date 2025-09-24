@@ -39,7 +39,119 @@ from django.db.models import Sum
 from datetime import datetime, timedelta
 import json
 
+from django.core.paginator import Paginator
+from .forms import MaterialOperationEditForm
 
+
+@login_required
+@mto_required
+def operations_list(request):
+    """Список всех операций с фильтрацией"""
+    operations = MaterialOperation.objects.select_related(
+        'material', 'user'
+    ).order_by('-created')
+
+    # Фильтрация
+    operation_type = request.GET.get('type', '')
+    material_id = request.GET.get('material', '')
+    date_from = request.GET.get('date_from', '')
+    date_to = request.GET.get('date_to', '')
+
+    if operation_type:
+        operations = operations.filter(operation_type=operation_type)
+
+    if material_id:
+        operations = operations.filter(material_id=material_id)
+
+    if date_from:
+        operations = operations.filter(created__date__gte=date_from)
+
+    if date_to:
+        operations = operations.filter(created__date__lte=date_to)
+
+    # Пагинация
+    paginator = Paginator(operations, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Материалы для фильтра
+    materials = Material.objects.all()
+
+    context = {
+        'page_obj': page_obj,
+        'materials': materials,
+        'operation_type': operation_type,
+        'selected_material': material_id,
+        'date_from': date_from,
+        'date_to': date_to,
+    }
+
+    return render(request, 'mebel/operations/operations_list.html', context)
+
+
+@login_required
+@mto_required
+def operation_edit(request, operation_id):
+    """Редактирование операции - УПРОЩЕННАЯ ВЕРСИЯ"""
+    operation = get_object_or_404(MaterialOperation, id=operation_id)
+    material = operation.material
+
+    # Сохраняем исходный баланс для сообщения
+    original_balance = material.balance
+
+    if request.method == 'POST':
+        form = MaterialOperationEditForm(
+            request.POST,
+            instance=operation,
+            material=material
+        )
+
+        if form.is_valid():
+            # Просто сохраняем операцию
+            operation = form.save()
+
+            # Пересчитываем баланс материала на основе ВСЕХ операций
+            Material.recalculate_balance(material.id)
+
+            # Обновляем объект material
+            material.refresh_from_db()
+
+            messages.success(request,
+                             f'Операция #{operation.id} успешно отредактирована. ' +
+                             f'Баланс пересчитан: {original_balance} → {material.balance}')
+            return redirect('mebel:operations_list')
+    else:
+        form = MaterialOperationEditForm(instance=operation, material=material)
+
+    return render(request, 'mebel/operations/operation_edit.html', {
+        'form': form,
+        'operation': operation,
+        'material': material
+    })
+
+
+@login_required
+@mto_required
+def operation_detail(request, operation_id):
+    """Детальная информация об операции"""
+    operation = get_object_or_404(MaterialOperation, id=operation_id)
+
+    return render(request, 'mebel/operations/operation_detail.html', {
+        'operation': operation
+    })
+
+
+@login_required
+@mto_required
+def recalculate_balances(request):
+    """Принудительный пересчет всех балансов"""
+    try:
+        Material.recalculate_all_balances()
+        messages.success(request, 'Балансы всех материалов успешно пересчитаны')
+    except Exception as e:
+        messages.error(request, f'Ошибка при пересчете балансов: {e}')
+
+    return redirect('mebel:operations_list')
 @login_required
 def material_operations(request, material_id):
     """Возвращает детальную информацию об операциях материала"""

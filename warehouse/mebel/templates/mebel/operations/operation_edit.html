@@ -1,0 +1,103 @@
+{% extends "mebel/base.html" %}
+{% load static %}
+
+{% block title %}Редактирование операции #{{ operation.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        ✏️ Редактирование операции #{{ operation.id }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <strong>Внимание!</strong> Изменение операции повлияет на баланс материала.
+                        Будет создана корректирующая операция.
+                    </div>
+
+                    <!-- Информация об операции -->
+                    <div class="mb-4">
+                        <h6>Информация об операции:</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <strong>Материал:</strong>
+                                <a href="{{ operation.material.get_absolute_url }}">
+                                    {{ operation.material.name }}
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Тип:</strong>
+                                {% if operation.operation_type == 'receipt' %}
+                                    <span class="badge bg-success">Поступление</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Списание</span>
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Текущее количество:</strong> {{ operation.quantity }} шт.
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Дата создания:</strong> {{ operation.created|date:"d.m.Y H:i" }}
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Добавьте этот блок после информации об операции -->
+                    <div class="mb-3">
+                        <h6>Текущее состояние:</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <strong>Текущий баланс материала:</strong> {{ material.balance }} шт.
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Исходное количество в операции:</strong> {{ operation.quantity }} шт.
+                            </li>
+                            {% if operation.operation_type == 'write_off' %}
+                            <li class="list-group-item">
+                                <strong>Максимально можно списать:</strong> {{ material.balance|add:operation.quantity }} шт.
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <!-- Форма редактирования -->
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% include "includes/form_errors.html" with form=form %}
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.quantity.label }}</label>
+                            {{ form.quantity }}
+                            <div class="form-text">
+                                Максимально можно установить:
+                                {% if operation.operation_type == 'write_off' %}
+                                    {{ operation.material.balance|add:operation.quantity }} шт.
+                                {% else %}
+                                    не ограничено
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.notes.label }}</label>
+                            {{ form.notes }}
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-warning">
+                                💾 Сохранить изменения
+                            </button>
+                            <a href="{% url 'mebel:operations_list' %}" class="btn btn-secondary">
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

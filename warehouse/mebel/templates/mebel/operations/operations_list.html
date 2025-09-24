@@ -1,0 +1,136 @@
+{% extends "mebel/base.html" %}
+{% load static %}
+
+{% block title %}Операции по материалам{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>📊 Операции по материалам</h1>
+    
+    <!-- Фильтры -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title">Фильтры</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Тип операции</label>
+                    <select name="type" class="form-select">
+                        <option value="">Все операции</option>
+                        <option value="receipt" {% if operation_type == 'receipt' %}selected{% endif %}>Поступления</option>
+                        <option value="write_off" {% if operation_type == 'write_off' %}selected{% endif %}>Списания</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label">Материал</label>
+                    <select name="material" class="form-select">
+                        <option value="">Все материалы</option>
+                        {% for material in materials %}
+                        <option value="{{ material.id }}" {% if selected_material == material.id|stringformat:"i" %}selected{% endif %}>
+                            {{ material.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label">С даты</label>
+                    <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label">По дату</label>
+                    <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+                </div>
+                
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Применить фильтры</button>
+                    <a href="{% url 'mebel:operations_list' %}" class="btn btn-secondary">Сбросить</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="mb-3">
+        <a href="{% url 'mebel:recalculate_balances' %}" class="btn btn-warning btn-sm">
+            🔄 Пересчитать все балансы
+        </a>
+        <small class="text-muted">Используйте если балансы не совпадают с операциями</small>
+    </div>
+    <!-- Таблица операций -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Список операций</h5>
+            <span class="badge bg-primary">Всего: {{ page_obj.paginator.count }}</span>
+        </div>
+        <div class="card-body">
+            {% if page_obj %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Дата</th>
+                            <th>Тип</th>
+                            <th>Материал</th>
+                            <th>Количество</th>
+                            <th>Пользователь</th>
+                            <th>Примечание</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for operation in page_obj %}
+                        <tr>
+                            <td>{{ operation.created|date:"d.m.Y H:i" }}</td>
+                            <td>
+                                {% if operation.operation_type == 'receipt' %}
+                                    <span class="badge bg-success">📈 Поступление</span>
+                                {% else %}
+                                    <span class="badge bg-danger">📉 Списание</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ operation.material.get_absolute_url }}">
+                                    {{ operation.material.name }}
+                                </a>
+                            </td>
+                            <td>{{ operation.quantity }} шт.</td>
+                            <td>{{ operation.user.get_full_name|default:operation.user.username }}</td>
+                            <td>{{ operation.notes|default:"-"|truncatewords:5 }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'mebel:operation_detail' operation.id %}" 
+                                       class="btn btn-outline-primary" title="Подробнее">
+                                        👁️
+                                    </a>
+                                    {% if operation.can_edit %}
+                                    <a href="{% url 'mebel:operation_edit' operation.id %}" 
+                                       class="btn btn-outline-warning" title="Редактировать">
+                                        ✏️
+                                    </a>
+                                    {% else %}
+                                    <button class="btn btn-outline-secondary" title="Редактирование недоступно" disabled>
+                                        ⏳
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Пагинация -->
+            {% include 'pagination.html' %}
+            
+            {% else %}
+            <div class="text-center py-4">
+                <p class="text-muted">Операции не найдены</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
