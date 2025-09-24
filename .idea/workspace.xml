@@ -4,16 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="В редактирование заказа добавлено отображение стоимости и стоимости материалов">
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/operations/operation_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/operations/operation_edit.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/operations/operations_list.html" afterDir="false" />
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлена возможность просмотра списаний и их редактирование">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,14 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Продолжение стилей. Админка цвет нехватки, автоматический расчет">
-      <option name="closed" value="true" />
-      <created>1753727133713</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1753727133713</updated>
     </task>
     <task id="LOCAL-00011" summary="Перенос на фронтэнд значения автоматического расчета">
       <option name="closed" value="true" />
@@ -491,7 +475,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758655491885</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="Добавлена возможность просмотра списаний и их редактирование">
+      <option name="closed" value="true" />
+      <created>1758732770059</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1758732770059</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -521,7 +513,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Исправлена таблица материалов . Добавлены графики на таблицу заказов" />
     <MESSAGE value="Добавлено изображение в детали материала" />
     <MESSAGE value="Добавлена возможность редактирования материала." />
     <MESSAGE value="Разграничение доступа без ошибок 1" />
@@ -546,6 +537,7 @@
     <MESSAGE value="График остатков добавлен и отлажен" />
     <MESSAGE value="Списки материалов и списки заказов приведены к одному виду" />
     <MESSAGE value="В редактирование заказа добавлено отображение стоимости и стоимости материалов" />
-    <option name="LAST_COMMIT_MESSAGE" value="В редактирование заказа добавлено отображение стоимости и стоимости материалов" />
+    <MESSAGE value="Добавлена возможность просмотра списаний и их редактирование" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлена возможность просмотра списаний и их редактирование" />
   </component>
 </project>
