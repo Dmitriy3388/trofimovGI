@@ -82,6 +82,28 @@
         </div>
       </div>
     </div>
+        <!-- Добавляем после блока с статусом оплаты -->
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">📅 Сроки выполнения</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Дата сдачи:</strong> {{ order.deadline|date:"d.m.Y" }}</p>
+                <p>
+                    <strong>Статус:</strong>
+                    {% with deadline_status=order.get_deadline_status %}
+                    <span class="badge bg-{{ deadline_status.class }}">
+                        {{ deadline_status.icon }} {{ deadline_status.status }}
+                    </span>
+                    {% endwith %}
+                </p>
+                {% with days_until=order.deadline|timeuntil %}
+                <p><strong>Осталось:</strong> {{ days_until }}</p>
+                {% endwith %}
+            </div>
+        </div>
+    </div>
   </div>
 
   <!-- Позиции заказа -->

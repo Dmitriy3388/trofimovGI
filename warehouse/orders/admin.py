@@ -71,13 +71,13 @@ def display_visualization(obj):
 class OrderAdmin(admin.ModelAdmin):
     # Обновляем список отображаемых полей
     list_display = [
-        'id', 'order_name', 'customer_name', 'category',
+        'id', 'order_name', 'customer_name', 'category', 'deadline',
         'address', 'transferred_amount', 'discount',
         'paid', 'created', 'updated',
         order_detail, order_pdf
     ]
 
-    list_filter = ['paid', 'created', 'updated', 'category']
+    list_filter = ['paid', 'created', 'updated', 'category', 'deadline']
 
     # Добавляем поиск по названию заказа и имени заказчика
     search_fields = ['order_name', 'customer_name']
@@ -88,7 +88,8 @@ class OrderAdmin(admin.ModelAdmin):
     # Поля для формы редактирования
     fieldsets = (
         ('Основная информация', {
-            'fields': ('order_name', 'customer_name', 'address', 'category', 'discount')
+            'fields': ('order_name', 'customer_name', 'address',
+                       'category', 'discount', 'deadline')
         }),
         ('Финансовая информация', {
             'fields': ('transferred_amount', 'paid')

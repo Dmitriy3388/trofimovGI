@@ -55,28 +55,39 @@
     <!-- Информация о заказе -->
     <div class="order-info mb-4">
         <h3>Информация по заказу</h3>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="{{ form.order_name.id_for_label }}">{{ form.order_name.label }}</label>
-                    {{ form.order_name }}
-                    {% if form.order_name.errors %}
-                    <div class="text-danger small">{{ form.order_name.errors }}</div>
-                    {% endif %}
+            <!-- В разделе "Информация о заказе" добавляем поле -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.order_name.id_for_label }}">{{ form.order_name.label }}</label>
+                        {{ form.order_name }}
+                        {% if form.order_name.errors %}
+                            <div class="text-danger small">{{ form.order_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.customer_name.id_for_label }}">{{ form.customer_name.label }}</label>
+                        {{ form.customer_name }}
+                        {% if form.customer_name.errors %}
+                            <div class="text-danger small">{{ form.customer_name.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="{{ form.customer_name.id_for_label }}">{{ form.customer_name.label }}</label>
-                    {{ form.customer_name }}
-                    {% if form.customer_name.errors %}
-                    <div class="text-danger small">{{ form.customer_name.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
-                    {{ form.address }}
-                    {% if form.address.errors %}
-                    <div class="text-danger small">{{ form.address.errors }}</div>
-                    {% endif %}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.deadline.id_for_label }}">{{ form.deadline.label }}</label>
+                        {{ form.deadline }}
+                        {% if form.deadline.errors %}
+                            <div class="text-danger small">{{ form.deadline.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
+                        {{ form.category }}
+                        {% if form.category.errors %}
+                            <div class="text-danger small">{{ form.category.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -305,5 +316,10 @@ function updateTotal() {
 .form-group {
     margin-bottom: 15px;
 }
+
+/* Добавляем в существующие стили */
+.badge.bg-danger { background-color: #dc3545 !important; }
+.badge.bg-warning { background-color: #ffc107 !important; color: #000 !important; }
+.badge.bg-success { background-color: #28a745 !important; }
 </style>
 {% endblock %}

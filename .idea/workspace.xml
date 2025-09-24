@@ -6,6 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлена возможность просмотра списаний и их редактирование">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +61,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "Python.forms.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "newmebel",
+    "git-widget-placeholder": "addfich",
     "last_opened_file_path": "C:/Users/Dmitriy/PycharmProjects/trofimovGI/warehouse/mebel/templates/mebel",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }

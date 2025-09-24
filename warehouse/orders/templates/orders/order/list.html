@@ -14,12 +14,14 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 0.85rem;
 }
 
 .order-list th, .order-list td {
-    padding: 12px;
+    padding: 8px 10px;
     text-align: left;
     border-bottom: 1px solid #e9ecef;
+    line-height: 1.3;
 }
 
 .order-list th {
@@ -27,14 +29,19 @@
     color: white;
     font-weight: 600;
     border: none;
+    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
-.order-list .sort-link {
+/* Стили для ссылок сортировки */
+.order-list th a.sort-link {
     color: white !important;
     text-decoration: none;
+    display: block;
+    padding: 2px 0;
 }
 
-.order-list .sort-link:hover {
+.order-list th a.sort-link:hover {
     color: #e6f3ff !important;
     text-decoration: underline;
 }
@@ -51,9 +58,10 @@
 /* Стили для статусов оплаты */
 .paid-status {
     font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 14px;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    white-space: nowrap;
 }
 
 .paid-fully {
@@ -62,31 +70,37 @@
 }
 
 .paid-partially {
-    color: #ffc107;
+    color: #856404;
     background-color: #fff3cd;
 }
 
 .paid-none {
-    color: #dc3545;
+    color: #721c24;
     background-color: #f8d7da;
+}
+
+/* Стили для статусов сдачи */
+.deadline-status {
+    font-size: 0.75rem;
+    white-space: nowrap;
+    padding: 3px 6px;
 }
 
 /* Стили для карточки с графиком */
 .chart-container {
     background: white;
     border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
+    padding: 15px;
+    margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     width: 50%;
-    height: 400px;
+    height: 350px;
     float: left;
-    margin-right: 20px;
-    position: relative;
+    margin-right: 15px;
 }
 
 .orders-table-container {
-    width: calc(50% - 20px);
+    width: calc(50% - 15px);
     float: right;
     margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -94,18 +108,18 @@
 
 .card-header {
     border-bottom: 1px solid #e9ecef;
-    padding-bottom: 15px;
-    margin-bottom: 15px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .card-title {
     margin: 0;
     color: #333;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .table-responsive {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .clearfix::after {
@@ -114,27 +128,75 @@
     display: table;
 }
 
+.btn-sm {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+}
+
+.date-cell {
+    white-space: nowrap;
+    font-size: 0.8rem;
+}
+
 /* Адаптивность */
-@media (max-width: 768px) {
-    .order-list {
-        font-size: 14px;
-    }
-
-    .order-list th, .order-list td {
-        padding: 8px;
-    }
-
+@media (max-width: 1200px) {
     .chart-container,
     .orders-table-container {
         width: 100%;
         float: none;
         margin-right: 0;
         margin-bottom: 20px;
-        height: auto;
     }
 
     .chart-container {
         height: 300px;
+    }
+}
+
+@media (max-width: 992px) {
+    .order-list th:nth-child(3), /* Дата создания */
+    .order-list td:nth-child(3) {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .order-list {
+        font-size: 0.75rem;
+    }
+
+    .order-list th, .order-list td {
+        padding: 6px 8px;
+    }
+
+    .order-list th {
+        font-size: 0.8rem;
+    }
+
+    .paid-status {
+        font-size: 0.7rem;
+        padding: 2px 4px;
+    }
+
+    .chart-container {
+        height: 250px;
+        padding: 10px;
+    }
+
+    .card-title {
+        font-size: 0.9rem;
+    }
+
+    .order-list th:nth-child(7), /* Оплата */
+    .order-list td:nth-child(7) {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .order-list th:nth-child(4), /* Дата сдачи */
+    .order-list td:nth-child(4) {
+        display: none;
     }
 }
 </style>
@@ -148,10 +210,10 @@
         <!-- График статусов оплаты -->
         <div class="chart-container">
             <div class="card-header">
-                <h5 class="card-title">📊 Статистика заказов по статусам оплаты</h5>
+                <h5 class="card-title">📊 Статистика заказов</h5>
             </div>
             <div class="card-body">
-                <div style="height: 300px;">
+                <div style="height: 250px;">
                     <canvas id="paymentStatusChart"></canvas>
                 </div>
             </div>
@@ -160,51 +222,51 @@
         <!-- Таблица заказов -->
         <div class="orders-table-container">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5>Список заказов</h5>
+                <h5>Заказы</h5>
+                {% if user.groups.all.0.name == 'Менеджеры' or user.is_superuser %}
+                <a href="{% url 'orders:order_create' %}" class="btn btn-primary btn-sm">+ Добавить</a>
+                {% endif %}
             </div>
-            <div>
-                 {% if user.groups.all.0.name == 'Менеджеры' or user.is_superuser %}
-                 <a href="{% url 'orders:order_create' %}" class="btn btn-primary btn-sm">+ Добавить заказ</a>
-                 {% endif %}
-            </div>
+
             <div class="table-responsive">
                 <table class="table table-sm table-hover order-list">
                     <thead>
                         <tr>
                             <th>
-                                <a href="?sort=id&order={% if current_sort == 'id' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link">
-                                    ID
-                                    {% if current_sort == 'id' %}
-                                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
-                                    {% endif %}
-                                </a>
-                            </th>
-                            <th>
-                                <a href="?sort=order_name&order={% if current_sort == 'order_name' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link">
-                                    Имя заказа
+                                <a href="?sort=order_name&order={% if current_sort == 'order_name' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link" title="Сортировать по названию заказа">
+                                    Заказ
                                     {% if current_sort == 'order_name' %}
                                         {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
                                     {% endif %}
                                 </a>
                             </th>
-                            <th>
-                                <a href="?sort=created&order={% if current_sort == 'created' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link">
-                                    Дата создания
+                            <th class="date-cell">
+                                <a href="?sort=created&order={% if current_sort == 'created' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link" title="Сортировать по дате создания">
+                                    Создан
                                     {% if current_sort == 'created' %}
                                         {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
                                     {% endif %}
                                 </a>
                             </th>
+                            <th class="date-cell">
+                                <a href="?sort=deadline&order={% if current_sort == 'deadline' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link" title="Сортировать по дате сдачи">
+                                    Сдача
+                                    {% if current_sort == 'deadline' %}
+                                        {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                                    {% endif %}
+                                </a>
+                            </th>
+                            <th>Статус</th>
                             <th>
-                                <a href="?sort=total_cost&order={% if current_sort == 'total_cost' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link">
-                                    Цена
+                                <a href="?sort=total_cost&order={% if current_sort == 'total_cost' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link" title="Сортировать по сумме">
+                                    Сумма
                                     {% if current_sort == 'total_cost' %}
                                         {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
                                     {% endif %}
                                 </a>
                             </th>
                             <th>
-                                <a href="?sort=paid&order={% if current_sort == 'paid' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link">
+                                <a href="?sort=paid&order={% if current_sort == 'paid' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link" title="Сортировать по статусу оплаты">
                                     Оплата
                                     {% if current_sort == 'paid' %}
                                         {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
@@ -216,17 +278,28 @@
                     <tbody>
                         {% for order in page_obj %}
                         <tr class="clickable-row" data-href="{% url 'orders:order_detail' order.id %}">
-                            <td>{{ order.id }}</td>
-                            <td>{{ order.order_name }}</td>
-                            <td>{{ order.created|date:"d.m.Y H:i" }}</td>
-                            <td>${{ order.get_total_cost }}</td>
+                            <td>
+                                <div>{{ order.order_name|truncatechars:20 }}</div>
+                                <small class="text-muted">{{ order.customer_name|truncatechars:15 }}</small>
+                            </td>
+                            <td class="date-cell">{{ order.created|date:"d.m.Y" }}</td>
+                            <td class="date-cell">{{ order.deadline|date:"d.m.Y" }}</td>
+                            <td>
+                                {% with deadline_status=order.get_deadline_status %}
+                                <span class="badge bg-{{ deadline_status.class }} deadline-status"
+                                      title="Сдача: {{ order.deadline|date:'d.m.Y' }} - {{ deadline_status.status }}">
+                                    {{ deadline_status.icon }}
+                                </span>
+                                {% endwith %}
+                            </td>
+                            <td>{{ order.get_total_cost }} ₽</td>
                             <td>
                                 {% if order.paid == 'fully_paid' %}
-                                    <span class="paid-status paid-fully">✓ Оплачено</span>
+                                    <span class="paid-status paid-fully" title="Оплачено">✓</span>
                                 {% elif order.paid == 'partially_paid' %}
-                                    <span class="paid-status paid-partially">⏳ Оплачено частично</span>
+                                    <span class="paid-status paid-partially" title="Оплачено частично">⏳</span>
                                 {% else %}
-                                    <span class="paid-status paid-none">✗ Не оплачено</span>
+                                    <span class="paid-status paid-none" title="Не оплачено">✗</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -251,6 +324,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Инициализация подсказок Bootstrap
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
     // График статусов оплаты
     const ctx = document.getElementById('paymentStatusChart').getContext('2d');
     const chart = new Chart(ctx, {
@@ -262,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data: {{ status_data_json|safe }},
                 backgroundColor: {{ background_colors_json|safe }},
                 borderColor: {{ border_colors_json|safe }},
-                borderWidth: 2
+                borderWidth: 1
             }]
         },
         options: {
@@ -270,8 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    display: true,
-                    position: 'top',
+                    display: false
                 }
             },
             scales: {
