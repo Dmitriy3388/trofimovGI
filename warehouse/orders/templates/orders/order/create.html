@@ -88,6 +88,13 @@
                             <div class="text-danger small">{{ form.category.errors }}</div>
                         {% endif %}
                     </div>
+                    <div class="form-group">
+                        <label for="{{ form.installation_status.id_for_label }}">{{ form.installation_status.label }}</label>
+                        {{ form.installation_status }}
+                        {% if form.installation_status.errors %}
+                            <div class="text-danger small">{{ form.installation_status.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">

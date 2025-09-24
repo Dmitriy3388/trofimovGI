@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлена возможность просмотра списаний и их редактирование">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлен статус заказа и срок сдачи.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/orders/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/signals.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/signals.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" afterDir="false" />
@@ -97,14 +98,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Перенос на фронтэнд значения автоматического расчета">
-      <option name="closed" value="true" />
-      <created>1753729066211</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1753729066211</updated>
     </task>
     <task id="LOCAL-00012" summary="Добавлено цветовое отображение у пользователя, таблица но не реализована сортировка">
       <option name="closed" value="true" />
@@ -490,7 +483,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758732770059</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="Добавлен статус заказа и срок сдачи.">
+      <option name="closed" value="true" />
+      <created>1758740119980</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1758740119993</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -520,7 +521,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Добавлено изображение в детали материала" />
     <MESSAGE value="Добавлена возможность редактирования материала." />
     <MESSAGE value="Разграничение доступа без ошибок 1" />
     <MESSAGE value="Разграничение доступа сокрытие кнопок" />
@@ -545,6 +545,7 @@
     <MESSAGE value="Списки материалов и списки заказов приведены к одному виду" />
     <MESSAGE value="В редактирование заказа добавлено отображение стоимости и стоимости материалов" />
     <MESSAGE value="Добавлена возможность просмотра списаний и их редактирование" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлена возможность просмотра списаний и их редактирование" />
+    <MESSAGE value="Добавлен статус заказа и срок сдачи." />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлен статус заказа и срок сдачи." />
   </component>
 </project>

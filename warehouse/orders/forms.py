@@ -64,7 +64,7 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ['order_name', 'customer_name', 'address', 'transferred_amount',
-                 'discount', 'category', 'deadline', 'blueprint', 'visualization']
+                 'discount', 'category', 'deadline', 'blueprint', 'visualization', 'installation_status']
         widgets = {
             'order_name': forms.TextInput(attrs={'class': 'form-control'}),
             'customer_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -81,6 +81,7 @@ class OrderForm(forms.ModelForm):
             ),
             'blueprint': forms.FileInput(attrs={'class': 'form-control'}),
             'visualization': forms.FileInput(attrs={'class': 'form-control'}),
+            'installation_status': forms.Select(attrs={'class': 'form-select'}),
         }
         labels = {
             'order_name': 'Название',
@@ -92,4 +93,5 @@ class OrderForm(forms.ModelForm):
             'deadline': 'Дата сдачи',
             'blueprint': 'Чертеж',
             'visualization': 'Визуализация',
+            'installation_status': 'Установка',
         }

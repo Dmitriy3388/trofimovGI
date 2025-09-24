@@ -132,6 +132,20 @@
     display: none;
 }
 
+/* Стили для строк с нулевым доступным количеством */
+.material-row-zero-available {
+    background-color: #ffe6e6 !important; /* бледно-красный */
+}
+
+.material-row-zero-available:hover {
+    background-color: #ffd6d6 !important; /* немного темнее при наведении */
+}
+
+/* Убедимся, что ячейки наследуют фон строки */
+.material-row-zero-available td {
+    background-color: inherit !important;
+}
+
 .material-info {
     background: #f8f9fa;
     padding: 15px;
@@ -346,7 +360,7 @@
                     </thead>
                     <tbody>
                         {% for material in materials %}
-                        <tr data-material-id="{{ material.id }}">
+                        <tr data-material-id="{{ material.id }}" class="{% if material.available == 0 %}material-row-zero-available{% endif %}">
                             <td>
                                 <strong>{{ material.name }}</strong>
                             </td>

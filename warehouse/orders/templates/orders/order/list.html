@@ -93,14 +93,14 @@
     padding: 15px;
     margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    width: 50%;
+    width: 40%;
     height: 350px;
     float: left;
     margin-right: 15px;
 }
 
 .orders-table-container {
-    width: calc(50% - 15px);
+    width: calc(60% - 15px);
     float: right;
     margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -136,6 +136,20 @@
 .date-cell {
     white-space: nowrap;
     font-size: 0.8rem;
+}
+
+    .completed-badge {
+        background-color: #e8f5e8 !important; /* бледно-зеленый фон */
+        color: #198754 !important; /* зеленый текст */
+        border: 1px solid #198754;
+    }
+    .completed-order {
+        background-color: #e8f5e8 !important; /* бледно-зеленый фон для строки */
+    }
+
+.completed-order td {
+    background-color: inherit !important; /* наследовать фон от строки */
+    font-weight: 500;
 }
 
 /* Адаптивность */
@@ -191,6 +205,28 @@
     .order-list td:nth-child(7) {
         display: none;
     }
+
+        .completed-order {
+        background-color: #e8f5e8 !important; /* бледно-зеленый */
+    }
+
+    .installation-status {
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .installed {
+        color: #198754;
+        background-color: #d1e7dd;
+    }
+
+    .not-installed {
+        color: #6c757d;
+        background-color: #f8f9fa;
+    }
+
 }
 
 @media (max-width: 576px) {
@@ -273,11 +309,28 @@
                                     {% endif %}
                                 </a>
                             </th>
+                            <th>
+                                <a href="?sort=installation_status&order={% if current_sort == 'installation_status' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link">
+                                    Установка
+                                    {% if current_sort == 'installation_status' %}
+                                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                                    {% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?sort=is_completed&order={% if current_sort == 'is_completed' and current_order == 'asc' %}desc{% else %}asc{% endif %}" class="sort-link">
+                                    Завершено
+                                    {% if current_sort == 'is_completed' %}
+                                    {% if current_order == 'asc' %}↑{% else %}↓{% endif %}
+                                    {% endif %}
+                                </a>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for order in page_obj %}
-                        <tr class="clickable-row" data-href="{% url 'orders:order_detail' order.id %}">
+                        <tr class="clickable-row {% if order.is_completed %}completed-order{% endif %}"
+                            data-href="{% url 'orders:order_detail' order.id %}">
                             <td>
                                 <div>{{ order.order_name|truncatechars:20 }}</div>
                                 <small class="text-muted">{{ order.customer_name|truncatechars:15 }}</small>
@@ -300,6 +353,20 @@
                                     <span class="paid-status paid-partially" title="Оплачено частично">⏳</span>
                                 {% else %}
                                     <span class="paid-status paid-none" title="Не оплачено">✗</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if order.installation_status == 'installed' %}
+                                <span class="installation-status installed">✓ Установлено</span>
+                                {% else %}
+                                <span class="installation-status not-installed">✗ Не установлено</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if order.is_completed %}
+                                <span class="badge completed-badge">✓ Завершено</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Не завершено</span>
                                 {% endif %}
                             </td>
                         </tr>

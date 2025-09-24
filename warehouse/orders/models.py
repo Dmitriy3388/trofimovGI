@@ -12,6 +12,10 @@ class Order(models.Model):
         PARTIALLY_PAID = 'partially_paid', 'Оплачено частично'
         FULLY_PAID = 'fully_paid', 'Оплачено полностью'
 
+    class InstallationStatus(models.TextChoices):
+        NOT_INSTALLED = 'not_installed', 'Не установлено'
+        INSTALLED = 'installed', 'Установлено'
+
     class CategoryChoices(models.TextChoices):
         KITCHEN = 'kitchen', 'Кухня'
         WARDROBE = 'wardrobe', 'Шкаф'
@@ -46,6 +50,14 @@ class Order(models.Model):
         default=PaymentStatus.NOT_PAID,
         verbose_name='Статус оплаты'
     )
+    # Новые поля
+    installation_status = models.CharField(
+        max_length=20,
+        choices=InstallationStatus.choices,
+        default=InstallationStatus.NOT_INSTALLED,
+        verbose_name='Установка'
+    )
+    is_completed = models.BooleanField(default=False, verbose_name='Завершено')
 
     class Meta:
         ordering = ['-created']
@@ -88,7 +100,7 @@ class Order(models.Model):
             return {
                 'status': 'в работе',
                 'class': 'success',
-                'icon': '✅'
+                'icon': '🛠️'
             }
 
     def update_payment_status(self):
@@ -102,7 +114,15 @@ class Order(models.Model):
         else:
             self.paid = self.PaymentStatus.NOT_PAID
 
+    def update_completion_status(self):
+        """Обновляет статус завершения заказа"""
+        self.is_completed = (
+            self.paid == self.PaymentStatus.FULLY_PAID and
+            self.installation_status == self.InstallationStatus.INSTALLED
+        )
     def save(self, *args, **kwargs):
+        self.update_payment_status()
+        self.update_completion_status()
         super().save(*args, **kwargs)
 
 

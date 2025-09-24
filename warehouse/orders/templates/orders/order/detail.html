@@ -78,6 +78,22 @@
               {{ order.get_paid_display }}
             </span>
           </p>
+                <p>
+                    <strong>Статус установки:</strong>
+                    <span class="badge
+                    {% if order.installation_status == 'installed' %}bg-success
+                    {% else %}bg-secondary{% endif %}">
+                        {{ order.get_installation_status_display }}
+                    </span>
+                </p>
+                <p>
+                    <strong>Завершено:</strong>
+                    <span class="badge
+                    {% if order.is_completed %}bg-success
+                    {% else %}bg-secondary{% endif %}">
+                        {% if order.is_completed %}Да{% else %}Нет{% endif %}
+                    </span>
+                </p>
           <p><strong>ID заказа:</strong> {{ order.id }}</p>
         </div>
       </div>
