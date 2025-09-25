@@ -4,15 +4,52 @@
 {% block title %}Заказ #{{ order.id }}{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6">
+<!-- Блок с изображениями - ОБНОВЛЕНО -->
+<div class="row mb-4">
+    <div class="col-md-4">
         {% if order.blueprint %}
-            <img src="{{ order.blueprint.url }}" class="img-fluid" alt="Чертеж">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">📐 Чертеж</h6>
+            </div>
+            <div class="card-body text-center">
+                <img src="{{ order.blueprint.url }}" class="img-fluid rounded" alt="Чертеж" style="max-height: 200px;">
+            </div>
+        </div>
         {% endif %}
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         {% if order.visualization %}
-            <img src="{{ order.visualization.url }}" class="img-fluid" alt="Визуализация">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">🎨 Визуализация</h6>
+            </div>
+            <div class="card-body text-center">
+                <img src="{{ order.visualization.url }}" class="img-fluid rounded" alt="Визуализация" style="max-height: 200px;">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-4">
+        {% if order.installation_photo %}
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">📸 Фото установки</h6>
+            </div>
+            <div class="card-body text-center">
+                <img src="{{ order.installation_photo.url }}" class="img-fluid rounded" alt="Фото установки" style="max-height: 200px;">
+            </div>
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">📸 Фото установки</h6>
+            </div>
+            <div class="card-body text-center text-muted">
+                <i class="bi bi-camera" style="font-size: 3rem;"></i>
+                <p class="mt-2 mb-0">Фото установки не добавлено</p>
+            </div>
+        </div>
         {% endif %}
     </div>
 </div>

@@ -57,6 +57,12 @@ class Order(models.Model):
         default=InstallationStatus.NOT_INSTALLED,
         verbose_name='Установка'
     )
+    installation_photo = models.ImageField(
+        upload_to='installation_photos/%Y/%m/%d/',
+        blank=True,
+        null=True,
+        verbose_name='Фото установки'
+    )
     is_completed = models.BooleanField(default=False, verbose_name='Завершено')
 
     class Meta:

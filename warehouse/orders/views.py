@@ -272,6 +272,11 @@ def display_visualization(obj):
         return mark_safe(f'<img src="{obj.visualization.url}" width="100" height="100" />')
     return "Нет визуализации"
 
+def display_installation_photo(obj):
+    if obj.installation_photo:
+        return mark_safe(f'<img src="{obj.installation_photo.url}" width="100" height="100" />')
+    return "Нет фото установки"
+
 @staff_member_required
 def admin_order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
@@ -285,6 +290,7 @@ def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     return render(request, 'orders/order/detail.html', {
         'order': order,
+        'display_installation_photo': display_installation_photo(order)
     })
 
 

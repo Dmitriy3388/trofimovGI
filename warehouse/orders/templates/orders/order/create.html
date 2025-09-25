@@ -31,8 +31,9 @@
     {% endif %}
 
     <!-- Загрузка изображений -->
+    <!-- В разделе "Загрузка изображений" -->
     <div class="row mb-4">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="form-group">
                 <label for="{{ form.blueprint.id_for_label }}">{{ form.blueprint.label }}</label>
                 {{ form.blueprint }}
@@ -41,12 +42,21 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="form-group">
                 <label for="{{ form.visualization.id_for_label }}">{{ form.visualization.label }}</label>
                 {{ form.visualization }}
                 {% if form.visualization.errors %}
                 <div class="text-danger small">{{ form.visualization.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="{{ form.installation_photo.id_for_label }}">{{ form.installation_photo.label }}</label>
+                {{ form.installation_photo }}
+                {% if form.installation_photo.errors %}
+                <div class="text-danger small">{{ form.installation_photo.errors }}</div>
                 {% endif %}
             </div>
         </div>

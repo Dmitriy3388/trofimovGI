@@ -11,9 +11,9 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <!-- Загрузка изображений -->
+        <!-- В разделе "Загрузка изображений" добавим: -->
         <div class="row mb-4">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label">{{ form.blueprint.label }}</label>
                     {{ form.blueprint }}
@@ -27,7 +27,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label">{{ form.visualization.label }}</label>
                     {{ form.visualization }}
@@ -37,6 +37,20 @@
                     {% if order.visualization %}
                     <div class="mt-2">
                         <small>Текущий файл: <a href="{{ order.visualization.url }}" target="_blank">{{ order.visualization.name }}</a></small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label">{{ form.installation_photo.label }}</label>
+                    {{ form.installation_photo }}
+                    {% if form.installation_photo.errors %}
+                    <div class="text-danger small">{{ form.installation_photo.errors }}</div>
+                    {% endif %}
+                    {% if order.installation_photo %}
+                    <div class="mt-2">
+                        <small>Текущий файл: <a href="{{ order.installation_photo.url }}" target="_blank">{{ order.installation_photo.name }}</a></small>
                     </div>
                     {% endif %}
                 </div>

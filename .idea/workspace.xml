@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлен столбец установки и завершения заказа, добавлено цветовое сопровождение. Так же световое споровождение добавлено в список материалов." />
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлен столбец установки и завершения заказа, добавлено цветовое сопровождение. Так же световое споровождение добавлено в список материалов.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/views.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -88,14 +96,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00013" summary="проблема с ошибками в форме списания материалов">
-      <option name="closed" value="true" />
-      <created>1757271510130</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1757271510130</updated>
     </task>
     <task id="LOCAL-00014" summary="ошибки с формами списания решены.">
       <option name="closed" value="true" />
@@ -481,7 +481,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758745114203</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="Добавлен столбец установки и завершения заказа, добавлено цветовое сопровождение. Так же световое споровождение добавлено в список материалов.">
+      <option name="closed" value="true" />
+      <created>1758820738249</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1758820738249</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
