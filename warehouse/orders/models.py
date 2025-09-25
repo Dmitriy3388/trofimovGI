@@ -87,6 +87,14 @@ class Order(models.Model):
 
     def get_deadline_status(self):
         """Возвращает статус сдачи заказа"""
+
+        if self.is_completed:
+            return {
+                'status': 'закрыт',
+                'class': 'success',
+                'icon': '✅'
+            }
+
         today = timezone.now().date()
         days_until_deadline = (self.deadline - today).days
 
