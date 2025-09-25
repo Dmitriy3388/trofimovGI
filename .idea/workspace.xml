@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлен статус заказа и срок сдачи.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/signals.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/signals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" afterDir="false" />
-    </list>
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлен столбец установки и завершения заказа, добавлено цветовое сопровождение. Так же световое споровождение добавлено в список материалов." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -98,14 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Добавлено цветовое отображение у пользователя, таблица но не реализована сортировка">
-      <option name="closed" value="true" />
-      <created>1753732530741</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1753732530741</updated>
     </task>
     <task id="LOCAL-00013" summary="проблема с ошибками в форме списания материалов">
       <option name="closed" value="true" />
@@ -491,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758740119993</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Добавлен столбец установки и завершения заказа, добавлено цветовое сопровождение. Так же световое споровождение добавлено в список материалов.">
+      <option name="closed" value="true" />
+      <created>1758745114203</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1758745114203</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -521,7 +511,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Добавлена возможность редактирования материала." />
     <MESSAGE value="Разграничение доступа без ошибок 1" />
     <MESSAGE value="Разграничение доступа сокрытие кнопок" />
     <MESSAGE value="Разграничение доступа статусбар" />
@@ -546,6 +535,7 @@
     <MESSAGE value="В редактирование заказа добавлено отображение стоимости и стоимости материалов" />
     <MESSAGE value="Добавлена возможность просмотра списаний и их редактирование" />
     <MESSAGE value="Добавлен статус заказа и срок сдачи." />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлен статус заказа и срок сдачи." />
+    <MESSAGE value="Добавлен столбец установки и завершения заказа, добавлено цветовое сопровождение. Так же световое споровождение добавлено в список материалов." />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлен столбец установки и завершения заказа, добавлено цветовое сопровождение. Так же световое споровождение добавлено в список материалов." />
   </component>
 </project>
