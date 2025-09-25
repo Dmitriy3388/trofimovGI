@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлен столбец установки и завершения заказа, добавлено цветовое сопровождение. Так же световое споровождение добавлено в список материалов.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлен столбец фото установки , добавлено в редактирование и создание" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -96,14 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00014" summary="ошибки с формами списания решены.">
-      <option name="closed" value="true" />
-      <created>1757274094450</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1757274094450</updated>
     </task>
     <task id="LOCAL-00015" summary="решена ошибка с уведомлениями">
       <option name="closed" value="true" />
@@ -489,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758820738249</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="Добавлен столбец фото установки , добавлено в редактирование и создание">
+      <option name="closed" value="true" />
+      <created>1758821883862</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1758821883862</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -519,7 +511,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Разграничение доступа без ошибок 1" />
     <MESSAGE value="Разграничение доступа сокрытие кнопок" />
     <MESSAGE value="Разграничение доступа статусбар" />
     <MESSAGE value="Проработано приложение аккаунт 1" />
@@ -544,6 +535,7 @@
     <MESSAGE value="Добавлена возможность просмотра списаний и их редактирование" />
     <MESSAGE value="Добавлен статус заказа и срок сдачи." />
     <MESSAGE value="Добавлен столбец установки и завершения заказа, добавлено цветовое сопровождение. Так же световое споровождение добавлено в список материалов." />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлен столбец установки и завершения заказа, добавлено цветовое сопровождение. Так же световое споровождение добавлено в список материалов." />
+    <MESSAGE value="Добавлен столбец фото установки , добавлено в редактирование и создание" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлен столбец фото установки , добавлено в редактирование и создание" />
   </component>
 </project>

@@ -3,41 +3,173 @@
 {% load order_extras %}
 {% block title %}Заказ #{{ order.id }}{% endblock %}
 
+{% block extra_css %}
+<style>
+/* Стили для модального окна просмотра изображений */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    overflow: auto;
+}
+
+.image-modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90%;
+    margin-top: 2%;
+    animation: zoom 0.3s;
+}
+
+@keyframes zoom {
+    from {transform: scale(0.8); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1060;
+}
+
+.close-modal:hover {
+    color: #ccc;
+}
+
+.image-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1060;
+}
+
+.download-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.download-btn:hover {
+    background-color: #0056b3;
+}
+
+.image-card {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.image-card:hover {
+    transform: scale(1.02);
+}
+
+.image-card img {
+    transition: opacity 0.3s;
+}
+
+.image-card:hover img {
+    opacity: 0.9;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.image-card:hover .image-overlay {
+    opacity: 1;
+}
+
+.zoom-icon {
+    color: white;
+    font-size: 2rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Блок с изображениями - ОБНОВЛЕНО -->
 <div class="row mb-4">
     <div class="col-md-4">
         {% if order.blueprint %}
-        <div class="card">
+        <div class="card image-card" onclick="openImageModal('{{ order.blueprint.url }}', 'Чертеж заказа #{{ order.id }}')">
             <div class="card-header">
                 <h6 class="card-title mb-0">📐 Чертеж</h6>
             </div>
-            <div class="card-body text-center">
+            <div class="card-body text-center position-relative">
                 <img src="{{ order.blueprint.url }}" class="img-fluid rounded" alt="Чертеж" style="max-height: 200px;">
+                <div class="image-overlay">
+                    <div class="zoom-icon">
+                        <i class="bi bi-search"></i>
+                    </div>
+                </div>
             </div>
         </div>
         {% endif %}
     </div>
     <div class="col-md-4">
         {% if order.visualization %}
-        <div class="card">
+        <div class="card image-card" onclick="openImageModal('{{ order.visualization.url }}', 'Визуализация заказа #{{ order.id }}')">
             <div class="card-header">
                 <h6 class="card-title mb-0">🎨 Визуализация</h6>
             </div>
-            <div class="card-body text-center">
+            <div class="card-body text-center position-relative">
                 <img src="{{ order.visualization.url }}" class="img-fluid rounded" alt="Визуализация" style="max-height: 200px;">
+                <div class="image-overlay">
+                    <div class="zoom-icon">
+                        <i class="bi bi-search"></i>
+                    </div>
+                </div>
             </div>
         </div>
         {% endif %}
     </div>
     <div class="col-md-4">
         {% if order.installation_photo %}
-        <div class="card">
+        <div class="card image-card" onclick="openImageModal('{{ order.installation_photo.url }}', 'Фото установки заказа #{{ order.id }}')">
             <div class="card-header">
                 <h6 class="card-title mb-0">📸 Фото установки</h6>
             </div>
-            <div class="card-body text-center">
+            <div class="card-body text-center position-relative">
                 <img src="{{ order.installation_photo.url }}" class="img-fluid rounded" alt="Фото установки" style="max-height: 200px;">
+                <div class="image-overlay">
+                    <div class="zoom-icon">
+                        <i class="bi bi-search"></i>
+                    </div>
+                </div>
             </div>
         </div>
         {% else %}
@@ -53,6 +185,7 @@
         {% endif %}
     </div>
 </div>
+
 <div class="container mt-4">
   <!-- Заголовок с кнопками действий -->
   <div class="d-flex justify-content-between align-items-center mb-4">
@@ -232,6 +365,17 @@
   </div>
 </div>
 
+<!-- Модальное окно для просмотра изображений -->
+<div id="imageModal" class="image-modal">
+    <span class="close-modal" onclick="closeImageModal()">&times;</span>
+    <img class="image-modal-content" id="modalImage">
+    <div class="image-controls">
+        <button class="download-btn" onclick="downloadImage()">
+            <i class="bi bi-download"></i> Скачать изображение
+        </button>
+    </div>
+</div>
+
   <!-- Модальное окно -->
   {% with modal_id="writeOffModal" modal_size="modal-xl" modal_ajax_url=order.get_write_off_url %}
   {% include "includes/modal.html" %}
@@ -262,6 +406,68 @@
 {% block domready %}
 <!-- JS для загрузки контента в модальное окно -->
 <script>
+
+        // Переменные для хранения текущего изображения
+    let currentImageUrl = '';
+    let currentImageTitle = '';
+
+    // Функция открытия модального окна с изображением
+    function openImageModal(imageUrl, imageTitle) {
+        currentImageUrl = imageUrl;
+        currentImageTitle = imageTitle;
+
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+
+        modal.style.display = 'block';
+        modalImg.src = imageUrl;
+        modalImg.alt = imageTitle;
+
+        // Блокируем прокрутку фоновой страницы
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Функция закрытия модального окна
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.style.display = 'none';
+
+        // Восстанавливаем прокрутку страницы
+        document.body.style.overflow = 'auto';
+    }
+
+    // Функция скачивания изображения
+    function downloadImage() {
+        if (!currentImageUrl) return;
+
+        // Создаем временную ссылку для скачивания
+        const link = document.createElement('a');
+        link.href = currentImageUrl;
+
+        // Извлекаем имя файла из URL
+        const fileName = currentImageUrl.split('/').pop() || 'image';
+        link.download = fileName;
+
+        // Программно кликаем по ссылке
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Закрытие модального окна при клике вне изображения
+    document.getElementById('imageModal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeImageModal();
+        }
+    });
+
+    // Закрытие модального окна клавишей ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeImageModal();
+        }
+    });
+
     $(document).ready(function(){
         $('#writeOffModal').on('show.bs.modal', function (event) {
             var modal = $(this);
