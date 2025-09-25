@@ -1,6 +1,11 @@
 from mebel.models import Material
 from django import forms
 from .models import Order, OrderItem
+from mebel.models import Material
+from django import forms
+from .models import Order, OrderItem
+from django.utils import timezone
+from datetime import timedelta
 
 
 class OrderItemForm(forms.ModelForm):
@@ -54,19 +59,27 @@ class WriteOffForm(forms.Form):
                 'balance': item.material.balance
             }
 
-from mebel.models import Material
-from django import forms
-from .models import Order, OrderItem
-from django.utils import timezone
-from datetime import timedelta
+
 
 class OrderForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.is_edit = kwargs.pop('is_edit', False)
+        super().__init__(*args, **kwargs)
+
+        # Настраиваем поле deadline в зависимости от режима (создание/редактирование)
+        if 'deadline' in self.fields:
+            if self.is_edit:
+                # Для редактирования - убираем ограничение min
+                self.fields['deadline'].widget.attrs.pop('min', None)
+            else:
+                # Для создания - устанавливаем минимальную дату (сегодня)
+                self.fields['deadline'].widget.attrs['min'] = timezone.now().date().isoformat()
+
     class Meta:
         model = Order
         fields = ['order_name', 'customer_name', 'address', 'transferred_amount',
-                 'discount', 'category', 'deadline', 'blueprint', 'visualization',
-                  'installation_status', 'installation_photo'
-                  ]
+                  'discount', 'category', 'deadline', 'blueprint', 'visualization',
+                  'installation_status', 'installation_photo']
         widgets = {
             'order_name': forms.TextInput(attrs={'class': 'form-control'}),
             'customer_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -78,7 +91,7 @@ class OrderForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control',
                     'type': 'date',
-                    'min': timezone.now().date().isoformat()  # Нельзя выбрать прошедшие даты
+                    # Минимальная дата будет установлена в __init__
                 }
             ),
             'blueprint': forms.FileInput(attrs={'class': 'form-control'}),

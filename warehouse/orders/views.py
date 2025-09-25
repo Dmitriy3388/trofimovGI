@@ -310,7 +310,8 @@ def order_edit(request, order_id):
     )
 
     if request.method == 'POST':
-        form = OrderForm(request.POST, request.FILES, instance=order)
+        # Передаем is_edit=True для формы редактирования
+        form = OrderForm(request.POST, request.FILES, instance=order, is_edit=True)
         formset = OrderItemFormSet(request.POST, instance=order, prefix='items')
 
         if form.is_valid() and formset.is_valid():
@@ -383,7 +384,7 @@ def order_edit(request, order_id):
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
-        form = OrderForm(instance=order)
+        form = OrderForm(instance=order, is_edit=True)
         formset = OrderItemFormSet(instance=order, prefix='items')
 
     return render(request, 'orders/order/edit.html', {
