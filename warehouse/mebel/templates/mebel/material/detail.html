@@ -127,15 +127,55 @@
     </a>
   </div>
 
-  <!-- Модальное окно для списания -->
-  {% with modal_id="writeOffModal" modal_ajax_url=material.get_write_off_url %}
-  {% include "includes/modal.html" %}
-  {% endwith %}
+<!-- В material/detail.html ЗАМЕНИТЕ старые модальные окна на это -->
 
-  <!-- Модальное окно для поступления -->
-  {% with modal_id="receiptModal" modal_ajax_url=material.get_receipt_url %}
-  {% include "includes/modal.html" %}
-  {% endwith %}
+<!-- Модальное окно списания -->
+<div class="modal fade" id="writeOffModal" tabindex="-1" aria-labelledby="writeOffModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="writeOffModalLabel">
+          <i class="bi bi-arrow-up-circle me-2"></i>
+          Списание материала: {{ material.name }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Контент будет загружен через AJAX -->
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Загрузка...</span>
+          </div>
+          <p class="mt-2">Загрузка формы...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно поступления -->
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="receiptModalLabel">
+          <i class="bi bi-arrow-down-circle me-2"></i>
+          Поступление материала: {{ material.name }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Контент будет загружен через AJAX -->
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Загрузка...</span>
+          </div>
+          <p class="mt-2">Загрузка формы...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
 

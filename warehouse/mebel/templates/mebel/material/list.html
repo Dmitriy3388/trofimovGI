@@ -227,6 +227,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="container-fluid">
 <div class="container mt-4">
     <h1>{% if category %}{{ category.name }}{% else %}Все материалы{% endif %}</h1>
 
@@ -272,10 +273,10 @@
         <!-- Таблица материалов -->
         <div class="materials-table-container">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">Список заказов</h5>
+                <h5 class="mb-0">Список материалов</h5>
                 <div>
                     {% if user.groups.all.0.name == 'Менеджеры' or user.is_superuser %}
-                    <a href="{% url 'orders:order_create' %}" class="btn btn-primary btn-sm">+ Добавить заказ</a>
+                    <a href="{% url 'mebel:material_create' %}" class="btn btn-primary">+ Добавить материал</a>
                     {% endif %}
                 </div>
             </div>
@@ -410,6 +411,7 @@
 {% endblock %}
 
 {% block domready %}
+<script src="{% static 'js/icons.js' %}"></script>
 <script>
 let materialChart = null;
 let currentMaterialId = null;
