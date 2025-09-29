@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Добавлен статус закрыт.">
-      <change afterPath="$PROJECT_DIR$/warehouse/static/css/global.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/static/js/icons.js" afterDir="false" />
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Визуал">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -95,14 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Форма деталей по заказу исправлена. Добавлена информация по общему балансу">
-      <option name="closed" value="true" />
-      <created>1757442299836</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1757442299836</updated>
     </task>
     <task id="LOCAL-00019" summary="Форма деталей по заказу исправлена. Добавлена информация по общему балансу">
       <option name="closed" value="true" />
@@ -488,7 +476,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758825559555</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="Визуал">
+      <option name="closed" value="true" />
+      <created>1759167425601</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1759167425616</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -518,7 +514,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="В форме создания заказа считается цена" />
     <MESSAGE value="Добавлена кнопка создания материалов, добавлена пагинация в список материалов. Исправлено автоматическое формирование slug" />
     <MESSAGE value="Отердактирован базовый шаблон" />
     <MESSAGE value="Переставлены графики" />
@@ -543,6 +538,7 @@
     <MESSAGE value="Фото увеличиваются и скачиваются" />
     <MESSAGE value="Баг с сохранением даты при редактировании исправлен" />
     <MESSAGE value="Добавлен статус закрыт." />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлен статус закрыт." />
+    <MESSAGE value="Визуал" />
+    <option name="LAST_COMMIT_MESSAGE" value="Визуал" />
   </component>
 </project>
