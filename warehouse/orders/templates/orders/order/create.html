@@ -1,208 +1,584 @@
 {% extends "mebel/base.html" %}
+{% load static %}
 {% load order_extras %}
 
 {% block title %}Создание Заказа{% endblock %}
 
 {% block content %}
-<h1>Создание Заказа</h1>
+<div class="dashboard-container">
+    <!-- Заголовок страницы -->
+    <div class="page-header">
+        <h1>📝 Создание заказа</h1>
+        <p>Заполните информацию о новом заказе</p>
+    </div>
 
-<form method="post" class="order-form" enctype="multipart/form-data">
-    {% csrf_token %}
-    {% include "includes/form_errors.html" with form=form %}
+    <div class="card-modern">
+        <div class="card-modern-header">
+            <h5 class="card-modern-title">➕ Новый заказ</h5>
+        </div>
 
-    <!-- Обработка ошибок formsets -->
-    {% if formset.errors %}
-    <div class="alert alert-danger">
-        <h6>Ошибки в позициях заказа:</h6>
-        {{ formset.non_form_errors }}
-        {% for form in formset %}
-            {% if form.errors %}
-            <div class="mb-2">
-                <strong>Позиция {{ forloop.counter }}:</strong>
-                <ul class="mb-0">
-                    {% for field, errors in form.errors.items %}
-                    <li>{{ field }}: {{ errors|striptags }}</li>
-                    {% endfor %}
-                </ul>
+        <form method="post" class="order-form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Обработка ошибок формы -->
+            {% include "includes/form_errors.html" with form=form %}
+
+            <!-- Обработка ошибок formsets -->
+            {% if formset.errors %}
+            <div class="alert-danger" style="background: #fee; border: 1px solid #fcc; color: #c33; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+                <h6 style="margin: 0 0 15px 0; font-weight: 600;">⚠️ Ошибки в позициях заказа:</h6>
+                {{ formset.non_form_errors }}
+                {% for form in formset %}
+                    {% if form.errors %}
+                    <div style="margin-bottom: 15px; padding: 12px; background: #fff5f5; border-radius: 8px;">
+                        <strong style="color: #c53030;">Позиция {{ forloop.counter }}:</strong>
+                        <ul style="margin: 8px 0 0 20px;">
+                            {% for field, errors in form.errors.items %}
+                            <li>{{ field }}: {{ errors|striptags }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                {% endfor %}
             </div>
             {% endif %}
-        {% endfor %}
-    </div>
-    {% endif %}
 
-    <!-- Загрузка изображений -->
-    <!-- В разделе "Загрузка изображений" -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="{{ form.blueprint.id_for_label }}">{{ form.blueprint.label }}</label>
-                {{ form.blueprint }}
-                {% if form.blueprint.errors %}
-                <div class="text-danger small">{{ form.blueprint.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="{{ form.visualization.id_for_label }}">{{ form.visualization.label }}</label>
-                {{ form.visualization }}
-                {% if form.visualization.errors %}
-                <div class="text-danger small">{{ form.visualization.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="{{ form.installation_photo.id_for_label }}">{{ form.installation_photo.label }}</label>
-                {{ form.installation_photo }}
-                {% if form.installation_photo.errors %}
-                <div class="text-danger small">{{ form.installation_photo.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <!-- Информация о заказе -->
-    <div class="order-info mb-4">
-        <h3>Информация по заказу</h3>
-            <!-- В разделе "Информация о заказе" добавляем поле -->
-            <div class="row">
-                <div class="col-md-6">
+            <!-- Секция загрузки изображений -->
+            <div class="form-section">
+                <h6 class="section-title">🖼️ Изображения</h6>
+                <div class="form-grid">
                     <div class="form-group">
-                        <label for="{{ form.order_name.id_for_label }}">{{ form.order_name.label }}</label>
+                        <label for="{{ form.blueprint.id_for_label }}" class="form-label">{{ form.blueprint.label }}</label>
+                        {{ form.blueprint }}
+                        {% if form.blueprint.errors %}
+                        <div class="error-text">{{ form.blueprint.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.visualization.id_for_label }}" class="form-label">{{ form.visualization.label }}</label>
+                        {{ form.visualization }}
+                        {% if form.visualization.errors %}
+                        <div class="error-text">{{ form.visualization.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.installation_photo.id_for_label }}" class="form-label">{{ form.installation_photo.label }}</label>
+                        {{ form.installation_photo }}
+                        {% if form.installation_photo.errors %}
+                        <div class="error-text">{{ form.installation_photo.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Секция информации о заказе -->
+            <div class="form-section">
+                <h6 class="section-title">📋 Информация по заказу</h6>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="{{ form.order_name.id_for_label }}" class="form-label">{{ form.order_name.label }}</label>
                         {{ form.order_name }}
                         {% if form.order_name.errors %}
-                            <div class="text-danger small">{{ form.order_name.errors }}</div>
+                        <div class="error-text">{{ form.order_name.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.customer_name.id_for_label }}">{{ form.customer_name.label }}</label>
+                        <label for="{{ form.customer_name.id_for_label }}" class="form-label">{{ form.customer_name.label }}</label>
                         {{ form.customer_name }}
                         {% if form.customer_name.errors %}
-                            <div class="text-danger small">{{ form.customer_name.errors }}</div>
+                        <div class="error-text">{{ form.customer_name.errors }}</div>
                         {% endif %}
                     </div>
-                </div>
-                <div class="col-md-6">
                     <div class="form-group">
-                        <label for="{{ form.deadline.id_for_label }}">{{ form.deadline.label }}</label>
+                        <label for="{{ form.address.id_for_label }}" class="form-label">{{ form.address.label }}</label>
+                        {{ form.address }}
+                        {% if form.address.errors %}
+                        <div class="error-text">{{ form.address.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.deadline.id_for_label }}" class="form-label">{{ form.deadline.label }}</label>
                         {{ form.deadline }}
                         {% if form.deadline.errors %}
-                            <div class="text-danger small">{{ form.deadline.errors }}</div>
+                        <div class="error-text">{{ form.deadline.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
+                        <label for="{{ form.transferred_amount.id_for_label }}" class="form-label">{{ form.transferred_amount.label }}</label>
+                        {{ form.transferred_amount }}
+                        {% if form.transferred_amount.errors %}
+                        <div class="error-text">{{ form.transferred_amount.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.discount.id_for_label }}" class="form-label">{{ form.discount.label }}</label>
+                        {{ form.discount }}
+                        {% if form.discount.errors %}
+                        <div class="error-text">{{ form.discount.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.category.id_for_label }}" class="form-label">{{ form.category.label }}</label>
                         {{ form.category }}
                         {% if form.category.errors %}
-                            <div class="text-danger small">{{ form.category.errors }}</div>
+                        <div class="error-text">{{ form.category.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.installation_status.id_for_label }}">{{ form.installation_status.label }}</label>
+                        <label for="{{ form.installation_status.id_for_label }}" class="form-label">{{ form.installation_status.label }}</label>
                         {{ form.installation_status }}
                         {% if form.installation_status.errors %}
-                            <div class="text-danger small">{{ form.installation_status.errors }}</div>
+                        <div class="error-text">{{ form.installation_status.errors }}</div>
                         {% endif %}
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="{{ form.transferred_amount.id_for_label }}">{{ form.transferred_amount.label }}</label>
-                    {{ form.transferred_amount }}
-                    {% if form.transferred_amount.errors %}
-                    <div class="text-danger small">{{ form.transferred_amount.errors }}</div>
-                    {% endif %}
+
+            <!-- Секция материалов -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h6 class="section-title">🔧 Комплектующие</h6>
+                    <button type="button" id="add-more" class="btn-modern btn-outline">
+                        <i class="bi bi-plus-circle"></i>
+                        Добавить материал
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="{{ form.discount.id_for_label }}">{{ form.discount.label }}</label>
-                    {{ form.discount }}
-                    {% if form.discount.errors %}
-                    <div class="text-danger small">{{ form.discount.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
-                    {{ form.category }}
-                    {% if form.category.errors %}
-                    <div class="text-danger small">{{ form.category.errors }}</div>
-                    {% endif %}
+
+                {{ formset.management_form }}
+
+                <div class="table-responsive">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%">Материал</th>
+                                <th style="width: 20%">Количество</th>
+                                <th style="width: 20%">Цена за единицу</th>
+                                <th style="width: 15%">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="materials-tbody">
+                            {% for form in formset %}
+                            <tr class="material-form">
+                                <td>{{ form.material }}</td>
+                                <td>{{ form.quantity }}</td>
+                                <td class="price-cell" data-material-id="{{ form.material.value }}">
+                                    {% if form.material.value %}
+                                    <span class="price-placeholder">{{ form.material.value|get_material_price }} руб.</span>
+                                    {% else %}
+                                    <span class="text-muted">---</span>
+                                    {% endif %}
+                                </td>
+                                <td class="actions-cell">
+                                    {% if form.DELETE %}
+                                    <label class="delete-checkbox">
+                                        {{ form.DELETE }}
+                                        <span class="delete-label">Удалить</span>
+                                    </label>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+
+            <!-- Итоговая цена -->
+            <div class="total-section">
+                <div class="total-card">
+                    <div class="total-header">
+                        <span class="total-label">💰 Итоговая стоимость заказа:</span>
+                        <span id="total-price" class="total-amount">0 руб.</span>
+                    </div>
+                    <div class="total-formula">
+                        <small>(Стоимость материалов × 2 × (1 - скидка/100))</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопки отправки -->
+            <div class="form-actions">
+                <button type="submit" class="btn-modern btn-primary">
+                    <i class="bi bi-check-circle"></i>
+                    Создать заказ
+                </button>
+                <a href="{% url 'orders:order_list' %}" class="btn-modern btn-outline">
+                    <i class="bi bi-arrow-left"></i>
+                    Отмена
+                </a>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- Материалы -->
-    <div class="materials-section mb-4">
-        <h3>Комплектующие</h3>
-        {{ formset.management_form }}
+<style>
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
 
-        <table class="materials-table">
-            <thead>
-                <tr>
-                    <th>Материал</th>
-                    <th>Количество</th>
-                    <th>Цена</th>
-                    <th>Удалить?</th>
-                </tr>
-            </thead>
-            <tbody id="materials-tbody">
-                {% for form in formset %}
-                <tr class="material-form">
-                    <td>{{ form.material }}</td>
-                    <td>{{ form.quantity }}</td>
-                    <td class="price-cell" data-material-id="{{ form.material.value }}">
-                        {% if form.material.value %}
-                        <span class="price-placeholder">{{ form.material.value|get_material_price }} руб.</span>
-                        {% else %}
-                        ---
-                        {% endif %}
-                    </td>
-                    <td>{% if form.DELETE %}{{ form.DELETE }}{% endif %}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+.page-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-        <button type="button" id="add-more" class="btn">+ Добавить Материал</button>
-    </div>
+.page-header h1 {
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
 
-    <div class="total-price mb-4">
-        <strong>Цена Заказа: </strong><span id="total-price">0</span> руб.
-        <br>
-        <small class="text-muted">(Стоимость материалов × 2 × (1 - скидка/100))</small>
-    </div>
+.page-header p {
+    color: #6b7280;
+    font-size: 1.2rem;
+}
 
-    <input type="submit" value="Создать Заказ" class="submit-btn">
-</form>
+.card-modern {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: none;
+    overflow: hidden;
+}
+
+.card-modern-header {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 20px 25px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.card-modern-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-section {
+    padding: 25px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+}
+
+.section-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s;
+    background: white;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.error-text {
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+/* Стили для таблицы материалов */
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.modern-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.modern-table th {
+    color: white;
+    font-weight: 600;
+    padding: 15px 12px;
+    text-align: left;
+    border: none;
+    font-size: 0.9rem;
+}
+
+.modern-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.3s;
+}
+
+.modern-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.modern-table td {
+    padding: 12px;
+    vertical-align: middle;
+    border: none;
+}
+
+.price-cell {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #059669;
+}
+
+.actions-cell {
+    text-align: center;
+}
+
+.delete-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.delete-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.delete-label {
+    transition: color 0.3s;
+}
+
+.delete-checkbox:hover .delete-label {
+    color: #dc2626;
+}
+
+/* Стили для кнопок */
+.btn-modern {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #667eea;
+    color: #667eea;
+}
+
+.btn-outline:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Стили для итоговой цены */
+.total-section {
+    padding: 25px;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin: 25px;
+}
+
+.total-card {
+    text-align: center;
+}
+
+.total-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.total-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.total-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #059669;
+    font-family: 'Courier New', monospace;
+}
+
+.total-formula {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* Стили для действий формы */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 25px;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-modern {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 15px;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-modern {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .modern-table {
+        font-size: 0.8rem;
+    }
+
+    .modern-table th,
+    .modern-table td {
+        padding: 8px 6px;
+    }
+
+    .total-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .form-section {
+        padding: 20px;
+    }
+
+    .modern-table {
+        font-size: 0.75rem;
+    }
+}
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Преобразуем Python словарь в JavaScript объект
     const materialPrices = JSON.parse('{{ material_prices_json|escapejs }}');
-
-    // Получаем элемент управления formset
     const totalFormsInput = document.getElementById('id_items-TOTAL_FORMS');
     let formCount = parseInt(totalFormsInput.value);
 
-    // Функция для добавления новой строки
+    // Функция для добавления нового ряда материалов
     document.getElementById('add-more').addEventListener('click', function() {
-        // Находим первую строку для клонирования
         const formRow = document.querySelector('.material-form');
         if (!formRow) return;
 
-        // Клонируем строку
         const newRow = formRow.cloneNode(true);
-
-        // Обновляем имена полей в новой строке
         const newRowHtml = newRow.innerHTML.replace(
             /items-\d+-/g,
             `items-${formCount}-`
         );
         newRow.innerHTML = newRowHtml;
 
-        // Очищаем значения полей
+        // Очищаем значения в новом ряду
         newRow.querySelectorAll('input, select').forEach(function(input) {
             if (input.name.includes('material') || input.name.includes('quantity')) {
                 input.value = '';
@@ -212,24 +588,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Обновляем отображение цены
+        // Сбрасываем цену
         const priceCell = newRow.querySelector('.price-cell');
-        priceCell.innerHTML = '<span class="price-placeholder">---</span>';
+        priceCell.innerHTML = '<span class="text-muted">---</span>';
         priceCell.dataset.materialId = '';
         priceCell.dataset.price = '0';
 
-        // Добавляем новую строку в таблицу
+        // Добавляем новый ряд в таблицу
         document.getElementById('materials-tbody').appendChild(newRow);
-
-        // Увеличиваем счетчик форм
         formCount++;
         totalFormsInput.value = formCount;
 
-        // Добавляем обработчики событий для новой строки
+        // Добавляем обработчики событий для нового ряда
         addEventListenersToRow(newRow);
     });
 
-    // Функция добавления обработчиков событий к строке
+    // Функция для добавления обработчиков событий к ряду
     function addEventListenersToRow(row) {
         const materialSelect = row.querySelector('select[name*="-material"]');
         const quantityInput = row.querySelector('input[name*="-quantity"]');
@@ -245,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Функция обновления цены для конкретной строки
+    // Функция для обновления цены в ряду
     function updateRowPrice(row) {
         const materialSelect = row.querySelector('select[name*="-material"]');
         const priceCell = row.querySelector('.price-cell');
@@ -255,88 +629,73 @@ document.addEventListener('DOMContentLoaded', function() {
             priceCell.innerHTML = `<span class="price-placeholder">${price} руб.</span>`;
             priceCell.dataset.price = price;
             priceCell.dataset.materialId = materialSelect.value;
-
-            // Обновляем общую сумму
             updateTotal();
         } else {
-            priceCell.innerHTML = '<span class="price-placeholder">---</span>';
+            priceCell.innerHTML = '<span class="text-muted">---</span>';
             priceCell.dataset.price = '0';
             updateTotal();
         }
     }
 
-// Функция обновления общей суммы
-function updateTotal() {
-    let materialsTotal = 0;
+    // Функция для обновления общей стоимости
+    function updateTotal() {
+        let materialsTotal = 0;
 
-    document.querySelectorAll('tr.material-form').forEach(row => {
-        const priceCell = row.querySelector('.price-cell');
-        const quantityInput = row.querySelector('input[name*="-quantity"]');
+        document.querySelectorAll('tr.material-form').forEach(row => {
+            const priceCell = row.querySelector('.price-cell');
+            const quantityInput = row.querySelector('input[name*="-quantity"]');
 
-        if (priceCell && quantityInput) {
-            const price = parseFloat(priceCell.dataset.price || 0);
-            const quantity = parseFloat(quantityInput.value || 0);
-            materialsTotal += price * quantity;
-        }
-    });
+            if (priceCell && quantityInput) {
+                const price = parseFloat(priceCell.dataset.price || 0);
+                const quantity = parseFloat(quantityInput.value || 0);
+                materialsTotal += price * quantity;
+            }
+        });
 
-    // Получаем значение скидки
-    const discountInput = document.getElementById('{{ form.discount.id_for_label }}');
-    const discount = parseFloat(discountInput.value || 0);
+        const discountInput = document.getElementById('{{ form.discount.id_for_label }}');
+        const discount = parseFloat(discountInput.value || 0);
+        const totalPrice = materialsTotal * 2 * (1 - discount / 100);
 
-    // Рассчитываем итоговую стоимость: материалы * 2 * (1 - discount/100)
-    const totalPrice = materialsTotal * 2 * (1 - discount / 100);
+        document.getElementById('total-price').textContent = totalPrice.toFixed(2) + ' руб.';
+    }
 
-    document.getElementById('total-price').textContent = totalPrice.toFixed(2);
-}
-
-    // Инициализация цен и обработчиков событий при загрузке
+    // Инициализация обработчиков событий для существующих рядов
     document.querySelectorAll('tr.material-form').forEach(row => {
         addEventListenersToRow(row);
         updateRowPrice(row);
     });
 
-    // Добавляем обработчик для поля скидки
+    // Обработчик для поля скидки
     const discountInput = document.getElementById('{{ form.discount.id_for_label }}');
     if (discountInput) {
         discountInput.addEventListener('input', updateTotal);
     }
 
-    // Обновляем общую сумму при загрузке
+    // Инициализация общей стоимости
     updateTotal();
+
+    // Обработчик отправки формы для удаления пустых строк
+    document.querySelector('form.order-form').addEventListener('submit', function(e) {
+        const materialRows = document.querySelectorAll('tr.material-form');
+
+        materialRows.forEach(row => {
+            const materialSelect = row.querySelector('select[name*="-material"]');
+            const quantityInput = row.querySelector('input[name*="-quantity"]');
+
+            // Если оба поля пустые, скрываем строку
+            if ((!materialSelect || !materialSelect.value) &&
+                (!quantityInput || !quantityInput.value || quantityInput.value === '0' || quantityInput.value === '')) {
+                row.style.display = 'none';
+
+                // Добавляем скрытое поле DELETE
+                const deleteInput = document.createElement('input');
+                deleteInput.type = 'hidden';
+                deleteInput.name = materialSelect.name.replace('-material', '-DELETE');
+                deleteInput.value = 'on';
+                row.appendChild(deleteInput);
+            }
+        });
+    });
 });
 </script>
-
-<style>
-.materials-table {
-    width: 100%;
-    margin: 20px 0;
-    border-collapse: collapse;
-}
-.materials-table th, .materials-table td {
-    padding: 8px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-.btn {
-    padding: 5px 10px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px;
-}
-.total-price {
-    margin: 20px 0;
-    font-size: 1.2em;
-}
-.form-group {
-    margin-bottom: 15px;
-}
-
-/* Добавляем в существующие стили */
-.badge.bg-danger { background-color: #dc3545 !important; }
-.badge.bg-warning { background-color: #ffc107 !important; color: #000 !important; }
-.badge.bg-success { background-color: #28a745 !important; }
-</style>
 {% endblock %}

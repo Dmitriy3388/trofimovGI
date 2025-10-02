@@ -4,64 +4,147 @@
 {% block title %}Мой профиль{% endblock %}
 
 {% block content %}
-<div class="profile-container">
-    <h1 class="profile-title">Мой профиль</h1>
+<div class="container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <h1 class="text-center mb-4" style="color: #2c3e50; font-weight: 600;">👤 Мой профиль</h1>
 
-    <div class="profile-card">
-            <div class="profile-header">
-            <div class="profile-avatar-container">
+    <div class="card-modern">
+        <!-- Заголовок профиля с аватаром -->
+        <div class="card-modern-header">
+            <div class="text-center mb-4">
                 {% if profile.photo and profile.photo.url %}
                     <img src="{{ profile.photo.url }}"
-                        alt="Фото {{ profile.user.username }}"
-                        class="profile-avatar">
+                         alt="Фото {{ profile.user.username }}"
+                         class="profile-avatar"
+                         style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 5px solid rgba(255,255,255,0.3); box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
                 {% else %}
                     <img src="{% static 'img/no_image.png' %}"
-                        alt="Фото отсутствует"
-                        class="profile-avatar">
+                         alt="Фото отсутствует"
+                         class="profile-avatar"
+                         style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 5px solid rgba(255,255,255,0.3); box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
                 {% endif %}
             </div>
 
-    <div class="profile-info">
-        <h2>{{ profile.user.get_full_name|default:profile.user.username }}</h2>
-        <p class="username">@{{ profile.user.username }}</p>
-    </div>
-</div>
+            <div class="text-center">
+                <h2 class="card-modern-title" style="margin-bottom: 5px;">{{ profile.user.get_full_name|default:profile.user.username }}</h2>
+                <p class="card-modern-subtitle">@{{ profile.user.username }}</p>
+                <div class="online-status" style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.9rem; opacity: 0.8;">
+                    <span class="status-dot" style="width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite;"></span>
+                    В сети
+                </div>
+            </div>
+        </div>
 
-        <div class="profile-details">
+        <!-- Детали профиля -->
+        <div class="card-modern-body">
             <div class="detail-row">
-                <span class="detail-label">Логин:</span>
+                <span class="detail-label">👤 Логин:</span>
                 <span class="detail-value">{{ profile.user.username }}</span>
             </div>
 
             <div class="detail-row">
-                <span class="detail-label">Email:</span>
-                <span class="detail-value">{{ profile.user.email }}</span>
+                <span class="detail-label">📧 Email:</span>
+                <span class="detail-value">
+                    {% if profile.user.email %}
+                        {{ profile.user.email }}
+                    {% else %}
+                        <span style="color: #999;">Не указан</span>
+                    {% endif %}
+                </span>
             </div>
 
             <div class="detail-row">
-                <span class="detail-label">Дата рождения:</span>
+                <span class="detail-label">🎂 Дата рождения:</span>
                 <span class="detail-value">
                     {% if profile.date_of_birth %}
                         {{ profile.date_of_birth|date:"d.m.Y" }}
                     {% else %}
-                        Не указана
+                        <span style="color: #999;">Не указана</span>
                     {% endif %}
                 </span>
             </div>
+
+            <div class="detail-row">
+                <span class="detail-label">🏢 Роль:</span>
+                <span class="detail-value">
+                    {% if user.groups.all %}
+                        {{ user.groups.all.0.name }}
+                    {% else %}
+                        {% if user.is_staff %}
+                            <span style="color: #e74c3c;">👑 Администратор</span>
+                        {% else %}
+                            <span style="color: #999;">👤 Пользователь</span>
+                        {% endif %}
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">📅 Дата регистрации:</span>
+                <span class="detail-value">{{ profile.user.date_joined|date:"d.m.Y" }}</span>
+            </div>
         </div>
 
-        <a href="{% url 'account:edit' %}" class="edit-button">Редактировать профиль</a>
-        <a href="{% url 'account:password_change' %}">Изменить пароль</a>
-        <a href="{% url 'account:logout' %}">Выйти</a>.
+        <!-- Действия профиля -->
+        <div class="card-actions">
+            <a href="{% url 'account:edit' %}" class="btn-modern btn-primary-gradient">
+                <i class="bi bi-pencil-square"></i>
+                Редактировать профиль
+            </a>
+
+            <a href="{% url 'account:password_change' %}" class="btn-modern btn-outline-modern">
+                <i class="bi bi-shield-lock"></i>
+                Сменить пароль
+            </a>
+
+            <a href="{% url 'account:logout' %}" class="btn-modern btn-danger-modern">
+                <i class="bi bi-box-arrow-right"></i>
+                Выйти
+            </a>
+        </div>
     </div>
 </div>
+
 <style>
-    .profile-avatar {
-        width: 200px;         /* Фиксированная ширина */
-        height: 200px;        /* Фиксированная высота */
-        object-fit: cover;    /* Обрезает изображение чтобы заполнить область */
-        border-radius: 50%;   /* Круглая форма (опционально) */
-        border: 4px solid #ddd; /* Рамка (опционально) */
+/* Анимация пульсации для статуса */
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
     }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 5px rgba(74, 222, 128, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+    }
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .profile-avatar {
+        width: 120px !important;
+        height: 120px !important;
+    }
+
+    .card-actions {
+        flex-direction: column;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .detail-value {
+        text-align: left;
+    }
+}
 </style>
 {% endblock %}

@@ -1,0 +1,24 @@
+<!-- modern_card.html -->
+<div class="card-modern">
+    {% if header %}
+    <div class="card-modern-header">
+        <h2 class="card-modern-title">{{ title }}</h2>
+        {% if subtitle %}<p class="card-modern-subtitle">{{ subtitle }}</p>{% endif %}
+    </div>
+    {% endif %}
+
+    <div class="card-modern-body">
+        {{ content|safe }}
+    </div>
+
+    {% if actions %}
+    <div class="card-actions">
+        {% for action in actions %}
+        <a href="{{ action.url }}" class="btn-modern {{ action.class }}">
+            {% if action.icon %}<i class="{{ action.icon }}"></i>{% endif %}
+            {{ action.text }}
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

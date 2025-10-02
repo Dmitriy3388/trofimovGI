@@ -4,9 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Визуал">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Таблица материалов доведена до ума">
+      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/includes/modern_card.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/warehouse/static/css/cards.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/create.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,11 +80,11 @@
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\account\static\img" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\static\css" />
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI" />
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\mebel\static\mebel\css" />
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\mebel\static\css" />
       <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\mebel\templates\mebel" />
-      <recent name="C:\Users\Dmitriy\PycharmProjects\trofimovGI\warehouse\mebel\templates" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -91,14 +102,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Форма деталей по заказу исправлена. Добавлена информация по общему балансу">
-      <option name="closed" value="true" />
-      <created>1757442933243</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1757442933243</updated>
     </task>
     <task id="LOCAL-00020" summary="На главную страницу добавлены графики и справка по материалам">
       <option name="closed" value="true" />
@@ -484,7 +487,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759167425616</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="Таблица материалов доведена до ума">
+      <option name="closed" value="true" />
+      <created>1759169170032</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1759169170047</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -514,7 +525,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Добавлена кнопка создания материалов, добавлена пагинация в список материалов. Исправлено автоматическое формирование slug" />
     <MESSAGE value="Отердактирован базовый шаблон" />
     <MESSAGE value="Переставлены графики" />
     <MESSAGE value="Переименованы таблицы. Убран столбец ID" />
@@ -539,6 +549,7 @@
     <MESSAGE value="Баг с сохранением даты при редактировании исправлен" />
     <MESSAGE value="Добавлен статус закрыт." />
     <MESSAGE value="Визуал" />
-    <option name="LAST_COMMIT_MESSAGE" value="Визуал" />
+    <MESSAGE value="Таблица материалов доведена до ума" />
+    <option name="LAST_COMMIT_MESSAGE" value="Таблица материалов доведена до ума" />
   </component>
 </project>

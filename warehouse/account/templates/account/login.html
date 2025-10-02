@@ -1,16 +1,168 @@
 {% extends "mebel/base.html" %}
+{% load static %}
 
-{% block title %}Log-in{% endblock %}
+{% block title %}Авторизация{% endblock %}
 
 {% block content %}
-  <h1>Авторизация</h1>
-  <p>Пожалуйстя, заполните форму для авторизации:</p>
-  <form method="post">
-      {% csrf_token %}
+<div class="container" style="max-width: 500px; margin: 0 auto; padding: 20px;">
+    <div class="card-modern">
+        <!-- Заголовок формы -->
+        <div class="card-modern-header">
+            <h2 class="card-modern-title">🔐 Авторизация</h2>
+            <p class="card-modern-subtitle">Пожалуйста, заполните форму для входа в систему</p>
+        </div>
 
-      {% include "includes/form_errors.html" %}
+        <!-- Тело формы -->
+        <div class="card-modern-body">
+            <form method="post" class="auth-form">
+                {% csrf_token %}
 
-      {{ form.as_p }}
-      <button type="submit">Отправить</button>
-  </form>
+                <!-- Вывод ошибок формы -->
+                {% if form.errors %}
+                <div class="alert-danger" style="background: #fee; border: 1px solid #fcc; color: #c33; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                    <strong>Пожалуйста, исправьте следующие ошибки:</strong>
+                    <ul style="margin: 10px 0 0 20px;">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Поля формы -->
+                <div class="mb-4">
+                    <label for="id_username" class="form-label" style="display: block; margin-bottom: 8px; font-weight: 500; color: #2c3e50;">
+                        👤 Имя пользователя
+                    </label>
+                    <input type="text"
+                           name="username"
+                           id="id_username"
+                           class="form-control"
+                           style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; transition: border-color 0.3s;"
+                           placeholder="Введите ваше имя пользователя"
+                           required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="id_password" class="form-label" style="display: block; margin-bottom: 8px; font-weight: 500; color: #2c3e50;">
+                        🔒 Пароль
+                    </label>
+                    <input type="password"
+                           name="password"
+                           id="id_password"
+                           class="form-control"
+                           style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; transition: border-color 0.3s;"
+                           placeholder="Введите ваш пароль"
+                           required>
+                </div>
+
+                <!-- Дополнительные опции -->
+                <div class="mb-4">
+                    <div class="form-check" style="display: flex; align-items: center; gap: 8px;">
+                        <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me" style="width: 18px; height: 18px;">
+                        <label class="form-check-label" for="rememberMe" style="color: #2c3e50;">
+                            Запомнить меня
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Кнопка отправки -->
+                <div class="card-actions">
+                    <button type="submit" class="btn-modern btn-primary-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; transition: transform 0.2s; width: 100%;">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Войти в систему
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Дополнительные ссылки -->
+        <div class="card-actions" style="flex-direction: column; gap: 10px; margin-top: 20px;">
+            <div class="text-center">
+                <a href="{% url 'password_reset' %}" class="btn-modern btn-outline-modern" style="display: inline-block; padding: 10px 20px; border: 2px solid #667eea; color: #667eea; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.3s;">
+                    <i class="bi bi-key"></i>
+                    Забыли пароль?
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Стили для карточки */
+.card-modern {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin: 20px 0;
+}
+
+.card-modern-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.card-modern-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+}
+
+.card-modern-subtitle {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.card-modern-body {
+    margin-bottom: 20px;
+}
+
+/* Стили для полей ввода при фокусе */
+.form-control:focus {
+    outline: none;
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Стили для кнопок */
+.card-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-primary-gradient:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+}
+
+.btn-outline-modern:hover {
+    background: #667eea;
+    color: white;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .card-modern {
+        padding: 20px;
+        margin: 10px 0;
+    }
+
+    .card-actions {
+        flex-direction: column;
+    }
+}
+</style>
 {% endblock %}

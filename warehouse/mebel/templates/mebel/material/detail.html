@@ -3,180 +3,318 @@
 
 {% block title %}{{ material.name }}{% endblock %}
 
+{% block extra_css %}
+<style>
+.material-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.material-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.material-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 0;
+}
+
+.material-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    .material-content {
+        grid-template-columns: 1fr;
+    }
+
+    .material-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+}
+
+.status-badge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.status-available {
+    background: linear-gradient(135deg, #4ade80, #16a34a);
+    color: white;
+}
+
+.status-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.status-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.operations-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.operations-table th {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #5f6368;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.operations-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.operations-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.image-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.material-image {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}
+
 {% block content %}
-  <h1>{{ material.name }}</h1>
-
-  <div class="row">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h5>Информация о материале</h5>
-        </div>
-        <div class="card-body">
-          <p><strong>Категория:</strong> {{ material.category.name }}</p>
-          <p><strong>Цена:</strong> {{ material.price }} ₽</p>
-          <p><strong>Баланс на складе:</strong> {{ material.balance }}</p>
-          <p><strong>Зарезервировано:</strong> {{ material.reserved }}</p>
-          <p><strong>Доступно:</strong> <span style="color: {{ material.availability_status }}; font-weight: bold;">{{ material.available }}</span></p>
-          <p><strong>Нехватка:</strong> <span style="color: {% if material.lack > 0 %}red{% else %}green{% endif %}; font-weight: bold;">{{ material.lack }}</span></p>
-                <!-- В карточке информации о материале добавляем -->
-            <!-- В карточке информации о материале добавляем -->
-            <p><strong>Поставщик:</strong>
-                {% if material.supplier %}
-                    {{ material.supplier.name }}
-                    {% if material.supplier.phone %}
-                        <br><small class="text-muted">Тел: {{ material.supplier.phone }}</small>
-                    {% endif %}
-                {% else %}
-                    <span class="text-muted">Не указан</span>
-                {% endif %}
-            </p>
-
-          {% if material.description %}
-          <p><strong>Описание:</strong> {{ material.description }}</p>
-          {% endif %}
-        </div>
-      </div>
+<div class="material-detail-container">
+    <!-- Заголовок -->
+    <div class="material-header">
+        <h1 class="material-title">📦 {{ material.name }}</h1>
+        <span class="status-badge {% if material.availability_status == 'green' %}status-available{% elif material.availability_status == 'yellow' %}status-warning{% else %}status-danger{% endif %}">
+            {% if material.availability_status == 'green' %}
+                ✅ В наличии
+            {% elif material.availability_status == 'yellow' %}
+                ⚠️ Мало осталось
+            {% else %}
+                ❌ Нет в наличии
+            {% endif %}
+        </span>
     </div>
 
-    <!-- Секция изображения - всегда отображается -->
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5>Изображение</h5>
+    <!-- Основная информация -->
+    <div class="material-content">
+        <!-- Левая колонка - информация -->
+        <div class="card-modern">
+            <div class="card-modern-header">
+                <h2 class="card-modern-title">📋 Информация о материале</h2>
             </div>
-            <div class="card-body text-center">
-                <!-- Используем изображение по умолчанию, если нет своего -->
-                <img src="{% if material.image %}{{ material.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
-                     alt="{{ material.name }}" class="img-fluid" style="max-height: 300px;">
-            </div>
-        </div>
-    </div>
-  </div>
 
-  <!-- Кнопки действий -->
-  <div class="mt-4">
-      {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
-      <div class="btn-group" role="group">
-          <!-- Кнопка списания -->
-          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#writeOffModal">
-              📉 Списать материалы
-          </button>
+            <div class="card-modern-body">
+                <div class="detail-row">
+                    <span class="detail-label">🏷️ Категория:</span>
+                    <span class="detail-value">{{ material.category.name }}</span>
+                </div>
 
-          <!-- Кнопка поступления -->
-          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#receiptModal">
-              📈 Поступление материалов
-          </button>
+                <div class="detail-row">
+                    <span class="detail-label">💰 Цена:</span>
+                    <span class="detail-value">{{ material.price }} ₽</span>
+                </div>
 
-          <!-- Новая кнопка редактирования -->
-          <a href="{% url 'mebel:material_edit' material.id %}" class="btn btn-warning">
-              ✏️ Редактировать материал
-          </a>
-      </div>
-      {% endif %}
-  </div>
+                <div class="detail-row">
+                    <span class="detail-label">📊 Баланс на складе:</span>
+                    <span class="detail-value">{{ material.balance }} шт.</span>
+                </div>
 
+                <div class="detail-row">
+                    <span class="detail-label">🔒 Зарезервировано:</span>
+                    <span class="detail-value">{{ material.reserved }} шт.</span>
+                </div>
 
-  <!-- История операций -->
-  <div class="mt-4">
-    <div class="card">
-      <div class="card-header">
-        <h5>📊 История операций</h5>
-      </div>
-      <div class="card-body">
-        {% if operations %}
-          <div class="table-responsive">
-            <table class="table table-sm table-hover">
-              <thead class="table-light">
-                <tr>
-                  <th>Дата</th>
-                  <th>Тип операции</th>
-                  <th>Количество</th>
-                  <th>Примечание</th>
-                  <th>Пользователь</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for op in operations %}
-                <tr>
-                  <td>{{ op.created|date:"d.m.Y H:i" }}</td>
-                  <td>
-                    <span class="badge {% if op.operation_type == 'receipt' %}bg-success{% else %}bg-danger{% endif %}">
-                      {{ op.get_operation_type_display }}
+                <div class="detail-row">
+                    <span class="detail-label">✅ Доступно:</span>
+                    <span class="detail-value" style="color: {% if material.availability_status == 'green' %}#16a34a{% elif material.availability_status == 'yellow' %}#d97706{% else %}#dc2626{% endif %}; font-weight: 600;">
+                        {{ material.available }} шт.
                     </span>
-                  </td>
-                  <td>{{ op.quantity }} шт.</td>
-                  <td>{{ op.notes|default:"-" }}</td>
-                  <td>{{ op.user.username|default:"Система" }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        {% else %}
-          <p class="text-muted text-center">Операций пока нет</p>
-        {% endif %}
-      </div>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">⚠️ Нехватка:</span>
+                    <span class="detail-value" style="color: {% if material.lack > 0 %}#dc2626{% else %}#16a34a{% endif %}; font-weight: 600;">
+                        {{ material.lack }} шт.
+                    </span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">🏢 Поставщик:</span>
+                    <span class="detail-value">
+                        {% if material.supplier %}
+                            {{ material.supplier.name }}
+                            {% if material.supplier.phone %}
+                                <br><small style="color: #6b7280;">📞 {{ material.supplier.phone }}</small>
+                            {% endif %}
+                        {% else %}
+                            <span style="color: #9ca3af;">Не указан</span>
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if material.description %}
+                <div class="detail-row">
+                    <span class="detail-label">📝 Описание:</span>
+                    <span class="detail-value">{{ material.description }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="card-actions">
+                {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
+                <button type="button" class="btn-modern btn-danger-modern" data-bs-toggle="modal" data-bs-target="#writeOffModal">
+                    <i class="bi bi-arrow-up-circle"></i>
+                    Списать материалы
+                </button>
+
+                <button type="button" class="btn-modern btn-primary-gradient" data-bs-toggle="modal" data-bs-target="#receiptModal">
+                    <i class="bi bi-arrow-down-circle"></i>
+                    Поступление материалов
+                </button>
+
+                <a href="{% url 'mebel:material_edit' material.id %}" class="btn-modern btn-outline-modern">
+                    <i class="bi bi-pencil-square"></i>
+                    Редактировать
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Правая колонка - изображение -->
+        <div class="card-modern">
+            <div class="card-modern-header">
+                <h2 class="card-modern-title">🖼️ Изображение</h2>
+            </div>
+
+            <div class="image-container">
+                <img src="{% if material.image %}{{ material.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
+                     alt="{{ material.name }}"
+                     class="material-image">
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Кнопка возврата -->
-  <div class="d-flex justify-content-between">
-    <a href="{% url 'mebel:material_list' %}" class="btn btn-secondary">
-      <i class="bi bi-arrow-left"></i> Вернуться к списку материалов
-    </a>
-  </div>
+    <!-- История операций -->
+    <div class="card-modern">
+        <div class="card-modern-header">
+            <h2 class="card-modern-title">📊 История операций</h2>
+        </div>
 
-<!-- В material/detail.html ЗАМЕНИТЕ старые модальные окна на это -->
+        <div class="card-modern-body">
+            {% if operations %}
+            <div class="table-responsive">
+                <table class="operations-table">
+                    <thead>
+                        <tr>
+                            <th>📅 Дата</th>
+                            <th>🔧 Тип операции</th>
+                            <th>📦 Количество</th>
+                            <th>📝 Примечание</th>
+                            <th>👤 Пользователь</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for op in operations %}
+                        <tr>
+                            <td>{{ op.created|date:"d.m.Y H:i" }}</td>
+                            <td>
+                                <span class="badge {% if op.operation_type == 'receipt' %}bg-success{% else %}bg-danger{% endif %}">
+                                    {{ op.get_operation_type_display }}
+                                </span>
+                            </td>
+                            <td>{{ op.quantity }} шт.</td>
+                            <td>{{ op.notes|default:"-" }}</td>
+                            <td>{{ op.user.username|default:"Система" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <p style="color: #6b7280; font-size: 1.1rem;">📭 Операций пока нет</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 
-<!-- Модальное окно списания -->
+    <!-- Кнопка возврата -->
+    <div class="card-actions" style="justify-content: flex-start; padding: 0; margin-top: 20px;">
+        <a href="{% url 'mebel:material_list' %}" class="btn-modern btn-outline-modern">
+            <i class="bi bi-arrow-left"></i>
+            Вернуться к списку материалов
+        </a>
+    </div>
+</div>
+
+<!-- Модальные окна (остаются без изменений) -->
 <div class="modal fade" id="writeOffModal" tabindex="-1" aria-labelledby="writeOffModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="writeOffModalLabel">
-          <i class="bi bi-arrow-up-circle me-2"></i>
-          Списание материала: {{ material.name }}
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Контент будет загружен через AJAX -->
-        <div class="text-center py-4">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Загрузка...</span>
-          </div>
-          <p class="mt-2">Загрузка формы...</p>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="writeOffModalLabel">
+                    <i class="bi bi-arrow-up-circle me-2"></i>
+                    Списание материала: {{ material.name }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Загрузка...</span>
+                    </div>
+                    <p class="mt-2">Загрузка формы...</p>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
-<!-- Модальное окно поступления -->
 <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="receiptModalLabel">
-          <i class="bi bi-arrow-down-circle me-2"></i>
-          Поступление материала: {{ material.name }}
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Контент будет загружен через AJAX -->
-        <div class="text-center py-4">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Загрузка...</span>
-          </div>
-          <p class="mt-2">Загрузка формы...</p>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="receiptModalLabel">
+                    <i class="bi bi-arrow-down-circle me-2"></i>
+                    Поступление материала: {{ material.name }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Загрузка...</span>
+                    </div>
+                    <p class="mt-2">Загрузка формы...</p>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
-
 {% endblock %}
 
 {% block domready %}
@@ -200,7 +338,6 @@ $('#writeOffModal').on('show.bs.modal', function (event) {
                     url: form.attr('action'),
                     data: form.serialize(),
                     success: function(data) {
-                        // Просто заменяем содержимое модального окна
                         modal.find('.modal-content').html(data);
                     },
                     error: function() {

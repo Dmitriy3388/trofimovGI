@@ -5,110 +5,356 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'mebel/css/dashboard.css' %}">
-<!-- Подключаем Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.welcome-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.welcome-card h5 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.welcome-card p {
+    opacity: 0.9;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.full-width-chart {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.shortage-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.shortage-card {
+    min-height: 300px;
+    transition: transform 0.3s ease;
+}
+
+.shortage-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-modern {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: none;
+    overflow: hidden;
+}
+
+.card-modern-header {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 20px 25px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.card-modern-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-modern-body {
+    padding: 25px;
+}
+
+/* Стили для кнопок периода */
+.period-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-period {
+    padding: 8px 16px;
+    border: 2px solid #667eea;
+    background: transparent;
+    color: #667eea;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-period:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-period.active {
+    background: #667eea;
+    color: white;
+}
+
+/* Стили для списка материалов */
+.material-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.material-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border-left: 4px solid;
+    transition: all 0.3s;
+    text-decoration: none;
+    color: inherit;
+}
+
+.material-item:hover {
+    background: #f1f5f9;
+    transform: translateX(5px);
+}
+
+.material-item.current {
+    border-left-color: #ef4444;
+}
+
+.material-item.predicted {
+    border-left-color: #f59e0b;
+}
+
+.material-name {
+    font-weight: 500;
+    color: #2c3e50;
+    flex: 1;
+}
+
+.material-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.badge-danger {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.badge-warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+/* Стили для графика */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+.no-data {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+}
+
+.no-data p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-modern {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.shortage-card:nth-child(1) { animation-delay: 0.1s; }
+.shortage-card:nth-child(2) { animation-delay: 0.2s; }
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .dashboard-container {
+        padding: 15px;
+    }
+
+    .shortage-cards {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .welcome-card {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .card-modern-body {
+        padding: 20px;
+    }
+
+    .period-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .btn-period {
+        flex: 1;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .material-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-card h5 {
+        font-size: 1.3rem;
+    }
+
+    .card-modern-title {
+        font-size: 1.1rem;
+    }
+
+    .chart-container {
+        height: 250px;
+    }
+}
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-container">
-  <h1>Мой Склад</h1>
-  <div class="profile-actions">
-    <p>
-      Добро пожаловать в систему управления складом.
-    </p>
-  </div>
-<div class="row mt-4">
-        <!-- График динамики заказов -->
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Динамика создания заказов</h5>
-                    <div class="btn-group">
-                        <a href="?period=week" class="btn btn-sm {% if period == 'week' %}btn-primary{% else %}btn-outline-primary{% endif %}">Неделя</a>
-                        <a href="?period=month" class="btn btn-sm {% if period == 'month' %}btn-primary{% else %}btn-outline-primary{% endif %}">Месяц</a>
-                        <a href="?period=year" class="btn btn-sm {% if period == 'year' %}btn-primary{% else %}btn-outline-primary{% endif %}">Год</a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    {% if has_data %}
-                        <canvas id="ordersChart" width="400" height="200"></canvas>
-                    {% else %}
-                        <p class="text-muted">Нет данных для отображения графика</p>
-                    {% endif %}
+    <!-- Заголовок -->
+    <div class="text-center mb-4">
+        <h1 style="color: #2c3e50; font-weight: 700; font-size: 2.5rem; margin-bottom: 10px;">📊 Мой склад</h1>
+        <p style="color: #6b7280; font-size: 1.2rem;">Панель управления складом и отслеживание материалов</p>
+    </div>
+
+    <!-- Приветственная карточка -->
+    <div class="welcome-card">
+        <h5>🎉 Добро пожаловать в систему управления складом!</h5>
+        <p>Здесь отображается общая информация по заказам и материалам в реальном времени.</p>
+    </div>
+
+    <!-- График динамики заказов -->
+    <div class="full-width-chart">
+        <div class="card-modern">
+            <div class="card-modern-header d-flex justify-content-between align-items-center">
+                <h5 class="card-modern-title">
+                    📈 Динамика создания заказов
+                </h5>
+                <div class="period-buttons">
+                    <a href="?period=week" class="btn-period {% if period == 'week' %}active{% endif %}">Неделя</a>
+                    <a href="?period=month" class="btn-period {% if period == 'month' %}active{% endif %}">Месяц</a>
+                    <a href="?period=year" class="btn-period {% if period == 'year' %}active{% endif %}">Год</a>
                 </div>
             </div>
-        </div>
-
-        <!-- Материалы с нехваткой -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Нехватка материалов</h5>
+            <div class="card-modern-body">
+                {% if has_data %}
+                <div class="chart-container">
+                    <canvas id="ordersChart"></canvas>
                 </div>
-                <div class="card-body">
-                    <!-- Текущая нехватка -->
-                    <h6>Текущая нехватка</h6>
-                    <ul class="list-group list-group-flush">
-                        {% for material in current_shortage %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{{ material.get_absolute_url }}">{{ material.name }}</a>
-                            <span class="badge bg-danger rounded-pill">{{ material.lack }} шт.</span>
-                        </li>
-                        {% empty %}
-                        <li class="list-group-item">Нет материалов с текущей нехваткой</li>
-                        {% endfor %}
-                    </ul>
-
-                    <!-- Прогнозируемая нехватка -->
-                    <h6 class="mt-3">Прогнозируемая нехватка</h6>
-                    <ul class="list-group list-group-flush">
-                        {% for material in predicted_shortage %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{{ material.get_absolute_url }}">{{ material.name }}</a>
-                            <span class="badge bg-warning rounded-pill">
-                                {{ material.balance|add:"-"|add:material.reserved }} из {{ material.balance }} шт.
-                            </span>
-                        </li>
-                        {% empty %}
-                        <li class="list-group-item">Нет материалов с прогнозируемой нехваткой</li>
-                        {% endfor %}
-                    </ul>
+                {% else %}
+                <div class="no-data">
+                    <p>📭 Нет данных для отображения графика</p>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
-  <div class="main-actions">
-    <div class="action-card">
-      <a href="{% url 'account:profile' %}" class="btn btn-primary">Мой профиль</a>
-    </div>
-    {% if user.groups.all.0.name == 'Менеджеры' or user.is_superuser %}
-      <div class="action-card">
-        <a href="{% url 'orders:order_create' %}" class="btn btn-primary">Создание заказа</a>
-      </div>
-    {% endif %}
-      <div class="action-card">
-        <a href="{% url 'mebel:material_list' %}" class="btn btn-primary">Просмотр Материалов</a>
-      </div>
 
-    {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
-    <div class="action-card">
-        <a href="{% url 'mebel:operations_list' %}" class="btn btn-info">
-            📊 Операции списания/поступления
-        </a>
-    </div>
-    {% endif %}
-      <!-- Добавить этот блок в раздел с основными действиями -->
-    {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
-    <div class="action-card">
-        <a href="{% url 'mebel:material_create' %}" class="btn btn-primary">Добавить материал</a>
-    </div>
-    {% endif %}
-    <div class="action-card">
-      <a href="{% url 'orders:order_list' %}" class="btn btn-primary">Просмотр Заказов</a>
-    </div>
+    <!-- Карточки нехватки материалов -->
+    <div class="shortage-cards">
+        <!-- Текущая нехватка -->
+        <div class="card-modern shortage-card">
+            <div class="card-modern-header">
+                <h5 class="card-modern-title">🔴 Текущая нехватка</h5>
+            </div>
+            <div class="card-modern-body">
+                {% if current_shortage %}
+                <div class="material-list">
+                    {% for material in current_shortage %}
+                    <a href="{{ material.get_absolute_url }}" class="material-item current">
+                        <span class="material-name">{{ material.name }}</span>
+                        <span class="material-badge badge-danger">Не хватает: {{ material.lack }} шт.</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="no-data">
+                    <p>✅ Нет материалов с текущей нехваткой</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
 
-  </div>
-
+        <!-- Прогнозируемая нехватка -->
+        <div class="card-modern shortage-card">
+            <div class="card-modern-header">
+                <h5 class="card-modern-title">🟡 Прогнозируемая нехватка</h5>
+            </div>
+            <div class="card-modern-body">
+                {% if predicted_shortage %}
+                <div class="material-list">
+                    {% for material in predicted_shortage %}
+                    <a href="{{ material.get_absolute_url }}" class="material-item predicted">
+                        <span class="material-name">{{ material.name }}</span>
+                        <span class="material-badge badge-warning">{{ material.balance }} из {{ material.reserved }} шт.</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="no-data">
+                    <p>✅ Нет материалов с прогнозируемой нехваткой</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -116,7 +362,6 @@
 {% if has_data %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Инициализация графика
     const ctx = document.getElementById('ordersChart').getContext('2d');
     const chart = new Chart(ctx, {
         type: 'line',
@@ -125,82 +370,84 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: 'Количество заказов',
                 data: {{ counts_json|safe }},
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 2,
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderColor: 'rgba(102, 126, 234, 1)',
+                borderWidth: 3,
                 tension: 0.3,
-                fill: true
+                fill: true,
+                pointBackgroundColor: '#667eea',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     display: true,
                     position: 'top',
+                    labels: {
+                        font: {
+                            size: 14,
+                            family: "'Inter', sans-serif"
+                        },
+                        color: '#2c3e50'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(44, 62, 80, 0.9)',
+                    titleFont: {
+                        size: 13,
+                        family: "'Inter', sans-serif"
+                    },
+                    bodyFont: {
+                        size: 13,
+                        family: "'Inter', sans-serif"
+                    },
+                    padding: 12,
+                    cornerRadius: 8
                 }
             },
             scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        font: {
+                            family: "'Inter', sans-serif"
+                        },
+                        color: '#6b7280'
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        stepSize: 1
+                        stepSize: 1,
+                        font: {
+                            family: "'Inter', sans-serif"
+                        },
+                        color: '#6b7280'
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
                     }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            animations: {
+                tension: {
+                    duration: 1000,
+                    easing: 'linear'
                 }
             }
         }
-    });
-
-    // Функция для обновления графика
-    function updateChart(dates, counts) {
-        chart.data.labels = dates;
-        chart.data.datasets[0].data = counts;
-        chart.update();
-    }
-
-    // Функция для обновления активной кнопки
-    function updateActiveButton(period) {
-        // Удаляем активный класс у всех кнопок
-        document.querySelectorAll('.period-btn').forEach(btn => {
-            btn.classList.remove('btn-primary');
-            btn.classList.add('btn-outline-primary');
-        });
-        // Добавляем активный класс к выбранной кнопке
-        const activeBtn = document.querySelector(`.period-btn[href="?period=${period}"]`);
-        if (activeBtn) {
-            activeBtn.classList.remove('btn-outline-primary');
-            activeBtn.classList.add('btn-primary');
-        }
-    }
-
-    // Обработчик кликов для кнопок периода
-    document.querySelectorAll('.period-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const url = new URL(this.href);
-            const period = url.searchParams.get('period');
-
-            // AJAX-запрос
-            fetch(window.location.pathname, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Content-Type': 'application/json',
-                },
-                data: { period: period }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.has_data) {
-                    updateChart(data.dates, data.counts);
-                } else {
-                    // Обработка отсутствия данных
-                    updateChart([], []);
-                }
-                updateActiveButton(data.period);
-            })
-            .catch(error => console.error('Error:', error));
-        });
     });
 });
 </script>
