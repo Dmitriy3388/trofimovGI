@@ -6,7 +6,6 @@ app_name = 'mebel'
 
 urlpatterns = [
     path('recalculate-balances/', views.recalculate_balances, name='recalculate_balances'),
-    # НОВЫЕ ПУТИ ДЛЯ ОПЕРАЦИЙ - добавьте эти строки
     path('operations/', views.operations_list, name='operations_list'),
     path('operations/<int:operation_id>/edit/', views.operation_edit, name='operation_edit'),
     path('operations/<int:operation_id>/', views.operation_detail, name='operation_detail'),

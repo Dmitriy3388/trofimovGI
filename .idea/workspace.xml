@@ -4,20 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Таблица материалов доведена до ума">
-      <change afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/includes/modern_card.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warehouse/static/css/cards.css" afterDir="false" />
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Исправлена часть стилей">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/main_dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/account/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/account/edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/logged_out.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/logged_out.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/account/templates/registration/password_change_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/account/templates/registration/password_change_form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/material/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/orders/templates/orders/order/list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/operations/operations_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/mebel/templates/mebel/operations/operations_list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,14 +97,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00020" summary="На главную страницу добавлены графики и справка по материалам">
-      <option name="closed" value="true" />
-      <created>1757444893731</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1757444893731</updated>
     </task>
     <task id="LOCAL-00021" summary="Revert &quot;сплошные ошибки в списке заказов&quot;&#10;&#10;This reverts commit 3eae3ecb">
       <option name="closed" value="true" />
@@ -495,7 +482,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759169170047</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="Исправлена часть стилей">
+      <option name="closed" value="true" />
+      <created>1759428853823</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1759428853823</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -525,7 +520,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Отердактирован базовый шаблон" />
     <MESSAGE value="Переставлены графики" />
     <MESSAGE value="Переименованы таблицы. Убран столбец ID" />
     <MESSAGE value="В столбцах реализована функция сортировки по столбцам" />
@@ -550,6 +544,7 @@
     <MESSAGE value="Добавлен статус закрыт." />
     <MESSAGE value="Визуал" />
     <MESSAGE value="Таблица материалов доведена до ума" />
-    <option name="LAST_COMMIT_MESSAGE" value="Таблица материалов доведена до ума" />
+    <MESSAGE value="Исправлена часть стилей" />
+    <option name="LAST_COMMIT_MESSAGE" value="Исправлена часть стилей" />
   </component>
 </project>

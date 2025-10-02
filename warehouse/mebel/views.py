@@ -95,8 +95,6 @@ def operation_edit(request, operation_id):
     """Редактирование операции - УПРОЩЕННАЯ ВЕРСИЯ"""
     operation = get_object_or_404(MaterialOperation, id=operation_id)
     material = operation.material
-
-    # Сохраняем исходный баланс для сообщения
     original_balance = material.balance
 
     if request.method == 'POST':
@@ -107,15 +105,9 @@ def operation_edit(request, operation_id):
         )
 
         if form.is_valid():
-            # Просто сохраняем операцию
             operation = form.save()
-
-            # Пересчитываем баланс материала на основе ВСЕХ операций
             Material.recalculate_balance(material.id)
-
-            # Обновляем объект material
             material.refresh_from_db()
-
             messages.success(request,
                              f'Операция #{operation.id} успешно отредактирована. ' +
                              f'Баланс пересчитан: {original_balance} → {material.balance}')
@@ -185,8 +177,6 @@ def material_operations(request, material_id):
             'user': res.order.user.username if res.order.user else 'Система',
             'source': 'order'
         })
-
-    # Сортируем по дате
     operations_data.sort(key=lambda x: x['date'], reverse=True)
 
     return JsonResponse(operations_data, safe=False)
@@ -195,15 +185,11 @@ def material_operations(request, material_id):
 def material_chart_data(request, material_id):
     """Возвращает данные для графика наличия материала"""
     material = get_object_or_404(Material, id=material_id)
-
-    # Получаем операции за последний год
     one_year_ago = timezone.now() - timedelta(days=365)
     operations = MaterialOperation.objects.filter(
         material=material,
         created__gte=one_year_ago
     ).order_by('created')
-
-    # Также получаем операции из заказов (резервирования)
     from orders.models import OrderItem
     order_operations = OrderItem.objects.filter(
         material=material,
@@ -212,8 +198,6 @@ def material_chart_data(request, material_id):
 
     # Собираем все операции вместе
     all_operations = []
-
-    # Добавляем MaterialOperation
     for op in operations:
         all_operations.append({
             'date': op.created,
@@ -234,16 +218,14 @@ def material_chart_data(request, material_id):
     # Сортируем все операции по дате
     all_operations.sort(key=lambda x: x['date'])
 
-    # Создаем временные точки для графика (по месяцам)
     dates = []
     quantities = []
 
-    # Начинаем с текущего баланса и идем назад
     current_date = timezone.now().date()
     start_date = current_date - timedelta(days=365)
 
     # Создаем точки для каждого месяца
-    temp_date = start_date.replace(day=1)  # Начинаем с первого дня месяца
+    temp_date = start_date.replace(day=1)
     monthly_data = {}
 
     while temp_date <= current_date:
@@ -254,13 +236,11 @@ def material_chart_data(request, material_id):
             'write_off': 0,
             'reservation': 0
         }
-        # Переходим к следующему месяцу
         if temp_date.month == 12:
             temp_date = temp_date.replace(year=temp_date.year + 1, month=1)
         else:
             temp_date = temp_date.replace(month=temp_date.month + 1)
 
-    # Распределяем операции по месяцам
     for op in all_operations:
         month_key = op['date'].strftime('%Y-%m')
         if month_key in monthly_data:
@@ -271,23 +251,17 @@ def material_chart_data(request, material_id):
             elif op['type'] == 'reservation':
                 monthly_data[month_key]['reservation'] += op['quantity']
 
-    # Восстанавливаем историю баланса (идем от текущего значения назад)
     current_balance = material.balance
     balance_history = {current_date.strftime('%Y-%m'): current_balance}
 
-    # Сортируем месяцы в обратном порядке (от текущего к прошлому)
     sorted_months = sorted(monthly_data.keys(), reverse=True)
 
     for i, month_key in enumerate(sorted_months):
         if month_key == current_date.strftime('%Y-%m'):
-            # Текущий месяц - используем текущий баланс
             continue
-
-        # Для предыдущих месяцев: вычитаем поступления и прибавляем списания/резервирования
-        # (т.к. идем назад во времени)
         month_data = monthly_data[month_key]
         current_balance = current_balance - month_data['receipt'] + month_data['write_off'] + month_data['reservation']
-        balance_history[month_key] = max(0, current_balance)  # Баланс не может быть отрицательным
+        balance_history[month_key] = max(0, current_balance)
 
     # Сортируем данные по дате для графика
     sorted_history = sorted(balance_history.items(), key=lambda x: x[0])
@@ -310,18 +284,15 @@ def material_daily_chart_data(request, material_id):
     """Данные для графика по дням - ИСПРАВЛЕННАЯ ВЕРСИЯ"""
     material = get_object_or_404(Material, id=material_id)
 
-    # Получаем операции за ВСЕ время, а не за год
     operations = MaterialOperation.objects.filter(
         material=material
     ).order_by('created')
 
-    # Получаем резервирования за ВСЕ время
     from orders.models import OrderItem
     reservations = OrderItem.objects.filter(
         material=material
     ).order_by('order__created')
 
-    # Собираем ВСЕ события за всю историю материала
     all_events = []
 
     for op in operations:
@@ -340,31 +311,21 @@ def material_daily_chart_data(request, material_id):
             'source': 'order'
         })
 
-    # Сортируем по дате (от старых к новым)
     all_events.sort(key=lambda x: x['date'])
 
-    # Восстанавливаем историю баланса ПРАВИЛЬНО
-    # Начинаем с ИЗВЕСТНОГО начального баланса (если есть самая первая операция)
     current_balance = 0
     balance_history = []
 
-    # Если есть события, находим баланс ДО первого события
     if all_events:
-        # Вычисляем баланс на момент ДО первой операции
-        # Для этого идем ОТ ТЕКУЩЕГО баланса НАЗАД через все операции
         temp_balance = material.balance
-
-        # Идем в обратном порядке (от новых к старым) и "отменяем" операции
         for event in reversed(all_events):
             if event['type'] == 'receipt':
                 temp_balance -= event['quantity']  # Отменяем поступление
             elif event['type'] == 'write_off':
                 temp_balance += event['quantity']  # Отменяем списание
-            # Резервирования не влияют на физический баланс
 
-        current_balance = max(0, temp_balance)  # Начальный баланс ДО всех операций
+        current_balance = max(0, temp_balance)
 
-    # Теперь идем вперед по времени и применяем операции
     dates = []
     quantities = []
 
@@ -412,8 +373,6 @@ def material_daily_chart_data(request, material_id):
         'reserved': material.reserved
     })
 
-# View для автодополнения поиска
-# Добавим в views.py улучшенную функцию автодополнения
 @login_required
 def material_autocomplete(request):
     """Автодополнение для поиска материалов"""
@@ -453,7 +412,6 @@ def material_autocomplete(request):
         return JsonResponse([], safe=False)
 
 
-# НОВЫЙ VIEW ДЛЯ СОЗДАНИЯ ПОСТАВЩИКА ЧЕРЕЗ МОДАЛКУ
 @login_required
 @require_http_methods(["GET", "POST"])
 def supplier_create_modal(request):
@@ -489,8 +447,6 @@ def supplier_create_modal(request):
                 'success': False,
                 'errors': form.errors
             })
-        # Для не-AJAX просто показываем форму с ошибками
-        # (этот случай маловероятен, но на всякий случай)
 
     else:
         form = SupplierCreateForm()
@@ -502,7 +458,7 @@ def supplier_create_modal(request):
         }, request=request)
         return JsonResponse({'html': html})
 
-    # Не-AJAX GET запрос (редкий случай)
+    # Не-AJAX GET запрос
     return render(request, 'mebel/supplier/create.html', {'form': form})
 
 @require_POST  # Разрешаем только POST-запросы
@@ -657,9 +613,6 @@ class MaterialReceiptForm(forms.Form):
             'placeholder': 'Например: закупка, возврат, инвентаризация'
         })
     )
-
-
-
 
 
 @mto_required

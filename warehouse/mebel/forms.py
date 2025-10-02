@@ -10,7 +10,6 @@ from django.core.exceptions import ValidationError
 from django.db.models.functions import Lower, Replace
 from django.db.models import Value
 
-# НОВАЯ ФОРМА ДЛЯ ПОСТАВЩИКА
 class SupplierCreateForm(forms.ModelForm):
     class Meta:
         model = Supplier
@@ -79,31 +78,18 @@ class MaterialOperationEditForm(forms.ModelForm):
 
     def clean_quantity(self):
         quantity = self.cleaned_data['quantity']
-
-        # Для списания проверяем, чтобы не уйти в отрицательный баланс
         if (self.material and
                 self.instance.operation_type == 'write_off' and
                 hasattr(self.instance, 'id')):
-
-            # Рассчитываем, каким будет баланс после изменения
             current_balance = self.material.balance
-
-            # Находим разницу между старым и новым количеством списания
             quantity_diff = quantity - self.instance.quantity
-
-            # Предполагаемый новый баланс
             projected_balance = current_balance - quantity_diff
-
             if projected_balance < 0:
                 raise ValidationError(
                     f'Нельзя списать {quantity} шт. Это приведет к отрицательному балансу ({projected_balance})'
                 )
-
         return quantity
 
-
-
-# ОБНОВЛЯЕМ СУЩЕСТВУЮЩИЕ ФОРМЫ
 class MaterialCreateForm(forms.ModelForm):
     class Meta:
         model = Material

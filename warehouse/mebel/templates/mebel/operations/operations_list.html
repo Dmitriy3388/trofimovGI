@@ -3,72 +3,437 @@
 
 {% block title %}Операции по материалам{% endblock %}
 
+{% block extra_css %}
+<style>
+/* Основные стили контейнера */
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    color: #6b7280;
+    font-size: 1.2rem;
+}
+
+/* Стили для карточек */
+.card-modern {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: none;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.card-modern-header {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 20px 25px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-modern-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Стили для таблицы */
+.operations-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 0.85rem;
+}
+
+.operations-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.operations-table th {
+    color: white;
+    font-weight: 600;
+    padding: 15px 12px;
+    text-align: left;
+    border: none;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.operations-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.operations-table tbody tr:hover {
+    background-color: #f8fafc;
+    transform: translateX(5px);
+}
+
+.operations-table td {
+    padding: 12px;
+    vertical-align: middle;
+    border: none;
+}
+
+/* Стили для статусов операций */
+.operation-badge {
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    display: inline-block;
+    text-align: center;
+    min-width: 100px;
+}
+
+.receipt-badge {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.writeoff-badge {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+/* Стили для количеств */
+.quantity-cell {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    text-align: right;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+/* Стили для дат */
+.date-cell {
+    white-space: nowrap;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+/* Стили для названия материала */
+.material-name {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Стили для кнопок действий */
+.action-buttons {
+    display: flex !important;
+    gap: 5px !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+}
+
+.action-btn {
+    padding: 6px 8px !important;
+    border-radius: 6px !important;
+    font-size: 0.75rem !important;
+    min-width: 30px !important;
+    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s !important;
+    text-decoration: none !important;
+    border: none !important;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+/* Стили для фильтров */
+.filters-modern {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.filter-select {
+    padding: 10px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s;
+    background: white;
+}
+
+.filter-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filter-input {
+    padding: 10px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.filter-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Кнопки */
+.btn-modern {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.btn-modern:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-warning-modern {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.btn-warning-modern:hover {
+    background: linear-gradient(135deg, #e0900a 0%, #b45309 100%);
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-modern {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Стили для пустого состояния */
+.no-data {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+}
+
+.no-data p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Бейдж количества */
+.count-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .operations-table {
+        font-size: 0.75rem;
+    }
+
+    .operations-table th,
+    .operations-table td {
+        padding: 10px 8px;
+    }
+
+    .operations-table th:nth-child(5), /* Пользователь */
+    .operations-table td:nth-child(5) {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .operations-table th:nth-child(6), /* Примечание */
+    .operations-table td:nth-child(6) {
+        display: none;
+    }
+
+    .action-buttons {
+        flex-direction: column !important;
+        gap: 3px !important;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h1>📊 Операции по материалам</h1>
-    
-    <!-- Фильтры -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="card-title">Фильтры</h5>
+<div class="dashboard-container">
+    <!-- Заголовок страницы -->
+    <div class="page-header">
+        <h1>📊 Операции по материалам</h1>
+        <p>История поступлений и списаний материалов</p>
+    </div>
+
+    <!-- Карточка с фильтрами -->
+    <div class="card-modern">
+        <div class="card-modern-header">
+            <h5 class="card-modern-title">
+                🔍 Фильтры операций
+            </h5>
         </div>
-        <div class="card-body">
-            <form method="get" class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label">Тип операции</label>
-                    <select name="type" class="form-select">
-                        <option value="">Все операции</option>
-                        <option value="receipt" {% if operation_type == 'receipt' %}selected{% endif %}>Поступления</option>
-                        <option value="write_off" {% if operation_type == 'write_off' %}selected{% endif %}>Списания</option>
-                    </select>
-                </div>
-                
-                <div class="col-md-3">
-                    <label class="form-label">Материал</label>
-                    <select name="material" class="form-select">
-                        <option value="">Все материалы</option>
-                        {% for material in materials %}
-                        <option value="{{ material.id }}" {% if selected_material == material.id|stringformat:"i" %}selected{% endif %}>
-                            {{ material.name }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="col-md-3">
-                    <label class="form-label">С даты</label>
-                    <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
-                </div>
-                
-                <div class="col-md-3">
-                    <label class="form-label">По дату</label>
-                    <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
-                </div>
-                
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Применить фильтры</button>
-                    <a href="{% url 'mebel:operations_list' %}" class="btn btn-secondary">Сбросить</a>
+        <div class="card-modern-body">
+            <form method="get" class="filters-modern">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Тип операции</label>
+                        <select name="type" class="filter-select">
+                            <option value="">Все операции</option>
+                            <option value="receipt" {% if operation_type == 'receipt' %}selected{% endif %}>Поступления</option>
+                            <option value="write_off" {% if operation_type == 'write_off' %}selected{% endif %}>Списания</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Материал</label>
+                        <select name="material" class="filter-select">
+                            <option value="">Все материалы</option>
+                            {% for material in materials %}
+                            <option value="{{ material.id }}" {% if selected_material == material.id|stringformat:"i" %}selected{% endif %}>
+                                {{ material.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">С даты</label>
+                        <input type="date" name="date_from" class="filter-input" value="{{ date_from }}">
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">По дату</label>
+                        <input type="date" name="date_to" class="filter-input" value="{{ date_to }}">
+                    </div>
+
+                    <div class="filter-group" style="grid-column: 1 / -1;">
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button type="submit" class="btn-modern">
+                                🔍 Применить фильтры
+                            </button>
+                            <a href="{% url 'mebel:operations_list' %}" class="btn-modern" style="background: #6b7280;">
+                                🗑️ Сбросить
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </form>
+
+            <!-- Кнопка пересчета балансов -->
+            <div style="display: flex; align-items: center; gap: 15px; margin-top: 15px; padding: 15px; background: #fffbeb; border-radius: 8px; border: 1px solid #fcd34d;">
+                <a href="{% url 'mebel:recalculate_balances' %}" class="btn-modern btn-warning-modern">
+                    🔄 Пересчитать все балансы
+                </a>
+                <small style="color: #92400e; font-size: 0.8rem;">
+                    Используйте если балансы не совпадают с операциями
+                </small>
+            </div>
         </div>
     </div>
-    <div class="mb-3">
-        <a href="{% url 'mebel:recalculate_balances' %}" class="btn btn-warning btn-sm">
-            🔄 Пересчитать все балансы
-        </a>
-        <small class="text-muted">Используйте если балансы не совпадают с операциями</small>
-    </div>
+
     <!-- Таблица операций -->
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">Список операций</h5>
-            <span class="badge bg-primary">Всего: {{ page_obj.paginator.count }}</span>
+    <div class="card-modern">
+        <div class="card-modern-header">
+            <h5 class="card-modern-title">
+                📋 Список операций
+            </h5>
+            <span class="count-badge">Всего: {{ page_obj.paginator.count }}</span>
         </div>
-        <div class="card-body">
+        <div class="card-modern-body">
             {% if page_obj %}
             <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
+                <table class="operations-table">
+                    <thead>
                         <tr>
                             <th>Дата</th>
                             <th>Тип</th>
@@ -81,36 +446,41 @@
                     </thead>
                     <tbody>
                         {% for operation in page_obj %}
-                        <tr>
-                            <td>{{ operation.created|date:"d.m.Y H:i" }}</td>
+                        <tr onclick="window.location='{% url 'mebel:operation_detail' operation.id %}';">
+                            <td class="date-cell">{{ operation.created|date:"d.m.Y H:i" }}</td>
                             <td>
                                 {% if operation.operation_type == 'receipt' %}
-                                    <span class="badge bg-success">📈 Поступление</span>
+                                    <span class="operation-badge receipt-badge">📈 Поступление</span>
                                 {% else %}
-                                    <span class="badge bg-danger">📉 Списание</span>
+                                    <span class="operation-badge writeoff-badge">📉 Списание</span>
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{{ operation.material.get_absolute_url }}">
-                                    {{ operation.material.name }}
-                                </a>
+                                <div class="material-name">{{ operation.material.name|truncatechars:25 }}</div>
                             </td>
-                            <td>{{ operation.quantity }} шт.</td>
+                            <td class="quantity-cell">{{ operation.quantity }} шт.</td>
                             <td>{{ operation.user.get_full_name|default:operation.user.username }}</td>
-                            <td>{{ operation.notes|default:"-"|truncatewords:5 }}</td>
+                            <td>{{ operation.notes|default:"-"|truncatewords:3 }}</td>
                             <td>
-                                <div class="btn-group btn-group-sm">
-                                    <a href="{% url 'mebel:operation_detail' operation.id %}" 
-                                       class="btn btn-outline-primary" title="Подробнее">
+                                <div class="action-buttons">
+                                    <a href="{% url 'mebel:operation_detail' operation.id %}"
+                                       class="action-btn"
+                                       title="Подробнее"
+                                       style="background: #10b981; color: white;">
                                         👁️
                                     </a>
                                     {% if operation.can_edit %}
-                                    <a href="{% url 'mebel:operation_edit' operation.id %}" 
-                                       class="btn btn-outline-warning" title="Редактировать">
+                                    <a href="{% url 'mebel:operation_edit' operation.id %}"
+                                       class="action-btn"
+                                       title="Редактировать"
+                                       style="background: #f59e0b; color: white;">
                                         ✏️
                                     </a>
                                     {% else %}
-                                    <button class="btn btn-outline-secondary" title="Редактирование недоступно" disabled>
+                                    <button class="action-btn"
+                                            title="Редактирование недоступно"
+                                            disabled
+                                            style="background: #9ca3af; color: white;">
                                         ⏳
                                     </button>
                                     {% endif %}
@@ -121,13 +491,16 @@
                     </tbody>
                 </table>
             </div>
-            
+
             <!-- Пагинация -->
-            {% include 'pagination.html' %}
-            
+            <div style="margin-top: 25px;">
+                {% include 'pagination.html' %}
+            </div>
+
             {% else %}
-            <div class="text-center py-4">
-                <p class="text-muted">Операции не найдены</p>
+            <div class="no-data">
+                <p>📭 Операции не найдены</p>
+                <p style="font-size: 0.9rem; margin-top: 10px;">Попробуйте изменить параметры фильтров</p>
             </div>
             {% endif %}
         </div>

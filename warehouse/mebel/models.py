@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from django.db.models import Sum  # Добавляем импорт
+from django.db.models import Sum
 from django.conf import settings
 from django.urls import reverse
 from django.utils.text import slugify
@@ -9,8 +9,6 @@ from django.db.models.functions import Lower, Replace
 from django.db.models import Value
 from django.utils import timezone
 
-
-# Добавляем в models.py после импортов и перед Category
 
 class Supplier(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название поставщика")
@@ -71,7 +69,6 @@ class Material(models.Model):
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10,
                                 decimal_places=2)
-    # НОВОЕ ПОЛЕ - поставщик
     supplier = models.ForeignKey(Supplier,
                                 on_delete=models.SET_NULL,
                                 null=True,
@@ -100,27 +97,18 @@ class Material(models.Model):
 
     @classmethod
     def recalculate_balance(cls, material_id):
-        """Полностью пересчитывает баланс материала на основе всех операций"""
         from django.db.models import Sum
 
         material = cls.objects.get(id=material_id)
-
-        # Суммируем все поступления
         total_receipt = MaterialOperation.objects.filter(
             material=material,
             operation_type='receipt'
         ).aggregate(total=Sum('quantity'))['total'] or 0
-
-        # Суммируем все списания
         total_write_off = MaterialOperation.objects.filter(
             material=material,
             operation_type='write_off'
         ).aggregate(total=Sum('quantity'))['total'] or 0
-
-        # Вычисляем новый баланс
         new_balance = total_receipt - total_write_off
-
-        # Обновляем баланс, если он изменился
         if material.balance != new_balance:
             material.balance = new_balance
             material.save(update_fields=['balance'])
@@ -137,12 +125,8 @@ class Material(models.Model):
         return self.recalculate_balance(self.id)
     @classmethod
     def update_all_reserved_quantities(cls):
-        """
-        АКТУАЛИЗАЦИЯ: Пересчитывает резервы для всех материалов на основе активных заказов
-        """
+        """Пересчитывает резервы для всех материалов на основе активных заказов"""
         from orders.models import OrderItem
-
-        # Для каждого материала суммируем quantity из всех OrderItem
         for material in cls.objects.all():
             total_reserved = OrderItem.objects.filter(
                 material=material
@@ -182,7 +166,6 @@ class Material(models.Model):
             material=self
         ).aggregate(total=Sum('quantity'))['total'] or 0
 
-        # Обновляем только если значение изменилось
         if self.reserved != total_reserved:
             self.reserved = total_reserved
             self.save(update_fields=['reserved'])
