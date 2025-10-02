@@ -319,69 +319,151 @@
 
 {% block domready %}
 <script>
-// Для списания
-$('#writeOffModal').on('show.bs.modal', function (event) {
-    var modal = $(this);
-    $.ajax({
-        url: "{% url 'mebel:material_write_off' material.id %}",
-        context: document.body,
-        success: function(response) {
-            modal.find('.modal-content').html(response);
-
-            // Обработка формы через AJAX
-            modal.find('form').on('submit', function(e) {
-                e.preventDefault();
-                var form = $(this);
-
-                $.ajax({
-                    type: 'POST',
-                    url: form.attr('action'),
-                    data: form.serialize(),
-                    success: function(data) {
-                        modal.find('.modal-content').html(data);
-                    },
-                    error: function() {
-                        alert('Ошибка при отправке формы');
-                    }
-                });
-            });
-        },
-        error: function() {
-            modal.find('.modal-content').html('<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Не удалось загрузить форму списания.</p></div>');
-        }
-    });
-});
-
-// Аналогично для поступления
+// Для поступления
 $('#receiptModal').on('show.bs.modal', function (event) {
     var modal = $(this);
     $.ajax({
         url: "{% url 'mebel:material_receipt' material.id %}",
-        context: document.body,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         success: function(response) {
-            modal.find('.modal-content').html(response);
+            if (response.html) {
+                modal.find('.modal-content').html(response.html);
 
-            modal.find('form').on('submit', function(e) {
-                e.preventDefault();
-                var form = $(this);
+                // Вешаем обработчик на форму
+                modal.find('form').on('submit', function(e) {
+                    e.preventDefault();
+                    var form = $(this);
 
-                $.ajax({
-                    type: 'POST',
-                    url: form.attr('action'),
-                    data: form.serialize(),
-                    success: function(data) {
-                        modal.find('.modal-content').html(data);
-                    },
-                    error: function() {
-                        alert('Ошибка при отправке формы');
-                    }
+                    $.ajax({
+                        type: 'POST',
+                        url: form.attr('action'),
+                        data: form.serialize(),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        success: function(data) {
+                            if (data.success) {
+                                // Показываем сообщение об успехе
+                                showAlert('success', data.message);
+                                // Закрываем модальное окно
+                                modal.modal('hide');
+                                // Обновляем данные на странице (опционально)
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1000);
+                            } else {
+                                // Показываем ошибки валидации
+                                showFormErrors(form, data.errors);
+                            }
+                        },
+                        error: function() {
+                            alert('Ошибка при отправке формы');
+                        }
+                    });
                 });
-            });
+            }
         },
         error: function() {
-            modal.find('.modal-content').html('<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Не удалось загрузить форму поступления.</p></div>');
+            modal.find('.modal-content').html(
+                '<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>' +
+                '<div class="modal-body"><p>Не удалось загрузить форму поступления.</p></div>'
+            );
         }
     });
 });
+
+// Для списания - ТАКЖЕ ИСПРАВИТЬ
+$('#writeOffModal').on('show.bs.modal', function (event) {
+    var modal = $(this);
+    $.ajax({
+        url: "{% url 'mebel:material_write_off' material.id %}",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: function(response) {
+            if (response.html) {
+                modal.find('.modal-content').html(response.html);
+
+                // Вешаем обработчик на форму
+                modal.find('form').on('submit', function(e) {
+                    e.preventDefault();
+                    var form = $(this);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: form.attr('action'),
+                        data: form.serialize(),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        success: function(data) {
+                            if (data.success) {
+                                // Показываем сообщение об успехе
+                                showAlert('success', data.message);
+                                // Закрываем модальное окно
+                                modal.modal('hide');
+                                // Обновляем данные на странице (опционально)
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1000);
+                            } else {
+                                // Показываем ошибки валидации
+                                showFormErrors(form, data.errors);
+                            }
+                        },
+                        error: function() {
+                            alert('Ошибка при отправке формы');
+                        }
+                    });
+                });
+            }
+        },
+        error: function() {
+            modal.find('.modal-content').html(
+                '<div class="modal-header"><h5 class="modal-title">Ошибка</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>' +
+                '<div class="modal-body"><p>Не удалось загрузить форму списания.</p></div>'
+            );
+        }
+    });
+});
+
+// Функция для показа сообщений
+function showAlert(type, message) {
+    // Создаем или находим контейнер для алертов
+    var alertContainer = $('.alert-container');
+    if (alertContainer.length === 0) {
+        alertContainer = $('<div class="alert-container" style="position: fixed; top: 20px; right: 20px; z-index: 1060;"></div>');
+        $('body').append(alertContainer);
+    }
+
+    var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+    var alertHtml = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
+                    message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                    '</div>';
+
+    alertContainer.append(alertHtml);
+
+    // Автоматически скрываем через 5 секунд
+    setTimeout(function() {
+        alertContainer.find('.alert').first().alert('close');
+    }, 5000);
+}
+
+// Функция для показа ошибок формы
+function showFormErrors(form, errors) {
+    // Очищаем предыдущие ошибки
+    form.find('.error-text').remove();
+    form.find('.is-invalid').removeClass('is-invalid');
+
+    // Показываем новые ошибки
+    $.each(errors, function(field, messages) {
+        var fieldInput = form.find('[name="' + field + '"]');
+        fieldInput.addClass('is-invalid');
+        fieldInput.after('<div class="error-text text-danger small">' + messages.join(', ') + '</div>');
+    });
+}
 </script>
 {% endblock %}

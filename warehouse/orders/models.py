@@ -17,11 +17,10 @@ class Order(models.Model):
         INSTALLED = 'installed', 'Смонтировано'
 
     class CategoryChoices(models.TextChoices):
-        KITCHEN = 'kitchen', 'Кухня'
-        WARDROBE = 'wardrobe', 'Шкаф'
-        TABLE = 'table', 'Стол'
-        BED = 'bed', 'Кровать'
-        OTHER = 'other', 'Другое'
+        BLOKS = 'blocks', 'Блоки'
+        AGREGATS = 'agregats', 'Агрегаты'
+        MODULES = 'modules', 'Модули'
+        OTHER = 'other', 'другое'
 
     order_name = models.CharField(max_length=50, verbose_name='Название')
     customer_name = models.CharField(max_length=50, verbose_name='Имя заказчика')
@@ -55,13 +54,13 @@ class Order(models.Model):
         max_length=20,
         choices=InstallationStatus.choices,
         default=InstallationStatus.NOT_INSTALLED,
-        verbose_name='Установка'
+        verbose_name='Монтаж'
     )
     installation_photo = models.ImageField(
         upload_to='installation_photos/%Y/%m/%d/',
         blank=True,
         null=True,
-        verbose_name='Фото установки'
+        verbose_name='Фото монтажа'
     )
     is_completed = models.BooleanField(default=False, verbose_name='Завершено')
 

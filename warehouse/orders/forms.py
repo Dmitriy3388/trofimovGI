@@ -107,8 +107,8 @@ class OrderForm(forms.ModelForm):
             'discount': 'Скидка (%)',
             'category': 'Категория',
             'deadline': 'Дата сдачи',
-            'blueprint': 'Чертеж',
-            'visualization': 'Визуализация',
-            'installation_status': 'Установка',
-            'installation_photo': 'Фотография заказа'
+            'blueprint': 'Чертеж общего вида',
+            'visualization': 'Проектный вид',
+            'installation_status': 'Монтаж',
+            'installation_photo': 'Фотография монтажа'
         }
