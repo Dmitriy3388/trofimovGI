@@ -13,8 +13,8 @@ class Order(models.Model):
         FULLY_PAID = 'fully_paid', 'Оплачено полностью'
 
     class InstallationStatus(models.TextChoices):
-        NOT_INSTALLED = 'not_installed', 'Не установлено'
-        INSTALLED = 'installed', 'Установлено'
+        NOT_INSTALLED = 'not_installed', 'Не смонтировано'
+        INSTALLED = 'installed', 'Смонтировано'
 
     class CategoryChoices(models.TextChoices):
         KITCHEN = 'kitchen', 'Кухня'
