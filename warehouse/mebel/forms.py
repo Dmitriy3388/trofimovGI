@@ -5,7 +5,7 @@ from .models import Material
 from django.db.models.functions import Lower, Replace
 from django.db.models import Value
 from django import forms
-from .models import Material, MaterialOperation, Category, Supplier  # добавляем Supplier
+from .models import Material, MaterialOperation, Category, Supplier
 from django.core.exceptions import ValidationError
 from django.db.models.functions import Lower, Replace
 from django.db.models import Value

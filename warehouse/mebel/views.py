@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 from django.http import JsonResponse, HttpResponseBadRequest  # Добавить импорт
 from orders.models import Order
 from warehouse.utils import managers_required, mto_required
-from .forms import MaterialEditForm, MaterialCreateForm  # Добавить импорт
+from .forms import MaterialEditForm, MaterialCreateForm
 from .models import Material
 import json
 from django.utils.safestring import mark_safe
@@ -24,21 +24,16 @@ from transliterate import slugify as transliterate_slugify
 from django.core.paginator import Paginator
 from django.db.models import F, ExpressionWrapper, IntegerField
 from django.shortcuts import get_object_or_404
-from .models import Category, Material, Supplier  # добавляем Supplier
-from .forms import MaterialEditForm, MaterialCreateForm, SupplierCreateForm  # добавляем SupplierCreateForm
+from .models import Category, Material, Supplier
+from .forms import MaterialEditForm, MaterialCreateForm, SupplierCreateForm
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-
-# Добавим в views.py после существующих импортов
 from django.db.models import Sum, Q
 from django.utils import timezone
 from datetime import timedelta
-
-# Добавим в views.py
 from django.db.models import Sum
 from datetime import datetime, timedelta
 import json
-
 from django.core.paginator import Paginator
 from .forms import MaterialOperationEditForm
 
@@ -466,7 +461,6 @@ def supplier_create_modal(request):
 def refresh_materials(request):
     """Отдельный view только для обновления данных"""
     try:
-        # После рефакторинга сигналов эта строка может не понадобиться!
         # Material.update_all_reserved_quantities()
         messages.success(request, '✅ Данные материалов успешно обновлены!')
     except Exception as e:
