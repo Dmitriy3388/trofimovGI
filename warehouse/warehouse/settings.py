@@ -37,7 +37,12 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '24warehouse.ru',
+    'www.24warehouse.ru',
+    '31.130.155.228',
+    'localhost'
+]
 
 LOGIN_REDIRECT_URL = 'mebel:main_dashboard'
 LOGIN_URL = 'account:login'
