@@ -22,12 +22,8 @@ EMAIL_USE_TLS = True
 DEBUG = os.getenv('DEBUG') == 'True'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-    #os.path.join(BASE_DIR, "orders/static"),# Теперь Django будет искать файлы в /static/
-]
-
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Для collectstatic (если нужно)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Настройки БД
 DATABASES = {
@@ -62,6 +58,12 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rest_framework',
 ]
+
+# Security settings
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -129,11 +131,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 ORDERCART_SESSION_ID = 'ordercart'
-
-MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # Static files (CSS, JavaScript, Images)

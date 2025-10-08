@@ -17,3 +17,6 @@ __pycache__/
 # Database
 *.sqlite3
 *.dump
+media/
+staticfiles/
+.DS_Store
