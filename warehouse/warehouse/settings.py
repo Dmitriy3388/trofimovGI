@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mebel.apps.MebelConfig',
     'orders.apps.OrdersConfig',
-    'debug_toolbar',
     'rest_framework',
 ]
 
@@ -66,7 +65,6 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -117,7 +115,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-INTERNAL_IPS = ['127.0.0.1',]
 
 #CELERY_BROKER_URL = 'amqp://guest:guest@localhost:15672//'
 

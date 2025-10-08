@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="ПРограмма универсализирована">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse/warehouse/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,14 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Разграничение доступа без ошибок 1">
-      <option name="closed" value="true" />
-      <created>1757615864307</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1757615864307</updated>
     </task>
     <task id="LOCAL-00033" summary="Разграничение доступа сокрытие кнопок">
       <option name="closed" value="true" />
@@ -483,7 +477,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759955877519</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="ПРограмма универсализирована">
+      <option name="closed" value="true" />
+      <created>1759957099238</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1759957099238</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

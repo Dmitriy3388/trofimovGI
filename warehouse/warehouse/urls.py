@@ -10,7 +10,6 @@ urlpatterns = [
     path('account/', include('account.urls',namespace='account')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('', include('mebel.urls', namespace='mebel')),
-    path('__debug__/', include('debug_toolbar.urls')),
 
 ]
 
