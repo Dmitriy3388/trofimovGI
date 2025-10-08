@@ -37,12 +37,7 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = [
-    '24warehouse.ru',
-    'www.24warehouse.ru',
-    '31.130.155.228',
-    'localhost'
-]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 LOGIN_REDIRECT_URL = 'mebel:main_dashboard'
 LOGIN_URL = 'account:login'
@@ -60,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mebel.apps.MebelConfig',
     'orders.apps.OrdersConfig',
+    'debug_toolbar',
     'rest_framework',
 ]
 
