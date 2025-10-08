@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="ПРограмма универсализирована">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/warehouse/warehouse/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse/warehouse/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,22 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00027" summary="Добавлена возможность редактирования материала.">
-      <option name="closed" value="true" />
-      <created>1757531285231</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1757531285231</updated>
-    </task>
-    <task id="LOCAL-00028" summary="Добавлена возможность редактирования материала.">
-      <option name="closed" value="true" />
-      <created>1757531307626</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1757531307626</updated>
     </task>
     <task id="LOCAL-00029" summary="Добавлена возможность редактирования материала.">
       <option name="closed" value="true" />
@@ -484,7 +467,23 @@
       <option name="project" value="LOCAL" />
       <updated>1759946134708</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="ПРограмма универсализирована">
+      <option name="closed" value="true" />
+      <created>1759953833630</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1759953833630</updated>
+    </task>
+    <task id="LOCAL-00077" summary="ПРограмма универсализирована">
+      <option name="closed" value="true" />
+      <created>1759953873231</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1759953873231</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

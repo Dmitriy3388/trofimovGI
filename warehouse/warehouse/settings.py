@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mebel.apps.MebelConfig',
     'orders.apps.OrdersConfig',
-    'debug_toolbar',
     'rest_framework',
 ]
 
