@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mebel.apps.MebelConfig',
     'orders.apps.OrdersConfig',
-    'rest_framework',
 ]
 
 # Security settings
