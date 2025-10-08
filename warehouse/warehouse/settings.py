@@ -37,7 +37,7 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = ['24warehouse.ru', 'www.24warehouse.ru', '31.130.155.228', 'localhost', '127.0.0.1']
 
 LOGIN_REDIRECT_URL = 'mebel:main_dashboard'
 LOGIN_URL = 'account:login'
