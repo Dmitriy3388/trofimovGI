@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="ПРограмма универсализирована" />
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="ПРограмма универсализирована">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -89,22 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00037" summary="В форме создания заказа считается цена">
-      <option name="closed" value="true" />
-      <created>1757962838706</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1757962838706</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Добавлена кнопка создания материалов, добавлена пагинация в список материалов. Исправлено автоматическое формирование slug">
-      <option name="closed" value="true" />
-      <created>1757967248583</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1757967248583</updated>
     </task>
     <task id="LOCAL-00039" summary="Отердактирован базовый шаблон">
       <option name="closed" value="true" />
@@ -482,7 +468,23 @@
       <option name="project" value="LOCAL" />
       <updated>1760033802367</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="ПРограмма универсализирована">
+      <option name="closed" value="true" />
+      <created>1760034111004</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1760034111004</updated>
+    </task>
+    <task id="LOCAL-00087" summary="ПРограмма универсализирована">
+      <option name="closed" value="true" />
+      <created>1760034141424</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1760034141424</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
