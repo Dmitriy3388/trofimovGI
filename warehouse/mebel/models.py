@@ -171,10 +171,18 @@ class Material(models.Model):
             self.save(update_fields=['reserved'])
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = transliterate_slugify(self.name)
-        self.lack = max(0, self.reserved - self.balance)
-        self.full_clean()  # Вызывает clean()
+        from orders.models import OrderItem
+        from django.db.models import Sum
+
+        # Пересчитываем резерв с учетом уже списанного
+        total_pending = OrderItem.objects.filter(
+            material=self
+        ).aggregate(
+            total=Sum('quantity') - Sum('written_off')
+        )['total'] or 0
+
+        self.reserved = total_pending
+        self.lack = max(0, total_pending - self.balance)
         super().save(*args, **kwargs)
 
     def __str__(self):
