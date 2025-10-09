@@ -37,6 +37,13 @@ DATABASES = {
     }
 }
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://31.130.155.228:8000',
+    'http://24warehouse.ru',
+    'http://www.24warehouse.ru',
+    'http://31.130.155.228',
+]
+
 ALLOWED_HOSTS = ['24warehouse.ru', 'www.24warehouse.ru', '31.130.155.228', 'localhost', '127.0.0.1']
 
 LOGIN_REDIRECT_URL = 'mebel:main_dashboard'
