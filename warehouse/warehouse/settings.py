@@ -37,7 +37,14 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = ['24warehouse.ru', 'www.24warehouse.ru', '31.130.155.228', 'localhost', '127.0.0.1', '5788965-cy03385']
+CSRF_TRUSTED_ORIGINS = [
+    'http://31.130.155.228:8000',
+    'http://24warehouse.ru',
+    'http://www.24warehouse.ru',
+    'http://31.130.155.228',
+]
+
+ALLOWED_HOSTS = ['24warehouse.ru', 'www.24warehouse.ru', '31.130.155.228', 'localhost', '127.0.0.1']
 
 LOGIN_REDIRECT_URL = 'mebel:main_dashboard'
 LOGIN_URL = 'account:login'
@@ -59,8 +66,8 @@ INSTALLED_APPS = [
 ]
 
 # Security settings
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 

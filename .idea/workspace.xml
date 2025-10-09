@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="ПРограмма универсализирована" />
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="ПРограмма универсализирована">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -51,6 +53,7 @@
   "keyToString": {
     "DefaultHtmlFileTemplate": "HTML File",
     "Python.forms.executor": "Run",
+    "Python.settings.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "last_opened_file_path": "C:/Users/Dmitriy/PycharmProjects/trofimovGI/warehouse/mebel/templates/mebel",
@@ -88,22 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Разграничение доступа статусбар">
-      <option name="closed" value="true" />
-      <created>1757616954315</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1757616954315</updated>
-    </task>
-    <task id="LOCAL-00035" summary="Проработано приложение аккаунт 1">
-      <option name="closed" value="true" />
-      <created>1757620104419</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1757620104419</updated>
     </task>
     <task id="LOCAL-00036" summary="Проработано приложение аккаунт 1">
       <option name="closed" value="true" />
@@ -481,7 +468,23 @@
       <option name="project" value="LOCAL" />
       <updated>1759957533605</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="ПРограмма универсализирована">
+      <option name="closed" value="true" />
+      <created>1759957943048</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1759957943048</updated>
+    </task>
+    <task id="LOCAL-00084" summary="ПРограмма универсализирована">
+      <option name="closed" value="true" />
+      <created>1759958591840</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1759958591840</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
