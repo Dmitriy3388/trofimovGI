@@ -173,6 +173,7 @@ class Material(models.Model):
     def save(self, *args, **kwargs):
         from orders.models import OrderItem
         from django.db.models import Sum
+        super().save(*args, **kwargs)
 
         # Пересчитываем резерв с учетом уже списанного
         total_pending = OrderItem.objects.filter(
