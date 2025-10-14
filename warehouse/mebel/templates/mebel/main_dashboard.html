@@ -11,6 +11,24 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 25px;
+    align-items: start;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    position: sticky;
+    top: 20px;
 }
 
 .welcome-card {
@@ -18,7 +36,7 @@
     color: white;
     border-radius: 16px;
     padding: 25px;
-    margin-bottom: 30px;
+    margin-bottom: 0;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
@@ -36,19 +54,13 @@
 
 .full-width-chart {
     width: 100%;
-    margin-bottom: 30px;
-}
-
-.shortage-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-    margin-bottom: 30px;
+    margin-bottom: 0;
 }
 
 .shortage-card {
-    min-height: 300px;
+    min-height: 200px;
     transition: transform 0.3s ease;
+    height: 100%;
 }
 
 .shortage-card:hover {
@@ -61,6 +73,7 @@
     box-shadow: 0 5px 20px rgba(0,0,0,0.08);
     border: none;
     overflow: hidden;
+    height: 100%;
 }
 
 .card-modern-header {
@@ -81,6 +94,9 @@
 
 .card-modern-body {
     padding: 25px;
+    height: calc(100% - 80px);
+    display: flex;
+    flex-direction: column;
 }
 
 /* Стили для кнопок периода */
@@ -118,6 +134,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    flex: 1;
 }
 
 .material-item {
@@ -178,8 +195,12 @@
 
 .no-data {
     text-align: center;
-    padding: 60px 20px;
+    padding: 40px 20px;
     color: #9ca3af;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .no-data p {
@@ -203,17 +224,20 @@
     animation: fadeInUp 0.6s ease-out;
 }
 
-.shortage-card:nth-child(1) { animation-delay: 0.1s; }
-.shortage-card:nth-child(2) { animation-delay: 0.2s; }
-
 /* Адаптивность */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .dashboard-container {
-        padding: 15px;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .sidebar-content {
+        position: static;
     }
 
     .shortage-cards {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 20px;
     }
 }
@@ -221,11 +245,16 @@
 @media (max-width: 768px) {
     .dashboard-container {
         padding: 10px;
+        gap: 15px;
+    }
+
+    .shortage-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 
     .welcome-card {
         padding: 20px;
-        margin-bottom: 20px;
     }
 
     .card-modern-body {
@@ -262,53 +291,69 @@
     .chart-container {
         height: 250px;
     }
+
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Выравнивание высоты для боковой панели */
+.sidebar-content .shortage-card {
+    flex: 1;
+}
+
+.sidebar-content .shortage-card:first-child {
+    margin-bottom: 0;
 }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-container">
-    <!-- Заголовок -->
-    <div class="text-center mb-4">
-        <h1 style="color: #2c3e50; font-weight: 700; font-size: 2.5rem; margin-bottom: 10px;">📊 Мой склад</h1>
-        <p style="color: #6b7280; font-size: 1.2rem;">Панель управления складом и отслеживание материалов</p>
-    </div>
+    <!-- Основной контент -->
+    <div class="main-content">
+        <!-- Заголовок -->
+        <div class="text-center mb-4">
+            <h1 style="color: #2c3e50; font-weight: 700; font-size: 2.5rem; margin-bottom: 10px;">📊 Мой склад</h1>
+            <p style="color: #6b7280; font-size: 1.2rem;">Панель управления складом и отслеживание материалов</p>
+        </div>
 
-    <!-- Приветственная карточка -->
-    <div class="welcome-card">
-        <h5>🎉 Добро пожаловать в систему управления складом!</h5>
-        <p>Здесь отображается общая информация по заказам и материалам в реальном времени.</p>
-    </div>
+        <!-- Приветственная карточка -->
+        <div class="welcome-card">
+            <h5>🎉 Добро пожаловать в систему управления складом!</h5>
+            <p>Здесь отображается общая информация по заказам и материалам в реальном времени.</p>
+        </div>
 
-    <!-- График динамики заказов -->
-    <div class="full-width-chart">
-        <div class="card-modern">
-            <div class="card-modern-header d-flex justify-content-between align-items-center">
-                <h5 class="card-modern-title">
-                    📈 Динамика создания заказов
-                </h5>
-                <div class="period-buttons">
-                    <a href="?period=week" class="btn-period {% if period == 'week' %}active{% endif %}">Неделя</a>
-                    <a href="?period=month" class="btn-period {% if period == 'month' %}active{% endif %}">Месяц</a>
-                    <a href="?period=year" class="btn-period {% if period == 'year' %}active{% endif %}">Год</a>
+        <!-- График динамики заказов -->
+        <div class="full-width-chart">
+            <div class="card-modern">
+                <div class="card-modern-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-modern-title">
+                        📈 Динамика создания заказов
+                    </h5>
+                    <div class="period-buttons">
+                        <a href="?period=week" class="btn-period {% if period == 'week' %}active{% endif %}">Неделя</a>
+                        <a href="?period=month" class="btn-period {% if period == 'month' %}active{% endif %}">Месяц</a>
+                        <a href="?period=year" class="btn-period {% if period == 'year' %}active{% endif %}">Год</a>
+                    </div>
                 </div>
-            </div>
-            <div class="card-modern-body">
-                {% if has_data %}
-                <div class="chart-container">
-                    <canvas id="ordersChart"></canvas>
+                <div class="card-modern-body">
+                    {% if has_data %}
+                    <div class="chart-container">
+                        <canvas id="ordersChart"></canvas>
+                    </div>
+                    {% else %}
+                    <div class="no-data">
+                        <p>📭 Нет данных для отображения графика</p>
+                    </div>
+                    {% endif %}
                 </div>
-                {% else %}
-                <div class="no-data">
-                    <p>📭 Нет данных для отображения графика</p>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Карточки нехватки материалов -->
-    <div class="shortage-cards">
+    <!-- Боковая панель с карточками нехватки -->
+    <div class="sidebar-content">
         <!-- Текущая нехватка -->
         <div class="card-modern shortage-card">
             <div class="card-modern-header">
