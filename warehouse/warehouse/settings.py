@@ -18,7 +18,7 @@ EMAIL_HOST_PASSWORD = os.getenv('GG_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-# Режим отладки
+# Режим отладкисв
 DEBUG = os.getenv('DEBUG') == 'True'
 
 STATIC_URL = '/static/'
@@ -36,7 +36,8 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
     }
 }
-
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = [
     'http://31.130.155.228:8000',
     'http://24warehouse.ru',
