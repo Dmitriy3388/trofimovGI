@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Редирект профиля">
+    <list default="true" id="525f3a42-7344-44db-bf0c-953640b9d691" name="Changes" comment="Создание сертификата https">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,38 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1752680718262</updated>
-    </task>
-    <task id="LOCAL-00040" summary="Переставлены графики">
-      <option name="closed" value="true" />
-      <created>1758043355377</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1758043355377</updated>
-    </task>
-    <task id="LOCAL-00041" summary="Переименованы таблицы. Убран столбец ID">
-      <option name="closed" value="true" />
-      <created>1758043782772</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1758043782772</updated>
-    </task>
-    <task id="LOCAL-00042" summary="В столбцах реализована функция сортировки по столбцам">
-      <option name="closed" value="true" />
-      <created>1758048911276</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1758048911276</updated>
-    </task>
-    <task id="LOCAL-00043" summary="добавлена кнопка возврата к списку материалов">
-      <option name="closed" value="true" />
-      <created>1758049755606</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1758049755606</updated>
     </task>
     <task id="LOCAL-00044" summary="Исправлены подсказки в формах добавления материалов и создания заказов">
       <option name="closed" value="true" />
@@ -484,7 +452,39 @@
       <option name="project" value="LOCAL" />
       <updated>1760036254658</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="Редирект профиля">
+      <option name="closed" value="true" />
+      <created>1760041247868</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1760041247868</updated>
+    </task>
+    <task id="LOCAL-00090" summary="Редирект профиля">
+      <option name="closed" value="true" />
+      <created>1760465447956</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1760465447956</updated>
+    </task>
+    <task id="LOCAL-00091" summary="Редирект профиля">
+      <option name="closed" value="true" />
+      <created>1760466136943</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1760466136943</updated>
+    </task>
+    <task id="LOCAL-00092" summary="Создание сертификата https">
+      <option name="closed" value="true" />
+      <created>1760468674030</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1760468674030</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -514,7 +514,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="В столбцах реализована функция сортировки по столбцам" />
     <MESSAGE value="добавлена кнопка возврата к списку материалов" />
     <MESSAGE value="Исправлены подсказки в формах добавления материалов и создания заказов" />
     <MESSAGE value="Исправлено логирование списания материалов через форму деталей заказа и отображение категорий в списке материалов" />
@@ -539,6 +538,7 @@
     <MESSAGE value="Исправлена часть стилей" />
     <MESSAGE value="ПРограмма универсализирована" />
     <MESSAGE value="Редирект профиля" />
-    <option name="LAST_COMMIT_MESSAGE" value="Редирект профиля" />
+    <MESSAGE value="Создание сертификата https" />
+    <option name="LAST_COMMIT_MESSAGE" value="Создание сертификата https" />
   </component>
 </project>
