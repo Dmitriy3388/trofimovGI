@@ -5,7 +5,314 @@
 
 {% block extra_css %}
 <style>
-/* Стили для модального окна просмотра изображений */
+.order-detail-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-header h1 {
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    color: #6b7280;
+    font-size: 1.2rem;
+}
+
+.card-modern {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: none;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+
+
+.card-modern-title {
+    color: white;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-modern-header {
+    /* Убрать background - будет из cards.css */
+    color: white;  /* ← ДОБАВИТЬ ЭТУ СТРОКУ */
+    padding: 20px 25px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.card-modern-body {
+    padding: 25px;
+}
+
+/* Стили для строк с информацией */
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #2c3e50;
+    min-width: 200px;
+}
+
+.detail-value {
+    color: #4b5563;
+    text-align: right;
+    flex: 1;
+}
+
+/* Стили для изображений */
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 992px) {
+    .image-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .image-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.image-card-modern {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s;
+    cursor: pointer;
+    height: 100%;
+}
+
+.image-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.image-card-header {
+    background: linear-gradient(135deg, #4361ee, #3a0ca3 100%);
+    color: white;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.image-card-title {
+    color: white;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.image-card-body {
+    padding: 20px;
+    text-align: center;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.image-card-body img {
+    max-width: 100%;
+    max-height: 160px;
+    border-radius: 8px;
+    transition: transform 0.3s;
+}
+
+.image-card-modern:hover .image-card-body img {
+    transform: scale(1.05);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 8px;
+}
+
+.image-card-modern:hover .image-overlay {
+    opacity: 1;
+}
+
+.zoom-icon {
+    color: white;
+    font-size: 2rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-image {
+    color: #9ca3af;
+    text-align: center;
+}
+
+.no-image-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #d1d5db;
+}
+
+/* Стили для таблицы материалов */
+.table-modern {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-modern thead th {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #2c3e50;
+    font-weight: 600;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.table-modern tbody td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #4b5563;
+}
+
+.table-modern tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Стили для бейджей */
+.badge-modern {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.badge-success-modern {
+    background: linear-gradient(135deg, #4ade80, #16a34a);
+    color: white;
+}
+
+.badge-warning-modern {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.badge-danger-modern {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.badge-info-modern {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    color: white;
+}
+
+.badge-secondary-modern {
+    background: linear-gradient(135deg, #9ca3af, #6b7280);
+    color: white;
+}
+
+/* Стили для кнопок */
+.btn-modern {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.btn-modern:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-warning-modern {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.btn-warning-modern:hover {
+    background: linear-gradient(135deg, #e6900a 0%, #c46a05 100%);
+}
+
+.btn-outline-modern {
+    background: transparent;
+    border: 2px solid #667eea;
+    color: #667eea;
+}
+
+.btn-outline-modern:hover {
+    background: #667eea;
+    color: white;
+}
+
+/* Действия карточки */
+.card-actions {
+    display: flex;
+    gap: 12px;
+    padding: 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Модальное окно для изображений */
 .image-modal {
     display: none;
     position: fixed;
@@ -56,263 +363,316 @@
 }
 
 .download-btn {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px 24px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .download-btn:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-.image-card {
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.3s;
+/* Анимации */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.image-card:hover {
-    transform: scale(1.02);
+.card-modern {
+    animation: fadeInUp 0.6s ease-out;
 }
 
-.image-card img {
-    transition: opacity 0.3s;
-}
+/* Адаптивность */
+@media (max-width: 768px) {
+    .order-detail-container {
+        padding: 15px;
+    }
 
-.image-card:hover img {
-    opacity: 0.9;
-}
+    .page-header h1 {
+        font-size: 2rem;
+    }
 
-.image-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
+    .detail-row {
+        flex-direction: column;
+        gap: 5px;
+    }
 
-.image-card:hover .image-overlay {
-    opacity: 1;
-}
+    .detail-label {
+        min-width: auto;
+    }
 
-.zoom-icon {
-    color: white;
-    font-size: 2rem;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    .detail-value {
+        text-align: left;
+    }
+
+    .card-actions {
+        flex-direction: column;
+    }
+
+    .btn-modern {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .table-modern {
+        font-size: 0.9rem;
+    }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Блок с изображениями - ОБНОВЛЕНО -->
-<div class="row mb-4">
-    <div class="col-md-4">
-        {% if order.blueprint %}
-        <div class="card image-card" onclick="openImageModal('{{ order.blueprint.url }}', 'Чертеж заказа #{{ order.id }}')">
-            <div class="card-header">
-                <h6 class="card-title mb-0">📐 Чертеж</h6>
+<div class="order-detail-container">
+    <!-- Заголовок страницы -->
+    <div class="page-header">
+        <h1>📋 Заказ #{{ order.id }}</h1>
+        <p>Детальная информация о заказе</p>
+    </div>
+
+    <!-- Блок с изображениями -->
+    <div class="image-grid">
+        <!-- Чертеж -->
+        <div class="image-card-modern" onclick="openImageModal('{% if order.blueprint %}{{ order.blueprint.url }}{% endif %}', 'Чертеж заказа #{{ order.id }}')">
+            <div class="image-card-header">
+                <h6 class="image-card-title">📐 Чертеж</h6>
             </div>
-            <div class="card-body text-center position-relative">
-                <img src="{{ order.blueprint.url }}" class="img-fluid rounded" alt="Чертеж" style="max-height: 200px;">
+            <div class="image-card-body">
+                {% if order.blueprint %}
+                <img src="{{ order.blueprint.url }}" alt="Чертеж">
                 <div class="image-overlay">
                     <div class="zoom-icon">
                         <i class="bi bi-search"></i>
                     </div>
                 </div>
+                {% else %}
+                <div class="no-image">
+                    <div class="no-image-icon">
+                        <i class="bi bi-file-earmark"></i>
+                    </div>
+                    <p>Чертеж не добавлен</p>
+                </div>
+                {% endif %}
             </div>
         </div>
-        {% endif %}
-    </div>
-    <div class="col-md-4">
-        {% if order.visualization %}
-        <div class="card image-card" onclick="openImageModal('{{ order.visualization.url }}', 'Визуализация заказа #{{ order.id }}')">
-            <div class="card-header">
-                <h6 class="card-title mb-0">🎨 Визуализация</h6>
+
+        <!-- Визуализация -->
+        <div class="image-card-modern" onclick="openImageModal('{% if order.visualization %}{{ order.visualization.url }}{% endif %}', 'Визуализация заказа #{{ order.id }}')">
+            <div class="image-card-header">
+                <h6 class="image-card-title">🎨 Визуализация</h6>
             </div>
-            <div class="card-body text-center position-relative">
-                <img src="{{ order.visualization.url }}" class="img-fluid rounded" alt="Визуализация" style="max-height: 200px;">
+            <div class="image-card-body">
+                {% if order.visualization %}
+                <img src="{{ order.visualization.url }}" alt="Визуализация">
                 <div class="image-overlay">
                     <div class="zoom-icon">
                         <i class="bi bi-search"></i>
                     </div>
                 </div>
+                {% else %}
+                <div class="no-image">
+                    <div class="no-image-icon">
+                        <i class="bi bi-image"></i>
+                    </div>
+                    <p>Визуализация не добавлена</p>
+                </div>
+                {% endif %}
             </div>
         </div>
-        {% endif %}
-    </div>
-    <div class="col-md-4">
-        {% if order.installation_photo %}
-        <div class="card image-card" onclick="openImageModal('{{ order.installation_photo.url }}', 'Фото установки заказа #{{ order.id }}')">
-            <div class="card-header">
-                <h6 class="card-title mb-0">📸 Фото установки</h6>
+
+        <!-- Фото установки -->
+        <div class="image-card-modern" onclick="openImageModal('{% if order.installation_photo %}{{ order.installation_photo.url }}{% endif %}', 'Фото установки заказа #{{ order.id }}')">
+            <div class="image-card-header">
+                <h6 class="image-card-title">📸 Фото установки</h6>
             </div>
-            <div class="card-body text-center position-relative">
-                <img src="{{ order.installation_photo.url }}" class="img-fluid rounded" alt="Фото установки" style="max-height: 200px;">
+            <div class="image-card-body">
+                {% if order.installation_photo %}
+                <img src="{{ order.installation_photo.url }}" alt="Фото установки">
                 <div class="image-overlay">
                     <div class="zoom-icon">
                         <i class="bi bi-search"></i>
                     </div>
                 </div>
+                {% else %}
+                <div class="no-image">
+                    <div class="no-image-icon">
+                        <i class="bi bi-camera"></i>
+                    </div>
+                    <p>Фото установки не добавлено</p>
+                </div>
+                {% endif %}
             </div>
         </div>
-        {% else %}
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">📸 Фото установки</h6>
-            </div>
-            <div class="card-body text-center text-muted">
-                <i class="bi bi-camera" style="font-size: 3rem;"></i>
-                <p class="mt-2 mb-0">Фото установки не добавлено</p>
-            </div>
-        </div>
-        {% endif %}
     </div>
-</div>
 
-<div class="container mt-4">
-  <!-- Заголовок с кнопками действий -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Заказ #{{ order.id }}</h1>
-    <div>
-        {% if user.groups.all.0.name == 'Менеджеры' or user.is_superuser %}
-            <a href="{% url 'orders:order_edit' order.id %}" class="btn btn-warning me-2">
-                <i class="bi bi-pencil"></i> Редактировать заказ
-            </a>
-        {% endif %}
-
-        {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
-            {% if order.items.exists %}
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#writeOffModal">
-                <i class="bi bi-box-arrow-right"></i> Списать материалы
-            </button>
-            {% endif %}
-        {% endif %}
-    </div>
-  </div>
-
-  <!-- Сообщения об успехе/ошибках -->
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  {% endif %}
-
-  <!-- Информация о заказе -->
+    <!-- Основная информация о заказе -->
     <div class="row">
+        <!-- Левая колонка -->
         <div class="col-md-6">
-            <p><strong>Название:</strong><br>{{ order.order_name }}</p>
-            <p><strong>Имя заказчика:</strong><br>{{ order.customer_name }}</p>
-            <p><strong>Категория:</strong><br>{{ order.get_category_display }}</p>
+            <div class="card-modern">
+                <div class="card-modern-header">
+                    <h5 class="card-modern-title">📝 Основная информация</h5>
+                </div>
+                <div class="card-modern-body">
+                    <div class="detail-row">
+                        <span class="detail-label">Название заказа:</span>
+                        <span class="detail-value">{{ order.order_name }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Имя заказчика:</span>
+                        <span class="detail-value">{{ order.customer_name }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Категория:</span>
+                        <span class="detail-value">{{ order.get_category_display }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Адрес:</span>
+                        <span class="detail-value">{{ order.address }}</span>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Правая колонка -->
         <div class="col-md-6">
-            <p><strong>Адрес:</strong><br>{{ order.address }}</p>
-            <p><strong>Перечисленные средства:</strong><br>{{ order.transferred_amount }} руб.</p>
-            <p><strong>Скидка:</strong><br>{{ order.discount }}%</p>
+            <div class="card-modern">
+                <div class="card-modern-header">
+                    <h5 class="card-modern-title">💰 Финансовая информация</h5>
+                </div>
+                <div class="card-modern-body">
+                    <div class="detail-row">
+                        <span class="detail-label">Перечисленные средства:</span>
+                        <span class="detail-value">{{ order.transferred_amount }} руб.</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Скидка:</span>
+                        <span class="detail-value">{{ order.discount }}%</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Общая стоимость:</span>
+                        <span class="detail-value"><strong class="text-primary">{{ order.get_total_cost }} руб.</strong></span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="col-md-6">
-      <div class="card mb-4">
-        <div class="card-header">
-          <h5 class="card-title mb-0">📊 Статус заказа</h5>
-        </div>
-        <div class="card-body">
-          <p><strong>Дата создания:</strong> {{ order.created|date:"d.m.Y H:i" }}</p>
-          <p><strong>Последнее обновление:</strong> {{ order.updated|date:"d.m.Y H:i" }}</p>
-          <p>
-            <strong>Статус оплаты:</strong>
-            <span class="badge
-              {% if order.paid == 'fully_paid' %}bg-success
-              {% elif order.paid == 'partially_paid' %}bg-warning
-              {% else %}bg-danger{% endif %}">
-              {{ order.get_paid_display }}
-            </span>
-          </p>
-                <p>
-                    <strong>Статус установки:</strong>
-                    <span class="badge
-                    {% if order.installation_status == 'installed' %}bg-success
-                    {% else %}bg-secondary{% endif %}">
-                        {{ order.get_installation_status_display }}
-                    </span>
-                </p>
-                <p>
-                    <strong>Завершено:</strong>
-                    <span class="badge
-                    {% if order.is_completed %}bg-success
-                    {% else %}bg-secondary{% endif %}">
-                        {% if order.is_completed %}Да{% else %}Нет{% endif %}
-                    </span>
-                </p>
-          <p><strong>ID заказа:</strong> {{ order.id }}</p>
-        </div>
-      </div>
-    </div>
-        <!-- Добавляем после блока с статусом оплаты -->
-    <div class="col-md-6">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="card-title mb-0">📅 Сроки выполнения</h5>
+    <!-- Статусы и сроки -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card-modern">
+                <div class="card-modern-header">
+                    <h5 class="card-modern-title">📊 Статус заказа</h5>
+                </div>
+                <div class="card-modern-body">
+                    <div class="detail-row">
+                        <span class="detail-label">Статус оплаты:</span>
+                        <span class="detail-value">
+                            <span class="badge-modern
+                                {% if order.paid == 'fully_paid' %}badge-success-modern
+                                {% elif order.paid == 'partially_paid' %}badge-warning-modern
+                                {% else %}badge-danger-modern{% endif %}">
+                                {{ order.get_paid_display }}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Статус установки:</span>
+                        <span class="detail-value">
+                            <span class="badge-modern
+                                {% if order.installation_status == 'installed' %}badge-success-modern
+                                {% else %}badge-secondary-modern{% endif %}">
+                                {{ order.get_installation_status_display }}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Завершено:</span>
+                        <span class="detail-value">
+                            <span class="badge-modern
+                                {% if order.is_completed %}badge-success-modern
+                                {% else %}badge-secondary-modern{% endif %}">
+                                {% if order.is_completed %}Да{% else %}Нет{% endif %}
+                            </span>
+                        </span>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <p><strong>Дата сдачи:</strong> {{ order.deadline|date:"d.m.Y" }}</p>
-                <p>
-                    <strong>Статус:</strong>
-                    {% with deadline_status=order.get_deadline_status %}
-                    <span class="badge bg-{{ deadline_status.class }}">
-                        {{ deadline_status.icon }} {{ deadline_status.status }}
-                    </span>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card-modern">
+                <div class="card-modern-header">
+                    <h5 class="card-modern-title">📅 Сроки выполнения</h5>
+                </div>
+                <div class="card-modern-body">
+                    <div class="detail-row">
+                        <span class="detail-label">Дата создания:</span>
+                        <span class="detail-value">{{ order.created|date:"d.m.Y H:i" }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Дата сдачи:</span>
+                        <span class="detail-value">{{ order.deadline|date:"d.m.Y" }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Статус сроков:</span>
+                        <span class="detail-value">
+                            {% with deadline_status=order.get_deadline_status %}
+                            <span class="badge-modern badge-{{ deadline_status.class }}-modern">
+                                {{ deadline_status.icon }} {{ deadline_status.status }}
+                            </span>
+                            {% endwith %}
+                        </span>
+                    </div>
+                    {% with days_until=order.deadline|timeuntil %}
+                    <div class="detail-row">
+                        <span class="detail-label">Осталось:</span>
+                        <span class="detail-value">{{ days_until }}</span>
+                    </div>
                     {% endwith %}
-                </p>
-                {% with days_until=order.deadline|timeuntil %}
-                <p><strong>Осталось:</strong> {{ days_until }}</p>
-                {% endwith %}
+                </div>
             </div>
         </div>
     </div>
-  </div>
 
-  <!-- Позиции заказа -->
-  <div class="card mb-4">
-      <div class="card-header">
-          <h5 class="card-title mb-0">📦 Позиции заказа</h5>
-      </div>
-      <div class="card-body">
-          <div class="table-responsive">
-              <table class="table table-hover">
-                    <thead class="table-light">
+    <!-- Позиции заказа -->
+    <div class="card-modern mt-4">
+        <div class="card-modern-header">
+            <h5 class="card-modern-title">📦 Позиции заказа</h5>
+        </div>
+        <div class="card-modern-body">
+            {% if order.items.exists %}
+            <div class="table-responsive">
+                <table class="table-modern">
+                    <thead>
                         <tr>
                             <th>Материал</th>
                             <th class="text-center">Цена за шт.</th>
-                            <th class="text-center">Количество по заказу</th>
+                            <th class="text-center">Количество</th>
                             <th class="text-center">Зарезервировано</th>
                             <th class="text-center">Баланс на складе</th>
                             <th class="text-center">Списано</th>
                             <th class="text-end">Стоимость</th>
                         </tr>
                     </thead>
-                  <tbody>
-                      {% for item in order.items.all %}
+                    <tbody>
+                        {% for item in order.items.all %}
                         <tr>
                             <td>
                                 <strong>{{ item.material.name }}</strong>
@@ -322,47 +682,71 @@
                             <td class="text-center">{{ item.price }} руб.</td>
                             <td class="text-center">{{ item.quantity }} шт.</td>
                             <td class="text-center">
-                                <span class="badge bg-info">
+                                <span class="badge-modern badge-info-modern">
                                     {{ item.material.reserved }} шт.
                                 </span>
                             </td>
                             <td class="text-center">
-                                <span class="badge {% if item.material.balance > 0 %}bg-success{% else %}bg-danger{% endif %}">
+                                <span class="badge-modern
+                                    {% if item.material.balance > 0 %}badge-success-modern
+                                    {% else %}badge-danger-modern{% endif %}">
                                     {{ item.material.balance }} шт.
                                 </span>
                             </td>
                             <td class="text-center">
-                                <span class="badge {% if item.written_off > 0 %}bg-success{% else %}bg-secondary{% endif %}">
-                                    {{ item.written_off }} шт. (остаток: {{ item.quantity|subtract:item.written_off }} шт.)
+                                <span class="badge-modern
+                                    {% if item.written_off > 0 %}badge-success-modern
+                                    {% else %}badge-secondary-modern{% endif %}">
+                                    {{ item.written_off }} шт.
                                 </span>
+                                <br>
+                                <small class="text-muted">Остаток: {{ item.quantity|subtract:item.written_off }} шт.</small>
                             </td>
                             <td class="text-end"><strong>{{ item.get_cost }} руб.</strong></td>
                         </tr>
-                      {% empty %}
-                      <tr>
-                          <td colspan="7" class="text-center text-muted py-4"> <!-- Изменили colspan на 7 -->
-                              В заказе нет позиций
-                          </td>
-                      </tr>
-                      {% endfor %}
-                  </tbody>
-                  <tfoot class="table-group-divider">
-                      <tr>
-                          <td colspan="6" class="text-end"><strong>Общая стоимость:</strong></td> <!-- Изменили colspan на 6 -->
-                          <td class="text-end"><strong class="fs-5">{{ order.get_total_cost }} руб.</strong></td>
-                      </tr>
-                  </tfoot>
-              </table>
-          </div>
-      </div>
-  </div>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6" class="text-end"><strong>Общая стоимость:</strong></td>
+                            <td class="text-end">
+                                <span class="fs-5 text-primary fw-bold">{{ order.get_total_cost }} руб.</span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <p class="text-muted">В заказе нет позиций</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 
-  <!-- Кнопка возврата -->
-  <div class="d-flex justify-content-between">
-    <a href="{% url 'orders:order_list' %}" class="btn btn-secondary">
-      <i class="bi bi-arrow-left"></i> Вернуться к списку заказов
-    </a>
-  </div>
+    <!-- Действия -->
+    <div class="card-actions">
+        <a href="{% url 'orders:order_list' %}" class="btn-modern btn-outline-modern">
+            <i class="bi bi-arrow-left"></i>
+            Вернуться к списку
+        </a>
+
+        {% if user.groups.all.0.name == 'Менеджеры' or user.is_superuser %}
+        <a href="{% url 'orders:order_edit' order.id %}" class="btn-modern btn-warning-modern">
+            <i class="bi bi-pencil-square"></i>
+            Редактировать заказ
+        </a>
+        {% endif %}
+
+        {% if user.groups.all.0.name == 'Отдел МТО' or user.is_superuser %}
+            {% if order.items.exists %}
+            <button type="button" class="btn-modern" data-bs-toggle="modal" data-bs-target="#writeOffModal">
+                <i class="bi bi-box-arrow-right"></i>
+                Списать материалы
+            </button>
+            {% endif %}
+        {% endif %}
+    </div>
 </div>
 
 <!-- Модальное окно для просмотра изображений -->
@@ -376,43 +760,22 @@
     </div>
 </div>
 
-  <!-- Модальное окно -->
-  {% with modal_id="writeOffModal" modal_size="modal-xl" modal_ajax_url=order.get_write_off_url %}
-  {% include "includes/modal.html" %}
-  {% endwith %}
-
-  <style>
-    .card {
-      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-      border: 1px solid rgba(0, 0, 0, 0.125);
-    }
-    .card-header {
-      background-color: #f8f9fa;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-    }
-    .table th {
-      font-weight: 600;
-      background-color: #f8f9fa;
-    }
-    .badge {
-      font-size: 0.85em;
-    }
-    .alert {
-      margin-bottom: 20px;
-    }
-  </style>
+<!-- Модальное окно для списания материалов -->
+{% with modal_id="writeOffModal" modal_size="modal-xl" modal_ajax_url=order.get_write_off_url %}
+{% include "includes/modal.html" %}
+{% endwith %}
 {% endblock %}
 
 {% block domready %}
-<!-- JS для загрузки контента в модальное окно -->
 <script>
-
-        // Переменные для хранения текущего изображения
+    // Переменные для хранения текущего изображения
     let currentImageUrl = '';
     let currentImageTitle = '';
 
     // Функция открытия модального окна с изображением
     function openImageModal(imageUrl, imageTitle) {
+        if (!imageUrl || imageUrl.includes('undefined')) return;
+
         currentImageUrl = imageUrl;
         currentImageTitle = imageTitle;
 
@@ -431,8 +794,6 @@
     function closeImageModal() {
         const modal = document.getElementById('imageModal');
         modal.style.display = 'none';
-
-        // Восстанавливаем прокрутку страницы
         document.body.style.overflow = 'auto';
     }
 
@@ -440,15 +801,10 @@
     function downloadImage() {
         if (!currentImageUrl) return;
 
-        // Создаем временную ссылку для скачивания
         const link = document.createElement('a');
         link.href = currentImageUrl;
-
-        // Извлекаем имя файла из URL
         const fileName = currentImageUrl.split('/').pop() || 'image';
         link.download = fileName;
-
-        // Программно кликаем по ссылке
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -468,13 +824,12 @@
         }
     });
 
+    // AJAX для модального окна списания
     $(document).ready(function(){
         $('#writeOffModal').on('show.bs.modal', function (event) {
             var modal = $(this);
-            // Загружаем форму списания в модальное окно
             $.ajax({
                 url: "{% url 'orders:order_write_off' order.id %}",
-                context: document.body,
                 success: function(response) {
                     modal.find('.modal-content').html(response);
                 },
@@ -482,7 +837,7 @@
                     modal.find('.modal-content').html(
                         '<div class="modal-header">' +
                         '<h5 class="modal-title">Ошибка</h5>' +
-                        '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                        '<button type="button" class="btn-close" data-bs-dismiss="modal"></button>' +
                         '</div>' +
                         '<div class="modal-body">' +
                         '<p class="text-danger">Не удалось загрузить форму списания.</p>' +
@@ -492,9 +847,7 @@
             });
         });
 
-        // Обновление страницы после закрытия модального окна
         $('#writeOffModal').on('hidden.bs.modal', function () {
-            // Перезагружаем страницу для обновления данных
             location.reload();
         });
     });
