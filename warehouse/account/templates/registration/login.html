@@ -64,10 +64,20 @@
             </form>
         </div>
 
-        <!-- Ссылка на восстановление пароля -->
+        <!-- Дополнительные ссылки -->
         <div class="card-actions" style="flex-direction: column; gap: 10px; margin-top: 20px;">
+            <!-- Кнопка регистрации -->
             <div class="text-center">
-                <a href="{% url 'account:password_reset' %}" class="btn-modern btn-outline-modern" style="display: inline-block; padding: 10px 20px; border: 2px solid #667eea; color: #667eea; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.3s;">
+                <a href="{% url 'account:register' %}" class="btn-modern" style="display: inline-block; padding: 10px 20px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.3s; width: 100%;">
+                    <i class="bi bi-person-plus"></i>
+                    Создать аккаунт
+                </a>
+            </div>
+
+            <!-- Ссылка на восстановление пароля -->
+            <div class="text-center">
+                <a href="{% url 'account:password_reset' %}" class="btn-modern btn-outline-modern" style="display: inline-block; padding: 10px 20px; border: 2px solid #667eea; color: #667eea; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.3s; width: 100%;">
+                    <i class="bi bi-key"></i>
                     Забыли свой пароль?
                 </a>
             </div>
@@ -164,6 +174,16 @@
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Стиль для кнопки регистрации */
+.btn-modern[href*="register"]:hover {
+    background: linear-gradient(135deg, #0da271 0%, #047857 100%) !important;
+}
+
+/* Иконки в кнопках */
+.btn-modern i {
+    margin-right: 8px;
 }
 
 /* Текст по центру */

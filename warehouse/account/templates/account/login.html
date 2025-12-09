@@ -86,6 +86,14 @@
                     Забыли пароль?
                 </a>
             </div>
+
+            <!-- ДОБАВЛЕНО: Кнопка регистрации -->
+            <div class="text-center">
+                <a href="{% url 'account:register' %}" class="btn-modern" style="display: inline-block; padding: 10px 20px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.3s;">
+                    <i class="bi bi-person-plus"></i>
+                    Создать аккаунт
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -147,6 +155,11 @@
 .btn-outline-modern:hover {
     background: #667eea;
     color: white;
+}
+
+/* Стиль для кнопки регистрации */
+.btn-modern[href*="register"]:hover {
+    background: linear-gradient(135deg, #0da271 0%, #047857 100%) !important;
 }
 
 /* Адаптивность для мобильных */
